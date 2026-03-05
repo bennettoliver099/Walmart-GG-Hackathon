@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     initializeBlock,
     useBase,
@@ -14,11 +14,13 @@ function safeGetCellValueAsString(record, fieldName) {
 }
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const EXTERNAL_FORM_URL = 'https://airtable.com/app4AdZ5m3rWZ4kt8/pagX2wubHXk1Q7Em0/form';
-const RULES_URL         = 'https://teams.wal-mart.com/sites/GGDigitalAcceleration';
-const TEST_NAMES        = ['Test', 'Test ', 'Test2', 'test 5', 'Rest'];
-const TECH_OPTIONS      = ['Airtable', 'CodePuppy', 'Harvey', 'Other'];
-const ATTENDANCE_OPTIONS= ['Virtual', 'In Person', 'Hybrid'];
+const EXTERNAL_FORM_URL     = 'https://airtable.com/app4AdZ5m3rWZ4kt8/pagX2wubHXk1Q7Em0/form';
+const RULES_URL             = 'https://teams.wal-mart.com/sites/GGDigitalAcceleration';
+const TEST_NAMES            = ['Test', 'Test ', 'Test2', 'test 5', 'Rest'];
+const TECH_OPTIONS          = ['Airtable', 'CodePuppy', 'Harvey', 'Other'];
+const ATTENDANCE_OPTIONS    = ['Virtual', 'In Person', 'Hybrid'];
+const HACKATHON_DEADLINE    = new Date('2026-03-09T17:00:00');
+const MAX_TEAMS             = 50;
 
 // ─── WALMART SPARK SVG ────────────────────────────────────────────────────────
 const SPARK_PATHS = `<path d="M375.663,273.363c12.505-2.575,123.146-53.269,133.021-58.97c22.547-13.017,30.271-41.847,17.254-64.393s-41.847-30.271-64.393-17.254c-9.876,5.702-109.099,76.172-117.581,85.715c-9.721,10.937-11.402,26.579-4.211,39.033C346.945,269.949,361.331,276.314,375.663,273.363z"/><path d="M508.685,385.607c-9.876-5.702-120.516-56.396-133.021-58.97c-14.332-2.951-28.719,3.415-35.909,15.87c-7.191,12.455-5.51,28.097,4.211,39.033c8.482,9.542,107.705,80.013,117.581,85.715c22.546,13.017,51.376,5.292,64.393-17.254S531.231,398.624,508.685,385.607z"/><path d="M266.131,385.012c-14.382,0-27.088,9.276-31.698,23.164c-4.023,12.117-15.441,133.282-15.441,144.685c0,26.034,21.105,47.139,47.139,47.139c26.034,0,47.139-21.105,47.139-47.139c0-11.403-11.418-132.568-15.441-144.685C293.219,394.288,280.513,385.012,266.131,385.012z"/><path d="M156.599,326.637c-12.505,2.575-123.146,53.269-133.021,58.97C1.031,398.624-6.694,427.454,6.323,450c13.017,22.546,41.847,30.271,64.393,17.254c9.876-5.702,109.098-76.172,117.58-85.715c9.722-10.937,11.402-26.579,4.211-39.033S170.931,323.686,156.599,326.637z"/><path d="M70.717,132.746C48.171,119.729,19.341,127.454,6.323,150c-13.017,22.546-5.292,51.376,17.254,64.393c9.876,5.702,120.517,56.396,133.021,58.97c14.332,2.951,28.719-3.415,35.91-15.87c7.191-12.455,5.51-28.096-4.211-39.033C179.815,208.918,80.592,138.447,70.717,132.746z"/><path d="M266.131,0c-26.035,0-47.139,21.105-47.139,47.139c0,11.403,11.418,132.568,15.441,144.685c4.611,13.888,17.317,23.164,31.698,23.164s27.088-9.276,31.698-23.164c4.023-12.117,15.441-133.282,15.441-144.685C313.27,21.105,292.165,0,266.131,0z"/>`;
@@ -30,16 +32,6 @@ function SparkIcon({ size = 20, color = 'white' }) {
             dangerouslySetInnerHTML={{ __html: SPARK_PATHS }} />
     );
 }
-
-// ─── STATIC DATASETS ─────────────────────────────────────────────────────────
-const STATIC_DATASETS = [
-    { icon: '📋', title: 'Regulatory Documents', desc: '10 government PDFs (BIPA, CCPA, OSHA, UFLPA, NYC AEDT, FLSA, ADA, TCPA, HazCom) parsed into plain-English summaries, deadlines, and Walmart action items.', tags: ['Compliance', 'AI-Parsed', 'PDF', 'Harvey'], rows: '10 docs · 16 AI fields' },
-    { icon: '🏪', title: 'Store Locations', desc: 'Store number, format, city, state, region, division, square footage, open date, and coordinates for US stores.', tags: ['Operations', 'Geography', 'CSV'], rows: '36 stores · 20 fields' },
-    { icon: '🏭', title: 'Distribution Centers', desc: 'DC type, automation level, stores served, and cold storage capabilities — ideal for supply chain AI ideas.', tags: ['Supply Chain', 'Operations', 'CSV'], rows: '22 DCs · 18 fields' },
-    { icon: '👥', title: 'GG Directory', desc: 'Associate records with name, supervisory org, email, and location. Use for routing, auto-assignment, and compliance ownership.', tags: ['People', 'Org Data', 'Live'], rows: '500+ associates' },
-    { icon: '🎯', title: 'Problem Statements', desc: '12 GG-specific problems with current state, desired state, data available, and suggested technologies.', tags: ['Strategy', 'GG', 'Live'], rows: '12 problems · 11 fields' },
-    { icon: '💡', title: 'Prompt Library', desc: '40 AI prompt templates across 9 categories — paste directly into Harvey or an Airtable AI field.', tags: ['AI', 'Prompts', 'Harvey', 'Airtable'], rows: '40 prompts · 9 categories' },
-];
 
 // ─── MASHUP IDEAS ─────────────────────────────────────────────────────────────
 const MASHUP_IDEAS = [
@@ -66,6 +58,14 @@ const TECH_GUIDES = [
     { name: 'CodePuppy', best: 'Custom code, integrations, APIs', desc: "Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations Airtable can't do natively." },
 ];
 
+// ─── PHASE TIMELINE ───────────────────────────────────────────────────────────
+const PHASES = [
+    { label: 'Register', sub: 'Now Open',             active: true  },
+    { label: 'Train',    sub: 'Week of March 9',       active: false },
+    { label: 'Build',    sub: 'March 16–19',           active: false },
+    { label: 'Present',  sub: 'March 20 · Science Fair', active: false },
+];
+
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
 const T = {
     blue:    '#0071CE',
@@ -84,6 +84,16 @@ const T = {
     shadow:  '0 1px 3px rgba(11,44,95,0.08)',
     shadowM: '0 4px 16px rgba(11,44,95,0.10)',
 };
+
+// ─── COUNTDOWN ────────────────────────────────────────────────────────────────
+function getCountdown() {
+    const diff = HACKATHON_DEADLINE - new Date();
+    if (diff <= 0) return 'Closed';
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    return `${d}d ${h}h ${m}m`;
+}
 
 // ─── CSS ──────────────────────────────────────────────────────────────────────
 const css = `
@@ -114,7 +124,7 @@ const css = `
 @keyframes lpspin{to{transform:rotate(360deg);}}
 .hero-eyebrow{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
 .hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:rgba(255,255,255,0.4);}
-.hero h1{font-size:48px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;color:${T.yellow};margin-bottom:16px;white-space:nowrap;}
+.hero h1{font-size:48px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;color:${T.yellow};margin-bottom:16px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 50%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero-byline{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.white};letter-spacing:0.04em;margin-bottom:16px;}
 .hero-sub{font-size:15px;color:rgba(255,255,255,0.72);max-width:520px;line-height:1.65;margin-bottom:28px;}
@@ -124,11 +134,13 @@ const css = `
 .btn-outline{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);color:${T.white};padding:11px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:5px;border:1px solid rgba(255,255,255,0.22);cursor:pointer;transition:all 0.18s;text-decoration:none;}
 .btn-outline:hover{background:rgba(255,255,255,0.2);}
 .stat-bar{background:${T.white};border-bottom:1px solid ${T.border};}
-.stat-bar-inner{display:grid;grid-template-columns:repeat(4,1fr);width:100%;}
-.stat-item{padding:22px 0;border-right:1px solid ${T.border};display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;}
+.stat-bar-inner{display:grid;grid-template-columns:repeat(6,1fr);width:100%;}
+.stat-item{padding:18px 0;border-right:1px solid ${T.border};display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;}
 .stat-item:last-child{border-right:none;}
-.stat-num{font-family:'Inter',sans-serif;font-size:26px;font-weight:700;color:${T.blue};line-height:1;}
-.stat-label{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};letter-spacing:0.08em;text-transform:uppercase;}
+.stat-num{font-family:'Inter',sans-serif;font-size:22px;font-weight:700;color:${T.blue};line-height:1;}
+.stat-num-red{color:#B91C1C;}
+.stat-num-sm{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:${T.blue};line-height:1.2;letter-spacing:-0.01em;}
+.stat-label{font-family:'Inter',sans-serif;font-size:9px;color:${T.muted};letter-spacing:0.08em;text-transform:uppercase;}
 .content-wrap{max-width:900px;margin:0 auto;padding:28px 40px 60px;}
 .tabs{display:flex;border-bottom:1px solid ${T.border};margin-bottom:24px;overflow-x:auto;scrollbar-width:none;}
 .tabs::-webkit-scrollbar{display:none;}
@@ -174,14 +186,6 @@ const css = `
 .risk-m{background:#FFF8E6;color:#92610A;}
 .risk-l{background:#E6F4EA;color:#1A7F37;}
 .risk-u{background:${T.cloud};color:${T.muted};}
-.ds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;}
-.ds-card{background:${T.white};border:1px solid ${T.border};border-radius:7px;padding:18px 16px;}
-.ds-icon{font-size:20px;margin-bottom:8px;}
-.ds-title{font-size:13px;font-weight:700;margin-bottom:5px;color:${T.deep};}
-.ds-desc{font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:10px;}
-.ds-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px;}
-.ds-tag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 6px;border-radius:3px;background:${T.ice};color:${T.blue};}
-.ds-rows{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted2};}
 .filter-pills{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;}
 .fp{padding:5px 12px;border:1px solid ${T.border2};border-radius:100px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:${T.muted};cursor:pointer;transition:all 0.15s;background:none;}
 .fp:hover{border-color:${T.blue};color:${T.blue};}
@@ -226,6 +230,8 @@ const css = `
 .modal-subtitle{font-size:12px;color:${T.muted};margin-top:3px;}
 .modal-close{background:none;border:none;cursor:pointer;color:${T.muted};font-size:18px;line-height:1;padding:2px;border-radius:3px;transition:color 0.15s;flex-shrink:0;}
 .modal-close:hover{color:${T.deep};}
+.modal-back{background:none;border:none;cursor:pointer;color:${T.muted};font-size:12px;display:flex;align-items:center;gap:4px;padding:0;transition:color 0.15s;font-family:'Inter',sans-serif;font-weight:600;}
+.modal-back:hover{color:${T.deep};}
 .modal-body{padding:22px 28px 24px;}
 .fs{margin-bottom:24px;}
 .fs-title{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:${T.blue};margin-bottom:14px;padding-bottom:7px;border-bottom:1px solid ${T.border};}
@@ -270,12 +276,13 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .success-wrap{text-align:center;padding:48px 32px;}
 .success-icon{font-size:40px;margin-bottom:14px;}
 .success-title{font-size:20px;font-weight:800;margin-bottom:8px;color:${T.deep};}
-.success-sub{font-size:13px;color:${T.muted};line-height:1.6;max-width:340px;margin:0 auto 24px;}
+.success-sub{font-size:13px;color:${T.muted};line-height:1.6;max-width:380px;margin:0 auto 24px;}
 .ferr{font-size:12px;color:#B91C1C;margin-top:5px;}
 .submit-err{background:#FEE2E2;border:1px solid rgba(185,28,28,0.25);border-radius:5px;padding:9px 12px;font-size:13px;color:#B91C1C;margin-bottom:14px;}
 .sbadge{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;display:inline-block;}
 .sbadge-submitted{background:#E6F4EA;color:#1A7F37;}
 .sbadge-registered{background:${T.ice};color:${T.blue};}
+.sbadge-agent{background:#FFF8E6;color:#92610A;}
 .detail-field{margin-bottom:18px;}
 .detail-field-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.muted};margin-bottom:6px;}
 .detail-field-value{font-size:13px;color:${T.body};line-height:1.7;}
@@ -288,6 +295,36 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .footer-brand{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};letter-spacing:0.1em;}
 .footer-links a{color:${T.muted};text-decoration:none;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.07em;margin-left:20px;transition:color 0.15s;}
 .footer-links a:hover{color:${T.blue};}
+/* ── OPTION CARDS (Screen 0) ── */
+.opt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.opt-card{background:${T.white};border:1px solid ${T.border};border-radius:10px;padding:24px 18px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;}
+.opt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${T.deep},${T.blue});opacity:0;transition:opacity 0.18s;}
+.opt-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
+.opt-card:hover::before{opacity:1;}
+.opt-card-dis{opacity:0.4;cursor:not-allowed;pointer-events:none;}
+.opt-card-icon{font-size:26px;}
+.opt-card-title{font-size:14px;font-weight:800;color:${T.deep};}
+.opt-card-desc{font-size:12px;color:${T.muted};line-height:1.6;flex:1;}
+.opt-card-cta{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:${T.blue};}
+.opt-card-soon{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;color:${T.muted2};padding:3px 8px;background:${T.cloud};border:1px solid ${T.border};border-radius:3px;display:inline-block;}
+/* ── HINT & CALLOUT ── */
+.hint-toggle{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:${T.blue};cursor:pointer;background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;margin-bottom:8px;}
+.hint-box{background:${T.ice};border:1px solid ${T.border2};border-radius:5px;padding:10px 14px;font-size:12px;color:${T.muted};line-height:1.7;margin-bottom:4px;}
+.callout-box{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:16px 20px;font-size:13px;color:${T.muted};line-height:1.7;margin-top:20px;}
+.callout-box strong{color:${T.deep};}
+/* ── TOGGLE BUTTON ── */
+.toggle-btn{padding:6px 14px;border:1px solid ${T.border2};border-radius:100px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${T.blue};cursor:pointer;transition:all 0.15s;background:none;white-space:nowrap;}
+.toggle-btn:hover{background:${T.ice};border-color:${T.blue};}
+/* ── PHASE TIMELINE ── */
+.phase-timeline{display:flex;align-items:flex-start;margin-bottom:32px;padding:18px 0 8px;}
+.phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+.phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:${T.border};}
+.phase-pill{padding:5px 14px;border-radius:100px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;margin-bottom:7px;white-space:nowrap;position:relative;z-index:1;}
+.phase-pill-active{background:${T.yellow};color:${T.deep};box-shadow:0 2px 8px rgba(255,194,32,0.35);}
+.phase-pill-inactive{background:${T.cloud};border:1px solid ${T.border};color:${T.muted2};}
+.phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};text-align:center;line-height:1.4;max-width:90px;}
+/* ── WORKSPACE ── */
+.workspace-card{background:${T.white};border:1px solid ${T.border};border-radius:12px;padding:56px 40px;text-align:center;max-width:440px;margin:60px auto;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
@@ -303,14 +340,19 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .judge-grid{grid-template-columns:1fr;}
   .hero-orbital{display:none;}
   .hero-inner{gap:0;}
+  .opt-cards{grid-template-columns:1fr;}
+  .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
+  .phase-timeline{flex-wrap:wrap;gap:16px;}
+  .phase-node::after{display:none;}
 }
 `;
 
 // ─── STATUS BADGE ─────────────────────────────────────────────────────────────
 function StatusBadge({ value }) {
     if (!value) return <span style={{ color: T.muted2 }}>—</span>;
-    const cls = value === 'Submitted'  ? 'sbadge sbadge-submitted'
-              : value === 'Registered' ? 'sbadge sbadge-registered'
+    const cls = value === 'Submitted'   ? 'sbadge sbadge-submitted'
+              : value === 'Registered'  ? 'sbadge sbadge-registered'
+              : value === 'Free Agent'  ? 'sbadge sbadge-agent'
               : 'sbadge';
     return <span className={cls}>{value}</span>;
 }
@@ -322,8 +364,8 @@ function ProblemDetailModal({ prob, onClose, probIdF, probTitleF, probDescF, pro
     const desc    = probDescF    ? prob.getCellValueAsString(probDescF)    : '';
     const domain  = probDomainF  ? prob.getCellValueAsString(probDomainF)  : '';
     const claimed = probClaimedF ? prob.getCellValueAsString(probClaimedF) : '';
-    const diff    = probDiffF    ? ((prob.getCellValue(probDiffF))?.name ?? '') : '';
-    const impact  = probImpactF  ? ((prob.getCellValue(probImpactF))?.name ?? '') : '';
+    const diff    = probDiffF    ? (prob.getCellValue(probDiffF)?.name ?? '') : '';
+    const impact  = probImpactF  ? (prob.getCellValue(probImpactF)?.name ?? '') : '';
     const diffCls = diff === 'Easy' ? 'mt mt-easy' : diff === 'Medium' ? 'mt mt-medium' : diff === 'Hard' ? 'mt mt-hard' : 'mt mt-domain';
 
     return (
@@ -492,67 +534,83 @@ async function createRecordWithRetry(table, fields, attempts = 3) {
 
 // ─── REGISTRATION MODAL ───────────────────────────────────────────────────────
 function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, dirNameField, dirEmailField }) {
-    const [teamName,   setTeamName]   = useState('');
-    const [useCase,    setUseCase]    = useState('');
-    const [technology, setTechnology] = useState('');
-    const [otherTech,  setOtherTech]  = useState('');
-    const [attendance, setAttendance] = useState('');
-    const [captain,    setCaptain]    = useState(null);
-    const [member2,    setMember2]    = useState(null);
-    const [member3,    setMember3]    = useState(null);
-    const [member4,    setMember4]    = useState(null);
-    const [member5,    setMember5]    = useState(null);
-    const [agreed,     setAgreed]     = useState(false);
-    const [submitting, setSubmitting] = useState(false);
-    const [success,    setSuccess]    = useState(false);
-    const [submitError,setSubmitError]= useState('');
-    const [errors,     setErrors]     = useState({});
+    // screen: 0 = choice, 'team' = team form, 'agent' = free agent form
+    const [screen,       setScreen]      = useState(0);
 
-    const validate = () => {
+    // ── Team form state ──
+    const [teamName,     setTeamName]    = useState('');
+    const [useCase,      setUseCase]     = useState('');
+    const [technology,   setTechnology]  = useState('');
+    const [otherTech,    setOtherTech]   = useState('');
+    const [attendance,   setAttendance]  = useState('');
+    const [skillLevel,   setSkillLevel]  = useState('');
+    const [showHint,     setShowHint]    = useState(false);
+    const [captain,      setCaptain]     = useState(null);
+    const [member2,      setMember2]     = useState(null);
+    const [member3,      setMember3]     = useState(null);
+    const [member4,      setMember4]     = useState(null);
+    const [member5,      setMember5]     = useState(null);
+    const [agreed,       setAgreed]      = useState(false);
+
+    // ── Free agent state ──
+    const [agentSelf,    setAgentSelf]   = useState(null);
+    const [agentInterest,setAgentInterest]= useState('');
+    const [agentTool,    setAgentTool]   = useState('');
+    const [agentSkill,   setAgentSkill]  = useState('');
+    const [agentAttend,  setAgentAttend] = useState('');
+    const [agentAgreed,  setAgentAgreed] = useState(false);
+
+    // ── Shared ──
+    const [submitting,   setSubmitting]  = useState(false);
+    const [success,      setSuccess]     = useState(false);
+    const [submitError,  setSubmitError] = useState('');
+    const [errors,       setErrors]      = useState({});
+
+    const validateTeam = () => {
         const e = {};
-        if (!teamName.trim())  e.teamName   = 'Team name is required.';
-        if (!useCase.trim())   e.useCase    = 'Please describe your use case.';
-        if (!technology)       e.technology = 'Select a technology.';
+        if (!teamName.trim())  e.teamName    = 'Team name is required.';
+        if (!useCase.trim())   e.useCase     = 'Please describe your use case.';
+        if (!technology)       e.technology  = 'Select a technology.';
         if (technology === 'Other' && !otherTech.trim()) e.otherTech = 'Please specify.';
-        if (!attendance)       e.attendance = 'Select an attendance format.';
-        if (!captain)          e.captain    = 'Team Captain is required.';
-        if (!agreed)           e.agreed     = 'You must agree to the rules to register.';
+        if (!attendance)       e.attendance  = 'Select an attendance format.';
+        if (!captain)          e.captain     = 'Team Captain is required.';
+        const memberCount = [captain, member2, member3, member4, member5].filter(Boolean).length;
+        if (memberCount < 3)   e.members     = 'Teams require at least 3 members (captain + 2). You can add more later.';
+        if (!agreed)           e.agreed      = 'You must agree to the rules to register.';
         setErrors(e);
         return Object.keys(e).length === 0;
     };
 
-    const handleSubmit = async () => {
-        if (!validate()) return;
+    const validateAgent = () => {
+        const e = {};
+        if (!agentSelf)       e.agentSelf   = 'Please search and select yourself from the directory.';
+        if (!agentTool)       e.agentTool   = 'Select a preferred tool.';
+        if (!agentSkill)      e.agentSkill  = 'Select your skill level.';
+        if (!agentAttend)     e.agentAttend = 'Select an attendance format.';
+        if (!agentAgreed)     e.agentAgreed = 'You must agree to the rules.';
+        setErrors(e);
+        return Object.keys(e).length === 0;
+    };
+
+    const handleTeamSubmit = async () => {
+        if (!validateTeam()) return;
         setSubmitting(true); setSubmitError('');
         try {
-            const tN  = submissionsTable.getFieldIfExists('Team Name');
-            const uC  = submissionsTable.getFieldIfExists('Use Case');
-            const tF  = submissionsTable.getFieldIfExists('Technology');
-            const oT  = submissionsTable.getFieldIfExists('Other Technology');
-            const aF  = submissionsTable.getFieldIfExists('Attendance Format');
-            const sF  = submissionsTable.getFieldIfExists('Submission Status');
-            const m1F = submissionsTable.getFieldIfExists('Team Member # 1 ( Captain)');
-            const m2F = submissionsTable.getFieldIfExists('Team Member # 2');
-            const m3F = submissionsTable.getFieldIfExists('Team Member # 3');
-            const m4F = submissionsTable.getFieldIfExists('Team Member # 4');
-            const m5F = submissionsTable.getFieldIfExists('Team Member # 5');
-            const rF  = submissionsTable.getFieldIfExists('By Selecting the checkbox, you attest that you have read the rules linked above and agree that your team will follow them.');
-            const rlF = submissionsTable.getFieldIfExists('Link To Hackathon Rules & Guidelines');
-
             const fields = {};
-            if (tN)  fields[tN.id]  = teamName.trim();
-            if (uC)  fields[uC.id]  = useCase.trim();
-            if (tF)  fields[tF.id]  = { name: technology };
-            if (oT && technology === 'Other') fields[oT.id] = otherTech.trim();
-            if (aF)  fields[aF.id]  = { name: attendance };
-            if (sF)  fields[sF.id]  = { name: 'Registered' };
-            if (rF)  fields[rF.id]  = true;
-            if (rlF) fields[rlF.id] = RULES_URL;
-            if (m1F && captain) fields[m1F.id] = [{ id: captain.id }];
-            if (m2F && member2) fields[m2F.id] = [{ id: member2.id }];
-            if (m3F && member3) fields[m3F.id] = [{ id: member3.id }];
-            if (m4F && member4) fields[m4F.id] = [{ id: member4.id }];
-            if (m5F && member5) fields[m5F.id] = [{ id: member5.id }];
+            try { const f = submissionsTable.getFieldIfExists('Team Name');          if (f) fields[f.id] = teamName.trim(); } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Use Case');           if (f) fields[f.id] = useCase.trim(); } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Technology');         if (f) fields[f.id] = { name: technology }; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Other Technology');   if (f && technology === 'Other') fields[f.id] = otherTech.trim(); } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Attendance Format');  if (f) fields[f.id] = { name: attendance }; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Submission Status');  if (f) fields[f.id] = { name: 'Registered' }; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 1 ( Captain)'); if (f && captain) fields[f.id] = [{ id: captain.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 2');   if (f && member2) fields[f.id] = [{ id: member2.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 3');   if (f && member3) fields[f.id] = [{ id: member3.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 4');   if (f && member4) fields[f.id] = [{ id: member4.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 5');   if (f && member5) fields[f.id] = [{ id: member5.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('By Selecting the checkbox, you attest that you have read the rules linked above and agree that your team will follow them.'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Link To Hackathon Rules & Guidelines'); if (f) fields[f.id] = RULES_URL; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('AI Skill Level');     if (f && skillLevel) fields[f.id] = parseInt(skillLevel, 10); } catch (e_) { /* skip */ }
 
             await createRecordWithRetry(submissionsTable, fields, 3);
             if (onRegister) onRegister();
@@ -566,115 +624,300 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
         }
     };
 
-    return (
-        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-            <div className="modal">
-                {success ? (
+    const handleAgentSubmit = async () => {
+        if (!validateAgent()) return;
+        setSubmitting(true); setSubmitError('');
+        try {
+            const fields = {};
+            try { const f = submissionsTable.getFieldIfExists('Team Name');          if (f) fields[f.id] = 'Free Agent Pool'; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Submission Status');  if (f) fields[f.id] = { name: 'Free Agent' }; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Technology');         if (f && agentTool) fields[f.id] = { name: agentTool }; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Attendance Format');  if (f) fields[f.id] = { name: agentAttend }; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 1 ( Captain)'); if (f && agentSelf) fields[f.id] = [{ id: agentSelf.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('By Selecting the checkbox, you attest that you have read the rules linked above and agree that your team will follow them.'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Problem Interest');   if (f && agentInterest) fields[f.id] = agentInterest; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('AI Skill Level');     if (f && agentSkill) fields[f.id] = parseInt(agentSkill, 10); } catch (e_) { /* skip */ }
+
+            await createRecordWithRetry(submissionsTable, fields, 3);
+            if (onRegister) onRegister();
+            setSuccess(true);
+        } catch (err) {
+            const msg = err?.message ?? '';
+            const isPerms = msg.toLowerCase().includes('permission') || msg.toLowerCase().includes('not authorized') || msg.toLowerCase().includes('read only');
+            setSubmitError(isPerms ? '__EXTERNAL__' : msg || 'Something went wrong. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    if (success) {
+        const isAgent = screen === 'agent';
+        return (
+            <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+                <div className="modal">
                     <div className="success-wrap">
-                        <div className="success-icon">🎉</div>
-                        <div className="success-title">You're registered!</div>
+                        <div className="success-icon">{isAgent ? '✋' : '🎉'}</div>
+                        <div className="success-title">{isAgent ? 'You\'re in the pool!' : 'Your team is registered!'}</div>
                         <div className="success-sub">
-                            <strong>{teamName}</strong> is on the leaderboard. The GG Digital Acceleration team will be in touch.
+                            {isAgent
+                                ? 'The hackathon team will reach out to match you with a team based on your skills and interests.'
+                                : <>Teammates will receive an invitation to confirm. <strong>Your team won't be fully locked in until all members accept.</strong></>
+                            }
                         </div>
                         <button className="btn-primary" onClick={onClose}>Back to Portal</button>
                     </div>
-                ) : (
-                    <>
-                        <div className="modal-header">
+                </div>
+            </div>
+        );
+    }
+
+    // ── Screen 0: Participation selector ─────────────────────────────────────
+    if (screen === 0) {
+        return (
+            <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+                <div className="modal">
+                    <div className="modal-header">
+                        <div>
+                            <div className="modal-title">How do you want to participate?</div>
+                            <div className="modal-subtitle">2026 GG AI Hackathon</div>
+                        </div>
+                        <button className="modal-close" onClick={onClose}>✕</button>
+                    </div>
+                    <div className="modal-body">
+                        <div className="opt-cards">
+                            <div className="opt-card" onClick={() => setScreen('team')}>
+                                <div className="opt-card-icon">👥</div>
+                                <div className="opt-card-title">Form a Team</div>
+                                <div className="opt-card-desc">Register your team of 3–5. You lead the build and submit at the end.</div>
+                                <div className="opt-card-cta">Get Started →</div>
+                            </div>
+                            <div className="opt-card" onClick={() => setScreen('agent')}>
+                                <div className="opt-card-icon">✋</div>
+                                <div className="opt-card-title">Join as Free Agent</div>
+                                <div className="opt-card-desc">No team yet? We'll match you based on your skills and problem interest.</div>
+                                <div className="opt-card-cta">Sign Up →</div>
+                            </div>
+                            <div className="opt-card opt-card-dis">
+                                <div className="opt-card-icon">🔍</div>
+                                <div className="opt-card-title">Find a Team</div>
+                                <div className="opt-card-desc">Browse teams actively looking for members to join.</div>
+                                <div className="opt-card-soon">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // ── Screen 1b: Free Agent form ────────────────────────────────────────────
+    if (screen === 'agent') {
+        return (
+            <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+                <div className="modal">
+                    <div className="modal-header">
+                        <div>
+                            <button className="modal-back" onClick={() => setScreen(0)}>← Back</button>
+                            <div className="modal-title" style={{ marginTop: 6 }}>Join as Free Agent</div>
+                            <div className="modal-subtitle">2026 GG AI Hackathon</div>
+                        </div>
+                        <button className="modal-close" onClick={onClose}>✕</button>
+                    </div>
+                    <div className="modal-body">
+                        <MemberSearch label="Find Yourself" dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={agentSelf} onSelect={setAgentSelf} />
+                        {errors.agentSelf && <div className="ferr" style={{ marginTop: -8, marginBottom: 10 }}>{errors.agentSelf}</div>}
+
+                        <div className="fr">
+                            <label className="form-label">Problem Space Interest</label>
+                            <div className="fh">What kind of problem do you want to work on?</div>
+                            <textarea className="fi" placeholder="e.g. Compliance automation, workforce tools, supply chain risk…" value={agentInterest} onChange={e => setAgentInterest(e.target.value)} />
+                        </div>
+
+                        <div className="fr-2">
                             <div>
-                                <div className="modal-title">Register Your Team</div>
-                                <div className="modal-subtitle">2026 GG AI Hackathon</div>
-                            </div>
-                            <button className="modal-close" onClick={onClose}>✕</button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="fs">
-                                <div className="fs-title">Your Project</div>
-                                <div className="fr">
-                                    <label className="form-label">Team Name<span className="req">*</span></label>
-                                    <input className="fi" placeholder="e.g. The Compliance Crushers" value={teamName} onChange={e => setTeamName(e.target.value)} />
-                                    {errors.teamName && <div className="ferr">{errors.teamName}</div>}
-                                </div>
-                                <div className="fr">
-                                    <label className="form-label">Use Case<span className="req">*</span></label>
-                                    <div className="fh">Briefly describe the problem you plan to solve. You can refine this later.</div>
-                                    <textarea className="fi" placeholder="We plan to build an AI agent that…" value={useCase} onChange={e => setUseCase(e.target.value)} />
-                                    {errors.useCase && <div className="ferr">{errors.useCase}</div>}
-                                </div>
-                                <div className="fr-2">
-                                    <div>
-                                        <label className="form-label">Technology<span className="req">*</span></label>
-                                        <div className="fh">Free training available for all three options.</div>
-                                        <div className="radio-group">
-                                            {TECH_OPTIONS.map(t => (
-                                                <div className="rp" key={t}>
-                                                    <input type="radio" id={`tech-${t}`} name="technology" value={t} checked={technology === t} onChange={() => setTechnology(t)} />
-                                                    <label htmlFor={`tech-${t}`}>{t}</label>
-                                                </div>
-                                            ))}
+                                <label className="form-label">Preferred Tool<span className="req">*</span></label>
+                                <div className="radio-group" style={{ marginTop: 7 }}>
+                                    {TECH_OPTIONS.map(t => (
+                                        <div className="rp" key={t}>
+                                            <input type="radio" id={`agt-${t}`} name="agentTool" value={t} checked={agentTool === t} onChange={() => setAgentTool(t)} />
+                                            <label htmlFor={`agt-${t}`}>{t}</label>
                                         </div>
-                                        {errors.technology && <div className="ferr">{errors.technology}</div>}
-                                        {technology === 'Other' && (
-                                            <div style={{ marginTop: 10 }}>
-                                                <input className="fi" placeholder="Specify technology…" value={otherTech} onChange={e => setOtherTech(e.target.value)} />
-                                                {errors.otherTech && <div className="ferr">{errors.otherTech}</div>}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <label className="form-label">Attendance<span className="req">*</span></label>
-                                        <div className="fh">How will your team participate?</div>
-                                        <div className="radio-group">
-                                            {ATTENDANCE_OPTIONS.map(a => (
-                                                <div className="rp" key={a}>
-                                                    <input type="radio" id={`att-${a}`} name="attendance" value={a} checked={attendance === a} onChange={() => setAttendance(a)} />
-                                                    <label htmlFor={`att-${a}`}>{a}</label>
-                                                </div>
-                                            ))}
+                                    ))}
+                                </div>
+                                {errors.agentTool && <div className="ferr">{errors.agentTool}</div>}
+                            </div>
+                            <div>
+                                <label className="form-label">Attendance<span className="req">*</span></label>
+                                <div className="radio-group" style={{ marginTop: 7 }}>
+                                    {ATTENDANCE_OPTIONS.map(a => (
+                                        <div className="rp" key={a}>
+                                            <input type="radio" id={`aga-${a}`} name="agentAttend" value={a} checked={agentAttend === a} onChange={() => setAgentAttend(a)} />
+                                            <label htmlFor={`aga-${a}`}>{a}</label>
                                         </div>
-                                        {errors.attendance && <div className="ferr">{errors.attendance}</div>}
-                                    </div>
+                                    ))}
                                 </div>
+                                {errors.agentAttend && <div className="ferr">{errors.agentAttend}</div>}
                             </div>
-
-                            <div className="fs">
-                                <div className="fs-title">Your Team</div>
-                                <MemberSearch label="Team Captain" dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={captain} onSelect={setCaptain} />
-                                {errors.captain && <div className="ferr" style={{ marginTop: -8, marginBottom: 10 }}>{errors.captain}</div>}
-                                <MemberSearch label="Member 2" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member2} onSelect={setMember2} />
-                                <MemberSearch label="Member 3" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member3} onSelect={setMember3} />
-                                <MemberSearch label="Member 4" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member4} onSelect={setMember4} />
-                                <MemberSearch label="Member 5" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member5} onSelect={setMember5} />
-                            </div>
-
-                            <div className="fr">
-                                <div className="ck-row">
-                                    <input type="checkbox" id="agreed" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
-                                    <label className="ck-label" htmlFor="agreed">
-                                        I have read the <a href={RULES_URL} target="_blank" rel="noreferrer">hackathon rules & guidelines</a> and agree that my team will follow them.
-                                    </label>
-                                </div>
-                                {errors.agreed && <div className="ferr">{errors.agreed}</div>}
-                            </div>
-
-                            {submitError && submitError !== '__EXTERNAL__' && (
-                                <div className="submit-err">{submitError}</div>
-                            )}
-                            {submitError === '__EXTERNAL__' && (
-                                <div className="submit-err">
-                                    This interface doesn't have write access to the submissions table. Please use the{' '}
-                                    <a href={EXTERNAL_FORM_URL} target="_blank" rel="noreferrer" style={{ color: '#B91C1C', fontWeight: 700 }}>registration form</a> instead.
-                                </div>
-                            )}
                         </div>
-                        <div className="modal-footer">
-                            <button className="cancel-btn" onClick={onClose}>Cancel</button>
-                            <button className="submit-btn" disabled={submitting} onClick={handleSubmit}>
-                                {submitting ? <><span className="spinner" /> Registering…</> : '✓ Register Team'}
+
+                        <div className="fr">
+                            <label className="form-label">Airtable Skill Level<span className="req">*</span></label>
+                            <div className="fh">1 = Never used it · 5 = Power user</div>
+                            <div className="radio-group">
+                                {['1','2','3','4','5'].map(n => (
+                                    <div className="rp" key={n}>
+                                        <input type="radio" id={`agsk-${n}`} name="agentSkill" value={n} checked={agentSkill === n} onChange={() => setAgentSkill(n)} />
+                                        <label htmlFor={`agsk-${n}`}>{n}</label>
+                                    </div>
+                                ))}
+                            </div>
+                            {errors.agentSkill && <div className="ferr">{errors.agentSkill}</div>}
+                        </div>
+
+                        <div className="fr">
+                            <div className="ck-row">
+                                <input type="checkbox" id="agAgreed" checked={agentAgreed} onChange={e => setAgentAgreed(e.target.checked)} />
+                                <label className="ck-label" htmlFor="agAgreed">
+                                    I have read the <a href={RULES_URL} target="_blank" rel="noreferrer">hackathon rules & guidelines</a> and agree to follow them.
+                                </label>
+                            </div>
+                            {errors.agentAgreed && <div className="ferr">{errors.agentAgreed}</div>}
+                        </div>
+
+                        {submitError && submitError !== '__EXTERNAL__' && <div className="submit-err">{submitError}</div>}
+                        {submitError === '__EXTERNAL__' && (
+                            <div className="submit-err">
+                                This interface doesn't have write access. Please use the{' '}
+                                <a href={EXTERNAL_FORM_URL} target="_blank" rel="noreferrer" style={{ color: '#B91C1C', fontWeight: 700 }}>registration form</a> instead.
+                            </div>
+                        )}
+                    </div>
+                    <div className="modal-footer">
+                        <button className="cancel-btn" onClick={onClose}>Cancel</button>
+                        <button className="submit-btn" disabled={submitting} onClick={handleAgentSubmit}>
+                            {submitting ? <><span className="spinner" /> Submitting…</> : '✓ Join Free Agent Pool'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // ── Screen 1a: Team Registration ──────────────────────────────────────────
+    return (
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+            <div className="modal">
+                <div className="modal-header">
+                    <div>
+                        <button className="modal-back" onClick={() => setScreen(0)}>← Back</button>
+                        <div className="modal-title" style={{ marginTop: 6 }}>Register Your Team</div>
+                        <div className="modal-subtitle">2026 GG AI Hackathon · Spots limited to first {MAX_TEAMS} teams</div>
+                    </div>
+                    <button className="modal-close" onClick={onClose}>✕</button>
+                </div>
+                <div className="modal-body">
+                    <div className="fs">
+                        <div className="fs-title">Your Project</div>
+                        <div className="fr">
+                            <label className="form-label">Team Name<span className="req">*</span></label>
+                            <div className="fh">Spots are limited to the first {MAX_TEAMS} teams.</div>
+                            <input className="fi" placeholder="e.g. The Compliance Crushers" value={teamName} onChange={e => setTeamName(e.target.value)} />
+                            {errors.teamName && <div className="ferr">{errors.teamName}</div>}
+                            <button className="hint-toggle" style={{ marginTop: 10 }} onClick={() => setShowHint(h => !h)}>
+                                {showHint ? '▾' : '▸'} Recommended Team Structure
                             </button>
+                            {showHint && <div className="hint-box">One person on business case · one on the tech build · one on UX/presentation.</div>}
                         </div>
-                    </>
-                )}
+                        <div className="fr">
+                            <label className="form-label">Use Case<span className="req">*</span></label>
+                            <div className="fh">Briefly describe the problem you plan to solve. You can refine this later.</div>
+                            <textarea className="fi" placeholder="We plan to build an AI agent that…" value={useCase} onChange={e => setUseCase(e.target.value)} />
+                            {errors.useCase && <div className="ferr">{errors.useCase}</div>}
+                        </div>
+                        <div className="fr-2">
+                            <div>
+                                <label className="form-label">Technology<span className="req">*</span></label>
+                                <div className="fh">Free training available for all three.</div>
+                                <div className="radio-group">
+                                    {TECH_OPTIONS.map(t => (
+                                        <div className="rp" key={t}>
+                                            <input type="radio" id={`tech-${t}`} name="technology" value={t} checked={technology === t} onChange={() => setTechnology(t)} />
+                                            <label htmlFor={`tech-${t}`}>{t}</label>
+                                        </div>
+                                    ))}
+                                </div>
+                                {errors.technology && <div className="ferr">{errors.technology}</div>}
+                                {technology === 'Other' && (
+                                    <div style={{ marginTop: 10 }}>
+                                        <input className="fi" placeholder="Specify technology…" value={otherTech} onChange={e => setOtherTech(e.target.value)} />
+                                        {errors.otherTech && <div className="ferr">{errors.otherTech}</div>}
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <label className="form-label">Attendance<span className="req">*</span></label>
+                                <div className="fh">How will your team participate?</div>
+                                <div className="radio-group">
+                                    {ATTENDANCE_OPTIONS.map(a => (
+                                        <div className="rp" key={a}>
+                                            <input type="radio" id={`att-${a}`} name="attendance" value={a} checked={attendance === a} onChange={() => setAttendance(a)} />
+                                            <label htmlFor={`att-${a}`}>{a}</label>
+                                        </div>
+                                    ))}
+                                </div>
+                                {errors.attendance && <div className="ferr">{errors.attendance}</div>}
+                            </div>
+                        </div>
+                        <div className="fr">
+                            <label className="form-label">Airtable Skill Level<span className="req">*</span></label>
+                            <div className="fh">1 = Never used it · 5 = Power user</div>
+                            <div className="radio-group">
+                                {['1','2','3','4','5'].map(n => (
+                                    <div className="rp" key={n}>
+                                        <input type="radio" id={`sk-${n}`} name="skillLevel" value={n} checked={skillLevel === n} onChange={() => setSkillLevel(n)} />
+                                        <label htmlFor={`sk-${n}`}>{n}</label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="fs">
+                        <div className="fs-title">Your Team</div>
+                        <div className="fh" style={{ marginBottom: 14 }}>Teams of 3–5. You can add members later.</div>
+                        <MemberSearch label="Team Captain" dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={captain} onSelect={setCaptain} />
+                        {errors.captain && <div className="ferr" style={{ marginTop: -8, marginBottom: 10 }}>{errors.captain}</div>}
+                        <MemberSearch label="Member 2" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member2} onSelect={setMember2} />
+                        <MemberSearch label="Member 3" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member3} onSelect={setMember3} />
+                        <MemberSearch label="Member 4" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member4} onSelect={setMember4} />
+                        <MemberSearch label="Member 5" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member5} onSelect={setMember5} />
+                        {errors.members && <div className="ferr">{errors.members}</div>}
+                    </div>
+
+                    <div className="fr">
+                        <div className="ck-row">
+                            <input type="checkbox" id="agreed" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
+                            <label className="ck-label" htmlFor="agreed">
+                                I have read the <a href={RULES_URL} target="_blank" rel="noreferrer">hackathon rules & guidelines</a> and agree that my team will follow them.
+                            </label>
+                        </div>
+                        {errors.agreed && <div className="ferr">{errors.agreed}</div>}
+                    </div>
+
+                    {submitError && submitError !== '__EXTERNAL__' && <div className="submit-err">{submitError}</div>}
+                    {submitError === '__EXTERNAL__' && (
+                        <div className="submit-err">
+                            This interface doesn't have write access. Please use the{' '}
+                            <a href={EXTERNAL_FORM_URL} target="_blank" rel="noreferrer" style={{ color: '#B91C1C', fontWeight: 700 }}>registration form</a> instead.
+                        </div>
+                    )}
+                </div>
+                <div className="modal-footer">
+                    <button className="cancel-btn" onClick={onClose}>Cancel</button>
+                    <button className="submit-btn" disabled={submitting} onClick={handleTeamSubmit}>
+                        {submitting ? <><span className="spinner" /> Registering…</> : '✓ Register Team'}
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -682,11 +925,11 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
 const TABS = [
-    { id: 'teams',    label: '👥 Teams'        },
-    { id: 'problems', label: '🎯 Problems'      },
-    { id: 'data',     label: '📊 Data'          },
-    { id: 'prompts',  label: '💡 Prompts'       },
-    { id: 'inspired', label: '🚀 Get Inspired'  },
+    { id: 'teams',     label: '👥 Teams'           },
+    { id: 'problems',  label: '🎯 Problems'         },
+    { id: 'data',      label: '📊 Data & Resources' },
+    { id: 'workspace', label: '🔒 Team Workspace'   },
+    { id: 'inspired',  label: '🚀 Get Inspired'     },
 ];
 
 function App() {
@@ -707,18 +950,29 @@ function App() {
     const regDocs     = useRecords(regTable);
 
     // ── UI State ─────────────────────────────────────────────────────────────
-    const [tab,       setTab]       = useState('teams');
-    const [showReg,   setShowReg]   = useState(false);
-    const [selProb,   setSelProb]   = useState(null);
-    const [selReg,    setSelReg]    = useState(null);
-    const [prmFilter, setPrmFilter] = useState('All');
-    const [copiedId,  setCopiedId]  = useState(null);
+    const [tab,            setTab]           = useState('teams');
+    const [showReg,        setShowReg]        = useState(false);
+    const [selProb,        setSelProb]        = useState(null);
+    const [selReg,         setSelReg]         = useState(null);
+    const [prmFilter,      setPrmFilter]      = useState('All');
+    const [copiedId,       setCopiedId]       = useState(null);
+    const [showFreeAgents, setShowFreeAgents] = useState(false);
+    const [showPrompts,    setShowPrompts]    = useState(false);
+    const [countdown,      setCountdown]      = useState(getCountdown);
+
+    useEffect(() => {
+        const id = setInterval(() => setCountdown(getCountdown()), 1000);
+        return () => clearInterval(id);
+    }, []);
 
     // ── Field detection: submissions ─────────────────────────────────────────
-    const sfTeamName = subTable.getFieldIfExists('Team Name');
-    const sfTech     = subTable.getFieldIfExists('Technology');
-    const sfAttend   = subTable.getFieldIfExists('Attendance Format');
-    const sfStatus   = subTable.getFieldIfExists('Submission Status');
+    const sfTeamName    = subTable.getFieldIfExists('Team Name');
+    const sfTech        = subTable.getFieldIfExists('Technology');
+    const sfAttend      = subTable.getFieldIfExists('Attendance Format');
+    const sfStatus      = subTable.getFieldIfExists('Submission Status');
+    const sfMember1     = subTable.getFieldIfExists('Team Member # 1 ( Captain)');
+    const sfSkillLevel  = subTable.getFieldIfExists('AI Skill Level');
+    const sfProbInterest= subTable.getFieldIfExists('Problem Interest');
 
     // ── Field detection: problems ────────────────────────────────────────────
     const pfId      = probTable.getFieldIfExists('Problem ID');
@@ -747,13 +1001,22 @@ function App() {
     const rdfHack    = regTable.getFieldIfExists('Hackathon Automation Opportunity') ?? regTable.getFieldIfExists('AI Opportunity');
 
     // ── Derived data ─────────────────────────────────────────────────────────
-    const liveTeams = useMemo(() =>
-        submissions.filter(r => {
-            const name = sfTeamName ? r.getCellValueAsString(sfTeamName) : '';
-            return !TEST_NAMES.includes(name.trim());
-        }),
-        [submissions, sfTeamName]
-    );
+    const { liveTeams, freeAgents } = useMemo(() => {
+        const live = [], agents = [];
+        submissions.forEach(r => {
+            const name   = sfTeamName ? r.getCellValueAsString(sfTeamName) : '';
+            const status = sfStatus   ? r.getCellValueAsString(sfStatus)   : '';
+            if (TEST_NAMES.includes(name.trim())) return;
+            if (status === 'Free Agent') agents.push(r);
+            else live.push(r);
+        });
+        return { liveTeams: live, freeAgents: agents };
+    }, [submissions, sfTeamName, sfStatus]);
+
+    const totalTeams     = liveTeams.length;
+    const submittedTeams = liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Submitted').length;
+    const registeredTeams= liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Registered').length;
+    const spotsLeft      = Math.max(0, MAX_TEAMS - totalTeams);
 
     const prmCategories = useMemo(() => {
         const cats = new Set(prmRecords.map(r => prmfCat ? r.getCellValueAsString(prmfCat) : '').filter(Boolean));
@@ -771,12 +1034,9 @@ function App() {
         setTimeout(() => setCopiedId(null), 2000);
     };
 
-    const stats = [
-        { num: liveTeams.length,         label: 'Teams Registered'  },
-        { num: probRecords.length || 12,  label: 'Problem Statements'},
-        { num: STATIC_DATASETS.length,   label: 'Datasets Available'},
-        { num: prmRecords.length || 40,   label: 'Prompt Templates'  },
-    ];
+    const navCta = totalTeams > 40
+        ? `Register Now — ${spotsLeft} Left`
+        : `Register Now — ${MAX_TEAMS} Spots`;
 
     // ── Renderers ────────────────────────────────────────────────────────────
     const renderTeamRow = (r, i) => {
@@ -791,6 +1051,23 @@ function App() {
                 <td>{tech}</td>
                 <td>{attend}</td>
                 <td><StatusBadge value={status} /></td>
+            </tr>
+        );
+    };
+
+    const renderFreeAgentRow = (r, i) => {
+        const m1      = sfMember1     ? r.getCellValue(sfMember1) : null;
+        const name    = m1?.[0]?.name ?? '—';
+        const tool    = sfTech        ? (r.getCellValue(sfTech)?.name ?? '—') : '—';
+        const interest= sfProbInterest? r.getCellValueAsString(sfProbInterest) : '—';
+        const skill   = sfSkillLevel  ? r.getCellValueAsString(sfSkillLevel)   : '—';
+        return (
+            <tr key={r.id}>
+                <td><span className="row-num">{i + 1}</span></td>
+                <td><span className="tnc">{name}</span></td>
+                <td>{tool}</td>
+                <td style={{ maxWidth: 200, color: T.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{interest || '—'}</td>
+                <td>{skill || '—'}</td>
             </tr>
         );
     };
@@ -825,7 +1102,7 @@ function App() {
         const risk    = rdfRisk    ? r.getCellValueAsString(rdfRisk)    : '';
         const display = name.replace('.pdf', '').replace(/_/g, ' ');
         const u = risk.toUpperCase();
-        const riskCls = u.includes('HIGH') ? 'risk risk-h' : u.includes('MEDIUM') ? 'risk risk-m' : u.includes('LOW') ? 'risk risk-l' : 'risk risk-u';
+        const riskCls   = u.includes('HIGH') ? 'risk risk-h' : u.includes('MEDIUM') ? 'risk risk-m' : u.includes('LOW') ? 'risk risk-l' : 'risk risk-u';
         const riskLabel = u.includes('HIGH') ? 'High Risk' : u.includes('MEDIUM') ? 'Medium Risk' : u.includes('LOW') ? 'Low Risk' : risk || 'Unknown';
         return (
             <div key={r.id} className="reg-card" onClick={() => setSelReg(r)}>
@@ -872,17 +1149,17 @@ function App() {
             <nav className="nav">
                 <div className="nav-brand">
                     <div className="nav-spark"><SparkIcon size={16} /></div>
-                    GG AI Hackathon · 2026
+                    FY27 GG AI Hackathon
                 </div>
-                <button className="nav-cta" onClick={() => setShowReg(true)}>Register Your Team →</button>
+                <button className="nav-cta" onClick={() => setShowReg(true)}>{navCta}</button>
             </nav>
 
             {/* ── HERO ── */}
             <section className="hero">
                 <div className="hero-inner">
                     <div className="hero-left">
-                        <div className="hero-eyebrow">GG Digital Acceleration · 2026</div>
-                        <h1>GG AI <span className="accent">Hackathon</span></h1>
+                        <div className="hero-eyebrow">GG Digital Acceleration · FY27</div>
+                        <h1>FY27 GG<br /><span className="accent">AI Hackathon</span></h1>
                         <div className="hero-byline">Build something that matters. Win something that counts.</div>
                         <div className="hero-sub">
                             48 hours. Real data. Real problems. Use Airtable, Harvey, or CodePuppy to build an AI-powered solution for Walmart's Global Governance team — then pitch it.
@@ -908,15 +1185,33 @@ function App() {
                 </div>
             </section>
 
-            {/* ── STAT BAR ── */}
+            {/* ── STAT BAR (6 columns) ── */}
             <div className="stat-bar">
                 <div className="stat-bar-inner">
-                    {stats.map(s => (
-                        <div key={s.label} className="stat-item">
-                            <div className="stat-num">{s.num}</div>
-                            <div className="stat-label">{s.label}</div>
-                        </div>
-                    ))}
+                    <div className="stat-item">
+                        <div className="stat-num">{totalTeams}</div>
+                        <div className="stat-label">Teams Registered</div>
+                    </div>
+                    <div className="stat-item">
+                        <div className="stat-num">{submittedTeams}</div>
+                        <div className="stat-label">Submitted</div>
+                    </div>
+                    <div className="stat-item">
+                        <div className="stat-num">{registeredTeams}</div>
+                        <div className="stat-label">Registered</div>
+                    </div>
+                    <div className="stat-item">
+                        <div className="stat-num">{probRecords.length || 12}</div>
+                        <div className="stat-label">Problem Tracks</div>
+                    </div>
+                    <div className="stat-item">
+                        <div className={`stat-num${spotsLeft <= 10 ? ' stat-num-red' : ''}`}>{spotsLeft}</div>
+                        <div className="stat-label">Spots Left</div>
+                    </div>
+                    <div className="stat-item">
+                        <div className="stat-num-sm">{countdown}</div>
+                        <div className="stat-label">Registration Closes</div>
+                    </div>
                 </div>
             </div>
 
@@ -930,13 +1225,13 @@ function App() {
                     ))}
                 </div>
 
-                {/* TEAMS */}
+                {/* ── TEAMS ── */}
                 {tab === 'teams' && (
                     <div>
                         <div className="sh"><span className="sl">Live</span><span className="st">Team Roster</span></div>
                         <p className="ss">
                             <span className="live-dot" />
-                            {liveTeams.length} team{liveTeams.length !== 1 ? 's' : ''} registered.{' '}
+                            {totalTeams} team{totalTeams !== 1 ? 's' : ''} registered.{' '}
                             Registration is open —{' '}
                             <button style={{ background: 'none', border: 'none', color: T.blue, cursor: 'pointer', font: 'inherit', padding: 0, fontWeight: 600 }} onClick={() => setShowReg(true)}>add yours</button>.
                         </p>
@@ -957,10 +1252,46 @@ function App() {
                                 }
                             </tbody>
                         </table>
+
+                        {/* Free Agent Pool */}
+                        <div style={{ marginTop: 32 }}>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
+                                <div>
+                                    <div className="sh"><span className="sl">Pool</span><span className="st">Free Agent Pool</span></div>
+                                    <p className="ss" style={{ marginBottom: 0 }}>These associates are looking to be placed on a team.</p>
+                                </div>
+                                <button className="toggle-btn" style={{ marginTop: 4 }} onClick={() => setShowFreeAgents(s => !s)}>
+                                    {showFreeAgents ? '▲ Hide' : '▼ Show'}{freeAgents.length > 0 ? ` (${freeAgents.length})` : ''}
+                                </button>
+                            </div>
+                            {showFreeAgents && (
+                                <table className="tbl">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Preferred Tool</th>
+                                            <th>Problem Interest</th>
+                                            <th>Skill Level</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {freeAgents.length === 0
+                                            ? <tr><td colSpan={5} className="empty">No free agents yet.</td></tr>
+                                            : freeAgents.map(renderFreeAgentRow)
+                                        }
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+
+                        <div style={{ marginTop: 20, padding: '12px 16px', background: T.cloud, border: `1px solid ${T.border}`, borderRadius: 7, fontSize: 12, color: T.muted }}>
+                            Need to update your team? Contact the hackathon team via the <strong style={{ color: T.body }}>GG Digital Acceleration</strong> Teams channel.
+                        </div>
                     </div>
                 )}
 
-                {/* PROBLEMS */}
+                {/* ── PROBLEMS ── */}
                 {tab === 'problems' && (
                     <div>
                         <div className="sh"><span className="sl">Open</span><span className="st">Problem Statements</span></div>
@@ -974,7 +1305,7 @@ function App() {
                     </div>
                 )}
 
-                {/* DATA */}
+                {/* ── DATA & RESOURCES ── */}
                 {tab === 'data' && (
                     <div>
                         <div className="sh"><span className="sl">Regulatory</span><span className="st">Compliance Documents</span></div>
@@ -985,45 +1316,39 @@ function App() {
                                 : <p style={{ color: T.muted, fontSize: 13 }}>Loading regulatory documents…</p>
                             }
                         </div>
-                        <div className="divider" />
-                        <div className="sh"><span className="sl">Datasets</span><span className="st">Available Data</span></div>
-                        <p className="ss">Pre-loaded Airtable tables you can build on. All datasets are live and ready in your hackathon base.</p>
-                        <div className="ds-grid">
-                            {STATIC_DATASETS.map(d => (
-                                <div key={d.title} className="ds-card">
-                                    <div className="ds-icon">{d.icon}</div>
-                                    <div className="ds-title">{d.title}</div>
-                                    <div className="ds-desc">{d.desc}</div>
-                                    <div className="ds-tags">{d.tags.map(t => <span key={t} className="ds-tag">{t}</span>)}</div>
-                                    <div className="ds-rows">{d.rows}</div>
-                                </div>
-                            ))}
+                        <div className="callout-box">
+                            <strong>Store Locations, Distribution Centers, GG Directory, and Prompt Library</strong> are available in your Team Workspace once registered.
                         </div>
                     </div>
                 )}
 
-                {/* PROMPTS */}
-                {tab === 'prompts' && (
-                    <div>
-                        <div className="sh"><span className="sl">AI Toolkit</span><span className="st">Prompt Library</span></div>
-                        <p className="ss">Ready-to-use prompts. Paste directly into Harvey or an Airtable AI field. Click Copy to grab any prompt.</p>
-                        <div className="filter-pills">
-                            {prmCategories.map(c => (
-                                <button key={c} className={`fp${prmFilter === c ? ' active' : ''}`} onClick={() => setPrmFilter(c)}>{c}</button>
-                            ))}
-                        </div>
-                        <div className="prompt-grid">
-                            {filteredPrms.length > 0
-                                ? filteredPrms.map(renderPromptCard)
-                                : <p style={{ color: T.muted, fontSize: 13 }}>No prompts in this category.</p>
-                            }
+                {/* ── TEAM WORKSPACE ── */}
+                {tab === 'workspace' && (
+                    <div className="workspace-card">
+                        <div style={{ fontSize: 40, marginBottom: 18 }}>🔒</div>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: T.deep, marginBottom: 10 }}>Your Team Workspace</div>
+                        <div style={{ fontSize: 13, color: T.muted, lineHeight: 1.7 }}>
+                            Once your team is registered and all members have confirmed, your workspace unlocks here — training calendar, shared notes, submission checklist, and team notifications.
                         </div>
                     </div>
                 )}
 
-                {/* INSPIRED */}
+                {/* ── GET INSPIRED ── */}
                 {tab === 'inspired' && (
                     <div>
+                        {/* Phase Timeline */}
+                        <div className="phase-timeline">
+                            {PHASES.map((p, i) => (
+                                <React.Fragment key={p.label}>
+                                    <div className="phase-node">
+                                        <div className={`phase-pill ${p.active ? 'phase-pill-active' : 'phase-pill-inactive'}`}>{p.label}</div>
+                                        <div className="phase-sub">{p.sub}</div>
+                                    </div>
+                                    {i < PHASES.length - 1 && <div style={{ flex: '0 0 0', position: 'relative' }} />}
+                                </React.Fragment>
+                            ))}
+                        </div>
+
                         <div className="ins-section">
                             <div className="ins-label">Mashup Ideas — Combine datasets to build something unexpected</div>
                             <div className="mashup-grid">
@@ -1037,7 +1362,9 @@ function App() {
                                 ))}
                             </div>
                         </div>
+
                         <div className="divider" />
+
                         <div className="ins-section">
                             <div className="ins-label">Technology Guides — What each tool does best</div>
                             <div className="tg-grid">
@@ -1050,7 +1377,9 @@ function App() {
                                 ))}
                             </div>
                         </div>
+
                         <div className="divider" />
+
                         <div className="ins-section">
                             <div className="ins-label">Judging Criteria — How projects will be evaluated</div>
                             <div className="judge-grid">
@@ -1065,13 +1394,42 @@ function App() {
                                 ))}
                             </div>
                         </div>
+
+                        <div className="divider" />
+
+                        {/* Prompt Starter Kit — collapsible */}
+                        <div className="ins-section">
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>
+                                <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: T.blue }}>
+                                    Prompt Starter Kit
+                                </div>
+                                <button className="toggle-btn" onClick={() => setShowPrompts(s => !s)}>
+                                    {showPrompts ? '▲ Hide Prompts' : '▼ Show Prompts'}
+                                </button>
+                            </div>
+                            {showPrompts && (
+                                <>
+                                    <div className="filter-pills">
+                                        {prmCategories.map(c => (
+                                            <button key={c} className={`fp${prmFilter === c ? ' active' : ''}`} onClick={() => setPrmFilter(c)}>{c}</button>
+                                        ))}
+                                    </div>
+                                    <div className="prompt-grid">
+                                        {filteredPrms.length > 0
+                                            ? filteredPrms.map(renderPromptCard)
+                                            : <p style={{ color: T.muted, fontSize: 13 }}>No prompts in this category.</p>
+                                        }
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </div>
                 )}
             </div>
 
             {/* ── FOOTER ── */}
             <footer className="footer">
-                <div className="footer-brand">GG DIGITAL ACCELERATION · 2026 AI HACKATHON</div>
+                <div className="footer-brand">GG DIGITAL ACCELERATION · FY27 AI HACKATHON · 50-TEAM LIMIT · SCIENCE FAIR: MARCH 20</div>
                 <div className="footer-links">
                     <a href={RULES_URL} target="_blank" rel="noreferrer">Rules</a>
                     <a href={EXTERNAL_FORM_URL} target="_blank" rel="noreferrer">Submit Project</a>
