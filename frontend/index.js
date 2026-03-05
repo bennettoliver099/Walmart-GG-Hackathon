@@ -45,44 +45,37 @@ const MASHUP_IDEAS = [
 
 // ─── JUDGING ──────────────────────────────────────────────────────────────────
 const JUDGING = [
-    { label: 'Impact', weight: '30%', desc: 'Does this solve a real GG problem? Would it save time, reduce risk, or close a compliance gap?' },
-    { label: 'Innovation', weight: '25%', desc: 'Does it use AI meaningfully — not just a dashboard, but something that automates or augments a real decision?' },
-    { label: 'Feasibility', weight: '25%', desc: 'Could this be deployed at Walmart with reasonable effort? Is it built on available data and tools?' },
+    { label: 'Impact',       weight: '30%', desc: 'Does this solve a real GG problem? Would it save time, reduce risk, or close a compliance gap?' },
+    { label: 'Innovation',   weight: '25%', desc: 'Does it use AI meaningfully — not just a dashboard, but something that automates or augments a real decision?' },
+    { label: 'Feasibility',  weight: '25%', desc: 'Could this be deployed at Walmart with reasonable effort? Is it built on available data and tools?' },
     { label: 'Demo Quality', weight: '20%', desc: 'Is the working prototype clear and compelling? Can you explain the problem it solves in 2 minutes?' },
-];
-
-// ─── TECH GUIDES ─────────────────────────────────────────────────────────────
-const TECH_GUIDES = [
-    { name: 'Airtable', best: 'Structured data, interfaces, automations', desc: 'Build operational interfaces, automated workflows, and dashboards. The base, views, and interface builder are your canvas.' },
-    { name: 'Harvey', best: 'Document AI, natural language Q&A', desc: 'Point Harvey at any PDF, policy doc, or regulation — ask questions, extract structured data, and draft content.' },
-    { name: 'CodePuppy', best: 'Custom code, integrations, APIs', desc: "Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations Airtable can't do natively." },
 ];
 
 // ─── PHASE TIMELINE ───────────────────────────────────────────────────────────
 const PHASES = [
-    { label: 'Register', sub: 'Now Open',             active: true  },
-    { label: 'Train',    sub: 'Week of March 9',       active: false },
-    { label: 'Build',    sub: 'March 16–19',           active: false },
-    { label: 'Present',  sub: 'March 20 · Science Fair', active: false },
+    { label: 'Register', sub: 'Now Open',                active: true  },
+    { label: 'Train',    sub: 'Week of March 9',          active: false },
+    { label: 'Build',    sub: 'March 16–19',              active: false },
+    { label: 'Present',  sub: 'March 20 · Science Fair',  active: false },
 ];
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
 const T = {
-    blue:    '#0071CE',
-    deep:    '#0B2C5F',
-    azure:   '#2C8EF4',
-    ice:     '#CFE8FF',
-    cloud:   '#F4F7FB',
-    white:   '#FFFFFF',
-    yellow:  '#FFC220',
-    body:    '#334155',
-    muted:   '#5A7A9A',
-    muted2:  '#8BA5BF',
-    border:  'rgba(0,113,206,0.14)',
-    border2: 'rgba(0,113,206,0.26)',
+    blue:     '#0071CE',
+    deep:     '#0B2C5F',
+    azure:    '#2C8EF4',
+    ice:      '#CFE8FF',
+    cloud:    '#F4F7FB',
+    white:    '#FFFFFF',
+    yellow:   '#FFC220',
+    body:     '#334155',
+    muted:    '#5A7A9A',
+    muted2:   '#8BA5BF',
+    border:   'rgba(0,113,206,0.14)',
+    border2:  'rgba(0,113,206,0.26)',
     heroGrad: 'linear-gradient(135deg,#0B2C5F 0%,#0071CE 60%,#2C8EF4 100%)',
-    shadow:  '0 1px 3px rgba(11,44,95,0.08)',
-    shadowM: '0 4px 16px rgba(11,44,95,0.10)',
+    shadow:   '0 1px 3px rgba(11,44,95,0.08)',
+    shadowM:  '0 4px 16px rgba(11,44,95,0.10)',
 };
 
 // ─── COUNTDOWN ────────────────────────────────────────────────────────────────
@@ -97,15 +90,39 @@ function getCountdown() {
 
 // ─── CSS ──────────────────────────────────────────────────────────────────────
 const css = `
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+html,body{scroll-behavior:smooth;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-.portal{background:${T.cloud};color:${T.body};font-family:'Bogle','Brandon Text','Inter',sans-serif;min-height:100vh;font-size:14px;line-height:1.5;}
+.portal{background:${T.white};color:${T.body};font-family:'Bogle','Brandon Text','Inter',sans-serif;min-height:100vh;font-size:14px;line-height:1.5;}
+
+/* ── NAV ── */
 .nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:60px;background:${T.white};border-bottom:1px solid ${T.border};box-shadow:${T.shadow};}
-.nav-brand{display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted};font-weight:600;}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted};font-weight:600;flex-shrink:0;}
 .nav-spark{width:30px;height:30px;background:${T.heroGrad};border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.nav-cta{background:${T.yellow};color:${T.deep};border:none;padding:9px 20px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-radius:5px;box-shadow:0 2px 8px rgba(255,194,32,0.3);transition:all 0.18s;}
+.nav-links{display:flex;align-items:center;gap:5px;}
+.nav-link{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${T.muted};text-decoration:none;padding:5px 12px;border-radius:100px;border:1px solid transparent;transition:all 0.15s;white-space:nowrap;}
+.nav-link:hover{color:${T.blue};border-color:${T.border2};}
+.nav-link.active{color:${T.white};background:${T.blue};border-color:${T.blue};}
+.nav-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.nav-countdown{font-family:'Inter',sans-serif;font-size:11px;color:${T.muted};white-space:nowrap;}
+.nav-cta{background:${T.yellow};color:${T.deep};border:none;padding:9px 20px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-radius:5px;box-shadow:0 2px 8px rgba(255,194,32,0.3);transition:all 0.18s;white-space:nowrap;}
 .nav-cta:hover{background:#FFD050;transform:translateY(-1px);}
-.hero{background:${T.heroGrad};padding:36px 40px 44px;position:relative;overflow:hidden;}
+
+/* ── SECTIONS ── */
+section[id]{scroll-margin-top:70px;}
+.sec-wrap{max-width:860px;margin:0 auto;padding:64px 40px;}
+.sec-white{background:${T.white};border-bottom:1px solid ${T.border};}
+.sec-cloud{background:${T.cloud};border-bottom:1px solid ${T.border};}
+.sec-dark{background:${T.heroGrad};}
+.sec-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:${T.blue};padding:3px 8px;border:1px solid ${T.border2};border-radius:3px;background:${T.ice};display:inline-block;margin-bottom:10px;}
+.sec-label-dark{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.9);}
+.sec-h2{font-size:26px;font-weight:800;letter-spacing:-0.01em;color:${T.deep};margin-bottom:10px;line-height:1.2;}
+.sec-h2-white{color:${T.white};}
+.sec-sub{font-size:14px;color:${T.muted};line-height:1.65;max-width:560px;margin-bottom:36px;}
+.sec-sub-white{color:rgba(255,255,255,0.72);}
+
+/* ── HERO ── */
+.hero{background:${T.heroGrad};padding:52px 40px 60px;position:relative;overflow:hidden;}
 .hero::after{content:'';position:absolute;top:-40%;right:-8%;width:55%;height:180%;background:radial-gradient(ellipse,rgba(44,142,244,0.18),transparent 65%);pointer-events:none;}
 .hero-inner{max-width:100%;position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:40px;}
 .hero-left{flex:1;min-width:0;max-width:600px;}
@@ -122,17 +139,21 @@ const css = `
 .orb-t1 .orb-dot{width:9px;height:9px;background:#FFC220;box-shadow:0 0 10px rgba(255,194,32,0.7),0 0 20px rgba(255,194,32,0.3);}
 .orb-t2 .orb-dot{width:6px;height:6px;background:white;box-shadow:0 0 8px rgba(255,255,255,0.7),0 0 16px rgba(255,255,255,0.3);}
 @keyframes lpspin{to{transform:rotate(360deg);}}
-.hero-eyebrow{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
 .hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:rgba(255,255,255,0.4);}
-.hero h1{font-size:48px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;color:${T.yellow};margin-bottom:16px;}
+.hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;color:${T.yellow};margin-bottom:18px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 50%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-byline{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.white};letter-spacing:0.04em;margin-bottom:16px;}
-.hero-sub{font-size:15px;color:rgba(255,255,255,0.72);max-width:520px;line-height:1.65;margin-bottom:28px;}
+.hero-byline{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:${T.white};letter-spacing:0.03em;margin-bottom:14px;}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.72);max-width:520px;line-height:1.65;margin-bottom:32px;}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
-.btn-primary{display:inline-flex;align-items:center;gap:8px;background:${T.yellow};color:${T.deep};padding:11px 24px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.35);transition:all 0.18s;text-decoration:none;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:${T.yellow};color:${T.deep};padding:12px 24px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.35);transition:all 0.18s;text-decoration:none;white-space:nowrap;}
 .btn-primary:hover{background:#FFD050;transform:translateY(-1px);}
-.btn-outline{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);color:${T.white};padding:11px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:5px;border:1px solid rgba(255,255,255,0.22);cursor:pointer;transition:all 0.18s;text-decoration:none;}
+.btn-outline{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);color:${T.white};padding:12px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:5px;border:1px solid rgba(255,255,255,0.22);cursor:pointer;transition:all 0.18s;text-decoration:none;}
 .btn-outline:hover{background:rgba(255,255,255,0.2);}
+.btn-outline-dark{display:inline-flex;align-items:center;gap:7px;background:none;color:${T.deep};padding:12px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:1px solid ${T.border2};cursor:pointer;transition:all 0.18s;text-decoration:none;}
+.btn-outline-dark:hover{background:${T.ice};border-color:${T.blue};color:${T.blue};}
+
+/* ── STAT BAR ── */
 .stat-bar{background:${T.white};border-bottom:1px solid ${T.border};}
 .stat-bar-inner{display:grid;grid-template-columns:repeat(6,1fr);width:100%;}
 .stat-item{padding:18px 0;border-right:1px solid ${T.border};display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;}
@@ -141,88 +162,122 @@ const css = `
 .stat-num-red{color:#B91C1C;}
 .stat-num-sm{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:${T.blue};line-height:1.2;letter-spacing:-0.01em;}
 .stat-label{font-family:'Inter',sans-serif;font-size:9px;color:${T.muted};letter-spacing:0.08em;text-transform:uppercase;}
-.content-wrap{max-width:900px;margin:0 auto;padding:28px 40px 60px;}
-.tabs{display:flex;border-bottom:1px solid ${T.border};margin-bottom:24px;overflow-x:auto;scrollbar-width:none;}
-.tabs::-webkit-scrollbar{display:none;}
-.tab{padding:10px 16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${T.muted};cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.18s;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;display:flex;align-items:center;gap:5px;}
-.tab:hover{color:${T.blue};}
-.tab.active{color:${T.blue};border-bottom-color:${T.blue};}
-.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
-.sl{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:${T.blue};padding:3px 8px;border:1px solid ${T.border2};border-radius:3px;background:${T.ice};flex-shrink:0;}
-.st{font-size:20px;font-weight:800;letter-spacing:-0.01em;color:${T.deep};}
-.ss{font-size:13px;color:${T.muted};margin-bottom:20px;line-height:1.6;max-width:600px;}
-.tbl{width:100%;border-collapse:collapse;border:1px solid ${T.border};border-radius:8px;overflow:hidden;margin-bottom:0;}
-.tbl thead th{background:${T.cloud};padding:10px 14px;text-align:left;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:${T.muted};border-bottom:1px solid ${T.border};}
-.tbl tbody tr{border-bottom:1px solid rgba(0,113,206,0.07);transition:background 0.12s;}
-.tbl tbody tr:last-child{border-bottom:none;}
-.tbl tbody tr:hover{background:${T.cloud};}
-.tbl td{padding:11px 14px;font-size:13px;vertical-align:middle;color:${T.body};}
-.row-num{font-family:'Inter',sans-serif;font-size:11px;color:${T.muted2};}
-.tnc{font-weight:700;color:${T.deep};}
-.empty{text-align:center;padding:40px;color:${T.muted};font-size:13px;}
-.prob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
-.prob-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:20px 18px;transition:all 0.18s;cursor:pointer;position:relative;overflow:hidden;}
-.prob-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${T.deep},${T.blue});opacity:0;transition:opacity 0.18s;}
-.prob-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
-.prob-card:hover::before{opacity:1;}
-.prob-id{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted2};letter-spacing:0.08em;margin-bottom:5px;}
-.prob-title{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:8px;color:${T.deep};}
-.prob-desc{font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:12px;}
-.prob-meta{display:flex;gap:5px;flex-wrap:wrap;}
-.mt{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;}
-.mt-easy{background:#E6F4EA;color:#1A7F37;}
-.mt-medium{background:#FFF8E6;color:#92610A;}
-.mt-hard{background:#FEE2E2;color:#B91C1C;}
-.mt-high{background:${T.ice};color:${T.blue};}
-.mt-domain{background:${T.cloud};color:${T.muted};}
-.prob-claimed{font-family:'Inter',sans-serif;font-size:10px;color:${T.blue};margin-top:10px;font-weight:600;}
-.reg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:28px;}
-.reg-card{background:${T.white};border:1px solid ${T.border};border-radius:7px;padding:18px 16px;cursor:pointer;transition:all 0.18s;}
-.reg-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
-.reg-name{font-size:13px;font-weight:700;margin-bottom:7px;color:${T.deep};line-height:1.3;}
-.reg-sum{font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:10px;}
-.risk{display:inline-block;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;}
-.risk-h{background:#FEE2E2;color:#B91C1C;}
-.risk-m{background:#FFF8E6;color:#92610A;}
-.risk-l{background:#E6F4EA;color:#1A7F37;}
-.risk-u{background:${T.cloud};color:${T.muted};}
-.filter-pills{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;}
-.fp{padding:5px 12px;border:1px solid ${T.border2};border-radius:100px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:${T.muted};cursor:pointer;transition:all 0.15s;background:none;}
-.fp:hover{border-color:${T.blue};color:${T.blue};}
-.fp.active{border-color:${T.blue};color:${T.blue};background:${T.ice};}
-.prompt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;}
-.prompt-card{background:${T.white};border:1px solid ${T.border};border-radius:7px;padding:18px 16px;display:flex;flex-direction:column;gap:8px;}
-.pt-title{font-size:13px;font-weight:700;color:${T.deep};line-height:1.3;}
-.pt-meta{display:flex;gap:5px;flex-wrap:wrap;}
-.pt-cat{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:${T.ice};color:${T.blue};}
-.pt-d-b{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:#E6F4EA;color:#1A7F37;}
-.pt-d-i{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:#FFF8E6;color:#92610A;}
-.pt-d-a{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:#FEE2E2;color:#B91C1C;}
-.pt-produces{font-size:12px;color:${T.muted};line-height:1.5;}
-.pt-text-wrap{position:relative;}
-.pt-text{font-family:'Inter',sans-serif;font-size:11px;color:${T.body};line-height:1.6;background:${T.cloud};border:1px solid ${T.border};border-radius:5px;padding:10px 40px 10px 12px;white-space:pre-wrap;word-break:break-word;max-height:110px;overflow-y:auto;}
-.copy-btn{position:absolute;top:7px;right:7px;background:${T.white};border:1px solid ${T.border2};color:${T.blue};font-family:'Inter',sans-serif;font-size:10px;font-weight:700;padding:3px 8px;border-radius:3px;cursor:pointer;transition:all 0.15s;}
-.copy-btn:hover{background:${T.ice};}
-.copy-btn.copied{background:#E6F4EA;border-color:#B6DFC0;color:#1A7F37;}
-.ins-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.blue};margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid ${T.border};}
-.mashup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:6px;}
-.mashup-card{background:${T.white};border:1px solid ${T.border};border-radius:7px;padding:18px 16px;}
-.mashup-icon{font-size:20px;margin-bottom:8px;}
-.mashup-title{font-size:13px;font-weight:700;margin-bottom:6px;color:${T.deep};}
-.mashup-desc{font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:10px;}
-.mashup-tags{display:flex;gap:5px;flex-wrap:wrap;}
-.mashup-tag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;background:${T.ice};color:${T.blue};}
-.tg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px;}
-.tg-card{background:${T.white};border:1px solid ${T.border};border-radius:7px;padding:20px 16px;border-top:3px solid ${T.blue};}
-.tg-name{font-size:15px;font-weight:800;margin-bottom:3px;color:${T.deep};}
-.tg-best{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.05em;color:${T.muted2};text-transform:uppercase;margin-bottom:10px;}
-.tg-desc{font-size:12px;color:${T.muted};line-height:1.6;}
-.judge-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+
+/* ── PHASE TIMELINE ── */
+.phase-section{background:${T.white};border-bottom:1px solid ${T.border};padding:20px 40px 16px;}
+.phase-timeline{display:flex;align-items:flex-start;max-width:860px;margin:0 auto;}
+.phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+.phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:${T.border};}
+.phase-pill{padding:5px 14px;border-radius:100px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;margin-bottom:7px;white-space:nowrap;position:relative;z-index:1;}
+.phase-pill-active{background:${T.yellow};color:${T.deep};box-shadow:0 2px 8px rgba(255,194,32,0.35);}
+.phase-pill-inactive{background:${T.cloud};border:1px solid ${T.border};color:${T.muted2};}
+.phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};text-align:center;line-height:1.4;max-width:90px;}
+
+/* ── RULE CARDS ── */
+.rule-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+.rule-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:24px 20px;transition:box-shadow 0.18s;}
+.rule-card:hover{box-shadow:${T.shadowM};}
+.rule-icon{font-size:22px;margin-bottom:12px;}
+.rule-title{font-size:14px;font-weight:700;color:${T.deep};margin-bottom:8px;}
+.rule-desc{font-size:13px;color:${T.muted};line-height:1.65;}
+.rules-link{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:24px;}
+.rules-link:hover{text-decoration:underline;}
+.rubric-toggle{padding:8px 16px;border:1px solid ${T.border2};border-radius:5px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};cursor:pointer;background:none;transition:all 0.15s;display:inline-flex;align-items:center;gap:7px;}
+.rubric-toggle:hover{background:${T.ice};}
+.judge-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px;}
 .judge-card{background:${T.white};border:1px solid ${T.border};border-radius:7px;padding:18px 16px;}
 .judge-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
 .judge-label{font-size:14px;font-weight:800;color:${T.deep};}
 .judge-weight{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;color:${T.blue};}
 .judge-desc{font-size:12px;color:${T.muted};line-height:1.6;}
+
+/* ── TOOL CARDS ── */
+.tool-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.tool-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.18s;}
+.tool-card:hover{box-shadow:${T.shadowM};}
+.tool-bar{height:3px;flex-shrink:0;}
+.tool-inner{padding:20px 18px;display:flex;flex-direction:column;flex:1;}
+.tool-name{font-size:18px;font-weight:800;color:${T.deep};margin-bottom:4px;}
+.tool-tagline{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:${T.muted2};margin-bottom:12px;}
+.tool-desc{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:14px;}
+.tool-access-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:12px 14px;font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:14px;}
+.tool-link{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
+.tool-link:hover{text-decoration:underline;}
+.callout-box{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:16px 20px;font-size:13px;color:${T.muted};line-height:1.7;}
+.callout-box strong{color:${T.deep};}
+
+/* ── REGISTRATION COLS ── */
+.reg-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+.reg-col-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:28px 24px;display:flex;flex-direction:column;}
+.reg-col-head{font-size:16px;font-weight:800;color:${T.deep};margin-bottom:20px;}
+.step-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
+.step-item{display:flex;gap:14px;align-items:flex-start;}
+.step-num{width:24px;height:24px;border-radius:50%;background:${T.blue};color:${T.white};font-family:'Inter',sans-serif;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step-text{font-size:13px;color:${T.body};line-height:1.55;}
+.warn-note{background:#FFF8E6;border:1px solid #F4D04A;border-radius:6px;padding:10px 14px;font-size:12px;color:#78500E;margin-bottom:20px;line-height:1.5;}
+.fa-bullets{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.fa-bullet{font-size:13px;color:${T.body};padding-left:16px;position:relative;line-height:1.5;}
+.fa-bullet::before{content:'→';position:absolute;left:0;color:${T.muted2};}
+.already-reg{background:${T.cloud};border:1px solid ${T.border};border-radius:8px;padding:18px 22px;font-size:13px;color:${T.muted};line-height:1.6;}
+
+/* ── WORKSPACE PREVIEW ── */
+.ws-preview-card{background:${T.white};border-radius:12px;padding:32px;box-shadow:0 8px 40px rgba(11,44,95,0.15);}
+.ws-lock-row{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid ${T.border};}
+.ws-lock-icon{font-size:32px;line-height:1;}
+.ws-lock-label{font-size:13px;color:${T.muted};font-weight:500;}
+.ws-feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.ws-tile{background:${T.cloud};border:1px solid ${T.border};border-radius:8px;padding:16px 14px;}
+.ws-tile-icon{font-size:20px;margin-bottom:8px;}
+.ws-tile-label{font-size:13px;font-weight:700;color:${T.deep};margin-bottom:4px;}
+.ws-tile-desc{font-size:12px;color:${T.muted};line-height:1.5;}
+.ws-note{font-size:12px;color:${T.muted};font-style:italic;line-height:1.6;}
+
+/* ── HELP CARDS ── */
+.help-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;}
+.help-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:24px 20px;display:flex;flex-direction:column;}
+.help-card-icon{font-size:24px;margin-bottom:10px;}
+.help-card-title{font-size:15px;font-weight:800;color:${T.deep};margin-bottom:16px;}
+
+/* ── FAQ ACCORDION ── */
+.faq-list{display:flex;flex-direction:column;}
+.faq-item{border-bottom:1px solid ${T.border};}
+.faq-item:first-child{border-top:1px solid ${T.border};}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:12px 0;font-size:13px;font-weight:600;color:${T.deep};cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transition:color 0.15s;font-family:inherit;line-height:1.45;}
+.faq-q:hover{color:${T.blue};}
+.faq-chevron{font-size:11px;flex-shrink:0;margin-top:2px;transition:transform 0.2s ease;color:${T.muted2};}
+.faq-chevron.open{transform:rotate(90deg);}
+.faq-a{font-size:13px;color:${T.muted};line-height:1.65;max-height:0;overflow:hidden;transition:max-height 0.25s ease,opacity 0.2s,padding 0.2s;opacity:0;padding-bottom:0;}
+.faq-a.open{max-height:120px;opacity:1;padding-bottom:12px;}
+
+/* ── CONTACT BLOCKS ── */
+.contact-blocks{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.contact-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:12px 14px;}
+.contact-topic{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:${T.muted};margin-bottom:4px;}
+.contact-name{font-size:13px;font-weight:700;color:${T.deep};}
+.contact-role{font-size:12px;color:${T.muted};}
+.contact-note{font-size:11px;color:${T.muted2};margin-top:2px;font-style:italic;}
+.help-footer-note{font-size:12px;color:${T.muted};margin-top:auto;padding-top:14px;border-top:1px solid ${T.border};}
+
+/* ── MENTOR ── */
+.mentor-body{font-size:13px;color:${T.muted};line-height:1.65;margin-bottom:14px;}
+.mentor-bullets{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.mentor-bullet{font-size:13px;color:${T.body};padding-left:18px;position:relative;line-height:1.5;}
+.mentor-bullet::before{content:'✓';position:absolute;left:0;color:${T.blue};font-weight:700;}
+.mentor-note{font-size:12px;color:${T.muted2};font-style:italic;line-height:1.5;margin-top:auto;}
+
+/* ── FOOTER ── */
+.site-footer{background:${T.white};border-top:1px solid ${T.border};padding:24px 40px 20px;}
+.site-footer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid ${T.border};}
+.site-footer-brand{display:flex;align-items:center;gap:10px;}
+.site-footer-brand-text{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:${T.muted};}
+.site-footer-links{display:flex;align-items:center;gap:20px;}
+.site-footer-link{font-family:'Inter',sans-serif;font-size:12px;color:${T.muted};text-decoration:none;cursor:pointer;transition:color 0.15s;background:none;border:none;}
+.site-footer-link:hover{color:${T.blue};}
+.site-footer-link-cta{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};cursor:pointer;background:none;border:none;transition:color 0.15s;}
+.site-footer-link-cta:hover{color:${T.deep};}
+.site-footer-bottom{font-family:'Inter',sans-serif;font-size:11px;color:${T.muted2};letter-spacing:0.06em;text-align:center;}
+
+/* ── MODAL (unchanged) ── */
 .modal-overlay{position:fixed;inset:0;z-index:999;background:rgba(11,44,95,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn 0.18s ease;}
 .modal{background:${T.white};border:1px solid ${T.border};border-radius:12px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(11,44,95,0.2);animation:slideUp 0.22s ease;scrollbar-width:thin;scrollbar-color:${T.muted2} transparent;}
 .modal-header{padding:24px 28px 18px;border-bottom:1px solid ${T.border};display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:${T.white};z-index:10;}
@@ -279,23 +334,6 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .success-sub{font-size:13px;color:${T.muted};line-height:1.6;max-width:380px;margin:0 auto 24px;}
 .ferr{font-size:12px;color:#B91C1C;margin-top:5px;}
 .submit-err{background:#FEE2E2;border:1px solid rgba(185,28,28,0.25);border-radius:5px;padding:9px 12px;font-size:13px;color:#B91C1C;margin-bottom:14px;}
-.sbadge{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;display:inline-block;}
-.sbadge-submitted{background:#E6F4EA;color:#1A7F37;}
-.sbadge-registered{background:${T.ice};color:${T.blue};}
-.sbadge-agent{background:#FFF8E6;color:#92610A;}
-.detail-field{margin-bottom:18px;}
-.detail-field-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.muted};margin-bottom:6px;}
-.detail-field-value{font-size:13px;color:${T.body};line-height:1.7;}
-.detail-avail{background:${T.ice};border:1px solid ${T.border2};border-radius:6px;padding:12px 14px;font-size:13px;color:${T.muted};line-height:1.6;}
-.detail-opp{background:${T.ice};border:1px solid ${T.border2};border-radius:6px;padding:12px 14px;}
-.live-dot{display:inline-block;width:6px;height:6px;background:#22C55E;border-radius:50%;animation:pulse 2s infinite;margin-right:5px;vertical-align:middle;}
-.ins-section{margin-bottom:32px;}
-.divider{height:1px;background:${T.border};margin:28px 0;}
-.footer{border-top:1px solid ${T.border};padding:18px 40px;display:flex;align-items:center;justify-content:space-between;background:${T.white};}
-.footer-brand{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};letter-spacing:0.1em;}
-.footer-links a{color:${T.muted};text-decoration:none;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.07em;margin-left:20px;transition:color 0.15s;}
-.footer-links a:hover{color:${T.blue};}
-/* ── OPTION CARDS (Screen 0) ── */
 .opt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 .opt-card{background:${T.white};border:1px solid ${T.border};border-radius:10px;padding:24px 18px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;}
 .opt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${T.deep},${T.blue});opacity:0;transition:opacity 0.18s;}
@@ -307,154 +345,39 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .opt-card-desc{font-size:12px;color:${T.muted};line-height:1.6;flex:1;}
 .opt-card-cta{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:${T.blue};}
 .opt-card-soon{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;color:${T.muted2};padding:3px 8px;background:${T.cloud};border:1px solid ${T.border};border-radius:3px;display:inline-block;}
-/* ── HINT & CALLOUT ── */
 .hint-toggle{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:${T.blue};cursor:pointer;background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;margin-bottom:8px;}
 .hint-box{background:${T.ice};border:1px solid ${T.border2};border-radius:5px;padding:10px 14px;font-size:12px;color:${T.muted};line-height:1.7;margin-bottom:4px;}
-.callout-box{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:16px 20px;font-size:13px;color:${T.muted};line-height:1.7;margin-top:20px;}
-.callout-box strong{color:${T.deep};}
-/* ── TOGGLE BUTTON ── */
-.toggle-btn{padding:6px 14px;border:1px solid ${T.border2};border-radius:100px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${T.blue};cursor:pointer;transition:all 0.15s;background:none;white-space:nowrap;}
-.toggle-btn:hover{background:${T.ice};border-color:${T.blue};}
-/* ── PHASE TIMELINE ── */
-.phase-timeline{display:flex;align-items:flex-start;margin-bottom:32px;padding:18px 0 8px;}
-.phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
-.phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:${T.border};}
-.phase-pill{padding:5px 14px;border-radius:100px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;margin-bottom:7px;white-space:nowrap;position:relative;z-index:1;}
-.phase-pill-active{background:${T.yellow};color:${T.deep};box-shadow:0 2px 8px rgba(255,194,32,0.35);}
-.phase-pill-inactive{background:${T.cloud};border:1px solid ${T.border};color:${T.muted2};}
-.phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};text-align:center;line-height:1.4;max-width:90px;}
-/* ── WORKSPACE ── */
-.workspace-card{background:${T.white};border:1px solid ${T.border};border-radius:12px;padding:56px 40px;text-align:center;max-width:440px;margin:60px auto;}
+
+/* ── SHARED ── */
+.live-dot{display:inline-block;width:6px;height:6px;background:#22C55E;border-radius:50%;animation:pulse 2s infinite;margin-right:5px;vertical-align:middle;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(11,44,95,0.25);border-top-color:${T.deep};border-radius:50%;animation:spin .7s linear infinite;}
+
+/* ── MOBILE ── */
 @media(max-width:680px){
-  .content-wrap{padding:20px 16px 48px;}
   .nav{padding:0 16px;}
-  .hero{padding:24px 16px 32px;}
-  .footer{padding:14px 16px;flex-direction:column;gap:8px;align-items:flex-start;}
-  .fr-2{grid-template-columns:1fr;}
-  .tg-grid{grid-template-columns:1fr;}
-  .judge-grid{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+  .nav-countdown{display:none;}
+  .hero{padding:32px 16px 40px;}
   .hero-orbital{display:none;}
   .hero-inner{gap:0;}
-  .opt-cards{grid-template-columns:1fr;}
+  .sec-wrap{padding:40px 20px;}
   .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
-  .phase-timeline{flex-wrap:wrap;gap:16px;}
-  .phase-node::after{display:none;}
+  .phase-section{padding:16px 16px 12px;}
+  .rule-cards,.tool-cards,.help-cards{grid-template-columns:1fr;}
+  .judge-grid{grid-template-columns:1fr;}
+  .reg-cols{grid-template-columns:1fr;}
+  .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
+  .opt-cards{grid-template-columns:1fr;}
+  .fr-2{grid-template-columns:1fr;}
+  .site-footer{padding:20px 16px;}
+  .site-footer-top{flex-direction:column;gap:14px;align-items:flex-start;}
+  .site-footer-links{flex-wrap:wrap;gap:12px;}
 }
 `;
-
-// ─── STATUS BADGE ─────────────────────────────────────────────────────────────
-function StatusBadge({ value }) {
-    if (!value) return <span style={{ color: T.muted2 }}>—</span>;
-    const cls = value === 'Submitted'   ? 'sbadge sbadge-submitted'
-              : value === 'Registered'  ? 'sbadge sbadge-registered'
-              : value === 'Free Agent'  ? 'sbadge sbadge-agent'
-              : 'sbadge';
-    return <span className={cls}>{value}</span>;
-}
-
-// ─── PROBLEM DETAIL MODAL ─────────────────────────────────────────────────────
-function ProblemDetailModal({ prob, onClose, probIdF, probTitleF, probDescF, probDiffF, probImpactF, probDomainF, probClaimedF }) {
-    const id      = probIdF      ? prob.getCellValueAsString(probIdF)      : '';
-    const title   = probTitleF   ? prob.getCellValueAsString(probTitleF)   : prob.name;
-    const desc    = probDescF    ? prob.getCellValueAsString(probDescF)    : '';
-    const domain  = probDomainF  ? prob.getCellValueAsString(probDomainF)  : '';
-    const claimed = probClaimedF ? prob.getCellValueAsString(probClaimedF) : '';
-    const diff    = probDiffF    ? (prob.getCellValue(probDiffF)?.name ?? '') : '';
-    const impact  = probImpactF  ? (prob.getCellValue(probImpactF)?.name ?? '') : '';
-    const diffCls = diff === 'Easy' ? 'mt mt-easy' : diff === 'Medium' ? 'mt mt-medium' : diff === 'Hard' ? 'mt mt-hard' : 'mt mt-domain';
-
-    return (
-        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-            <div className="modal">
-                <div className="modal-header">
-                    <div>
-                        {id && <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 11, color: T.muted2, letterSpacing: '0.08em', marginBottom: 4 }}>{id}</div>}
-                        <div className="modal-title">{title}</div>
-                        {domain && <div className="modal-subtitle">{domain}</div>}
-                    </div>
-                    <button className="modal-close" onClick={onClose}>✕</button>
-                </div>
-                <div className="modal-body">
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 18 }}>
-                        {diff   && <span className={diffCls}>{diff}</span>}
-                        {impact === 'High' && <span className="mt mt-high">High Impact</span>}
-                        {domain && <span className="mt mt-domain">{domain}</span>}
-                    </div>
-                    {desc && (
-                        <div className="detail-field">
-                            <div className="detail-field-label">Problem Description</div>
-                            <div className="detail-field-value">{desc}</div>
-                        </div>
-                    )}
-                    {claimed && (
-                        <div className="detail-field">
-                            <div className="detail-field-label">Being Explored By</div>
-                            <div className="detail-field-value" style={{ color: T.blue, fontWeight: 600 }}>🔍 {claimed}</div>
-                        </div>
-                    )}
-                    <div className="detail-avail">
-                        Multiple teams can work on the same problem — pick whichever one fits your idea best.
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// ─── REG DOC DETAIL MODAL ─────────────────────────────────────────────────────
-function RegDocModal({ reg, onClose, regNameF, regSummaryF, regRiskF, regHackF }) {
-    const name    = regNameF    ? reg.getCellValueAsString(regNameF)    : reg.name;
-    const summary = regSummaryF ? reg.getCellValueAsString(regSummaryF) : '';
-    const risk    = regRiskF    ? reg.getCellValueAsString(regRiskF)    : '';
-    const hackOpp = regHackF    ? reg.getCellValueAsString(regHackF)    : '';
-    const displayName = name.replace('.pdf', '').replace(/_/g, ' ');
-    const u = risk.toUpperCase();
-    const riskCls = u.includes('HIGH') ? 'risk risk-h' : u.includes('MEDIUM') ? 'risk risk-m' : u.includes('LOW') ? 'risk risk-l' : 'risk risk-u';
-
-    return (
-        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-            <div className="modal">
-                <div className="modal-header">
-                    <div>
-                        <div className="modal-title">{displayName}</div>
-                        <div className="modal-subtitle">Regulatory Document</div>
-                    </div>
-                    <button className="modal-close" onClick={onClose}>✕</button>
-                </div>
-                <div className="modal-body">
-                    {summary && (
-                        <div className="detail-field">
-                            <div className="detail-field-label">Plain-English Summary</div>
-                            <div className="detail-field-value">{summary}</div>
-                        </div>
-                    )}
-                    {risk && (
-                        <div className="detail-field">
-                            <div className="detail-field-label">Enforcement Risk</div>
-                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, flexWrap: 'wrap' }}>
-                                <span className={riskCls}>{u.includes('HIGH') ? 'High Risk' : u.includes('MEDIUM') ? 'Medium Risk' : u.includes('LOW') ? 'Low Risk' : 'Unknown'}</span>
-                                <div className="detail-field-value" style={{ flex: 1, minWidth: 180 }}>{risk.replace(/^(HIGH|MEDIUM|LOW)\s*[—–-]\s*/i, '')}</div>
-                            </div>
-                        </div>
-                    )}
-                    {hackOpp && (
-                        <div className="detail-field">
-                            <div className="detail-field-label">Hackathon Automation Opportunity</div>
-                            <div className="detail-opp">
-                                <div className="detail-field-value">{hackOpp}</div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-}
 
 // ─── MEMBER SEARCH ────────────────────────────────────────────────────────────
 function MemberSearch({ label, optional, dirRecords, nameField, emailField, selected, onSelect }) {
@@ -488,7 +411,7 @@ function MemberSearch({ label, optional, dirRecords, nameField, emailField, sele
         <div className="fr">
             <label className="form-label">{label}{!optional && <span className="req">*</span>}</label>
             {label.includes('Captain') && <div className="fh">Primary contact — submits the final project.</div>}
-            {optional && <div className="fh">Optional — teams can have 1–5 members.</div>}
+            {optional && <div className="fh">Optional — teams can have 3–5 members total.</div>}
             <div className="ms-wrap">
                 <input className="fi" placeholder="Search by name or email…"
                     value={query}
@@ -533,38 +456,38 @@ async function createRecordWithRetry(table, fields, attempts = 3) {
 }
 
 // ─── REGISTRATION MODAL ───────────────────────────────────────────────────────
-function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, dirNameField, dirEmailField }) {
+function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, dirNameField, dirEmailField, initialScreen = 0 }) {
     // screen: 0 = choice, 'team' = team form, 'agent' = free agent form
-    const [screen,       setScreen]      = useState(0);
+    const [screen,        setScreen]       = useState(() => initialScreen === 'freeagent' ? 'agent' : initialScreen);
 
     // ── Team form state ──
-    const [teamName,     setTeamName]    = useState('');
-    const [useCase,      setUseCase]     = useState('');
-    const [technology,   setTechnology]  = useState('');
-    const [otherTech,    setOtherTech]   = useState('');
-    const [attendance,   setAttendance]  = useState('');
-    const [skillLevel,   setSkillLevel]  = useState('');
-    const [showHint,     setShowHint]    = useState(false);
-    const [captain,      setCaptain]     = useState(null);
-    const [member2,      setMember2]     = useState(null);
-    const [member3,      setMember3]     = useState(null);
-    const [member4,      setMember4]     = useState(null);
-    const [member5,      setMember5]     = useState(null);
-    const [agreed,       setAgreed]      = useState(false);
+    const [teamName,      setTeamName]     = useState('');
+    const [useCase,       setUseCase]      = useState('');
+    const [technology,    setTechnology]   = useState('');
+    const [otherTech,     setOtherTech]    = useState('');
+    const [attendance,    setAttendance]   = useState('');
+    const [skillLevel,    setSkillLevel]   = useState('');
+    const [showHint,      setShowHint]     = useState(false);
+    const [captain,       setCaptain]      = useState(null);
+    const [member2,       setMember2]      = useState(null);
+    const [member3,       setMember3]      = useState(null);
+    const [member4,       setMember4]      = useState(null);
+    const [member5,       setMember5]      = useState(null);
+    const [agreed,        setAgreed]       = useState(false);
 
     // ── Free agent state ──
-    const [agentSelf,    setAgentSelf]   = useState(null);
-    const [agentInterest,setAgentInterest]= useState('');
-    const [agentTool,    setAgentTool]   = useState('');
-    const [agentSkill,   setAgentSkill]  = useState('');
-    const [agentAttend,  setAgentAttend] = useState('');
-    const [agentAgreed,  setAgentAgreed] = useState(false);
+    const [agentSelf,     setAgentSelf]    = useState(null);
+    const [agentInterest, setAgentInterest]= useState('');
+    const [agentTool,     setAgentTool]    = useState('');
+    const [agentSkill,    setAgentSkill]   = useState('');
+    const [agentAttend,   setAgentAttend]  = useState('');
+    const [agentAgreed,   setAgentAgreed]  = useState(false);
 
     // ── Shared ──
-    const [submitting,   setSubmitting]  = useState(false);
-    const [success,      setSuccess]     = useState(false);
-    const [submitError,  setSubmitError] = useState('');
-    const [errors,       setErrors]      = useState({});
+    const [submitting,    setSubmitting]   = useState(false);
+    const [success,       setSuccess]      = useState(false);
+    const [submitError,   setSubmitError]  = useState('');
+    const [errors,        setErrors]       = useState({});
 
     const validateTeam = () => {
         const e = {};
@@ -583,11 +506,11 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
 
     const validateAgent = () => {
         const e = {};
-        if (!agentSelf)       e.agentSelf   = 'Please search and select yourself from the directory.';
-        if (!agentTool)       e.agentTool   = 'Select a preferred tool.';
-        if (!agentSkill)      e.agentSkill  = 'Select your skill level.';
-        if (!agentAttend)     e.agentAttend = 'Select an attendance format.';
-        if (!agentAgreed)     e.agentAgreed = 'You must agree to the rules.';
+        if (!agentSelf)        e.agentSelf   = 'Please search and select yourself from the directory.';
+        if (!agentTool)        e.agentTool   = 'Select a preferred tool.';
+        if (!agentSkill)       e.agentSkill  = 'Select your skill level.';
+        if (!agentAttend)      e.agentAttend = 'Select an attendance format.';
+        if (!agentAgreed)      e.agentAgreed = 'You must agree to the rules.';
         setErrors(e);
         return Object.keys(e).length === 0;
     };
@@ -610,7 +533,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
             try { const f = submissionsTable.getFieldIfExists('Team Member # 5');   if (f && member5) fields[f.id] = [{ id: member5.id }]; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('By Selecting the checkbox, you attest that you have read the rules linked above and agree that your team will follow them.'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Link To Hackathon Rules & Guidelines'); if (f) fields[f.id] = RULES_URL; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('AI Skill Level');     if (f && skillLevel) fields[f.id] = parseInt(skillLevel, 10); } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('AI Skill Level');    if (f && skillLevel) fields[f.id] = parseInt(skillLevel, 10); } catch (e_) { /* skip */ }
 
             await createRecordWithRetry(submissionsTable, fields, 3);
             if (onRegister) onRegister();
@@ -657,11 +580,11 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                 <div className="modal">
                     <div className="success-wrap">
                         <div className="success-icon">{isAgent ? '✋' : '🎉'}</div>
-                        <div className="success-title">{isAgent ? 'You\'re in the pool!' : 'Your team is registered!'}</div>
+                        <div className="success-title">{isAgent ? "You're in the pool!" : 'Your team is registered!'}</div>
                         <div className="success-sub">
                             {isAgent
                                 ? 'The hackathon team will reach out to match you with a team based on your skills and interests.'
-                                : <>Teammates will receive an invitation to confirm. <strong>Your team won't be fully locked in until all members accept.</strong></>
+                                : <><strong>Teammates will receive an invitation to confirm.</strong> Your team won't be locked in until all members accept.</>
                             }
                         </div>
                         <button className="btn-primary" onClick={onClose}>Back to Portal</button>
@@ -761,7 +684,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                         </div>
 
                         <div className="fr">
-                            <label className="form-label">Airtable Skill Level<span className="req">*</span></label>
+                            <label className="form-label">AI Skill Level<span className="req">*</span></label>
                             <div className="fh">1 = Never used it · 5 = Power user</div>
                             <div className="radio-group">
                                 {['1','2','3','4','5'].map(n => (
@@ -869,7 +792,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                             </div>
                         </div>
                         <div className="fr">
-                            <label className="form-label">Airtable Skill Level<span className="req">*</span></label>
+                            <label className="form-label">AI Skill Level</label>
                             <div className="fh">1 = Never used it · 5 = Power user</div>
                             <div className="radio-group">
                                 {['1','2','3','4','5'].map(n => (
@@ -923,15 +846,33 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
     );
 }
 
-// ─── APP ──────────────────────────────────────────────────────────────────────
-const TABS = [
-    { id: 'teams',     label: '👥 Teams'           },
-    { id: 'problems',  label: '🎯 Problems'         },
-    { id: 'data',      label: '📊 Data & Resources' },
-    { id: 'workspace', label: '🔒 Team Workspace'   },
-    { id: 'inspired',  label: '🚀 Get Inspired'     },
+// ─── STATIC DATA ──────────────────────────────────────────────────────────────
+const WORKSPACE_TILES = [
+    { icon: '📅', label: 'Training Calendar',    desc: 'All office hours, sessions, and deadlines in one place.'               },
+    { icon: '📁', label: 'Resource Library',     desc: 'Rules, templates, data sets, and tool guides.'                         },
+    { icon: '💬', label: 'Team Announcements',   desc: 'Push notifications from the hackathon team directly to your workspace.' },
+    { icon: '📝', label: 'Submission Checklist', desc: 'Track your deliverables and submit your final project.'                 },
+    { icon: '👥', label: 'Team Notes',           desc: 'Shared scratchpad for your team during the build window.'              },
+    { icon: '🏅', label: 'Mentor Access',        desc: "Your assigned mentor's contact info and office hours."                 },
 ];
 
+const FAQS = [
+    { q: 'Can I use more than one tool?',                               a: 'Yes, if your use case calls for it. Just note one primary tool on your registration.' },
+    { q: "What if a teammate can't participate?",                       a: 'Submit a team change request via the #gg-hackathon Teams channel. Changes must be finalized before March 14.' },
+    { q: 'Do we need to have a problem statement picked before registering?', a: 'No. You can refine your use case after registration. Use the Problem Statements section in the main portal for inspiration.' },
+    { q: 'When does the build window start?',                           a: 'Monday March 16. No building before then — but you can plan, research tools, and attend training.' },
+    { q: 'Who judges the submissions?',                                 a: 'A panel of GG leadership and invited executives. Top 5 teams present at the Science Fair on March 20.' },
+];
+
+const NAV_SECTIONS = [
+    ['rules',     'Rules'    ],
+    ['tools',     'Tools'    ],
+    ['register',  'Register' ],
+    ['workspace', 'Workspace'],
+    ['help',      'Help'     ],
+];
+
+// ─── APP ──────────────────────────────────────────────────────────────────────
 function App() {
     const base = useBase();
 
@@ -950,212 +891,77 @@ function App() {
     const regDocs     = useRecords(regTable);
 
     // ── UI State ─────────────────────────────────────────────────────────────
-    const [tab,            setTab]           = useState('teams');
-    const [showReg,        setShowReg]        = useState(false);
-    const [selProb,        setSelProb]        = useState(null);
-    const [selReg,         setSelReg]         = useState(null);
-    const [prmFilter,      setPrmFilter]      = useState('All');
-    const [copiedId,       setCopiedId]       = useState(null);
-    const [showFreeAgents, setShowFreeAgents] = useState(false);
-    const [showPrompts,    setShowPrompts]    = useState(false);
-    const [countdown,      setCountdown]      = useState(getCountdown);
+    const [showReg,         setShowReg]        = useState(false);
+    const [modalInitScreen, setModalInitScreen]= useState(0);
+    const [activeSection,   setActiveSection]  = useState('hero');
+    const [openFaq,         setOpenFaq]        = useState(null);
+    const [showRubric,      setShowRubric]     = useState(false);
+    const [countdown,       setCountdown]      = useState(getCountdown);
 
     useEffect(() => {
         const id = setInterval(() => setCountdown(getCountdown()), 1000);
         return () => clearInterval(id);
     }, []);
 
-    // ── Field detection: submissions ─────────────────────────────────────────
-    const sfTeamName    = subTable.getFieldIfExists('Team Name');
-    const sfTech        = subTable.getFieldIfExists('Technology');
-    const sfAttend      = subTable.getFieldIfExists('Attendance Format');
-    const sfStatus      = subTable.getFieldIfExists('Submission Status');
-    const sfMember1     = subTable.getFieldIfExists('Team Member # 1 ( Captain)');
-    const sfSkillLevel  = subTable.getFieldIfExists('AI Skill Level');
-    const sfProbInterest= subTable.getFieldIfExists('Problem Interest');
+    useEffect(() => {
+        const ids = ['hero', 'rules', 'tools', 'register', 'workspace', 'help'];
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id); });
+        }, { threshold: 0.25, rootMargin: '-70px 0px -40% 0px' });
+        ids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+        return () => obs.disconnect();
+    }, []);
 
-    // ── Field detection: problems ────────────────────────────────────────────
-    const pfId      = probTable.getFieldIfExists('Problem ID');
-    const pfTitle   = probTable.getFieldIfExists('Name') ?? probTable.getFieldIfExists('Problem');
-    const pfDesc    = probTable.getFieldIfExists('Description') ?? probTable.getFieldIfExists('Current State');
-    const pfDiff    = probTable.getFieldIfExists('Difficulty');
-    const pfImpact  = probTable.getFieldIfExists('Impact');
-    const pfDomain  = probTable.getFieldIfExists('Domain') ?? probTable.getFieldIfExists('Category');
-    const pfClaimed = probTable.getFieldIfExists('Claimed By') ?? probTable.getFieldIfExists('Teams Exploring');
+    // ── Field detection: submissions ─────────────────────────────────────────
+    const sfTeamName     = subTable.getFieldIfExists('Team Name');
+    const sfStatus       = subTable.getFieldIfExists('Submission Status');
 
     // ── Field detection: directory ───────────────────────────────────────────
-    const dfName  = dirTable.getFieldIfExists('Name') ?? dirTable.getFieldIfExists('Associate Name');
+    const dfName  = dirTable.getFieldIfExists('Name')  ?? dirTable.getFieldIfExists('Associate Name');
     const dfEmail = dirTable.getFieldIfExists('Email') ?? dirTable.getFieldIfExists('Work Email');
 
-    // ── Field detection: prompts ─────────────────────────────────────────────
-    const prmfTitle    = prmTable.getFieldIfExists('Name') ?? prmTable.getFieldIfExists('Prompt Name');
-    const prmfCat      = prmTable.getFieldIfExists('Category');
-    const prmfDiff     = prmTable.getFieldIfExists('Difficulty') ?? prmTable.getFieldIfExists('Level');
-    const prmfText     = prmTable.getFieldIfExists('Prompt Text') ?? prmTable.getFieldIfExists('Prompt');
-    const prmfProduces = prmTable.getFieldIfExists('What It Produces') ?? prmTable.getFieldIfExists('Output');
-
-    // ── Field detection: reg docs ────────────────────────────────────────────
-    const rdfName    = regTable.getFieldIfExists('Name') ?? regTable.getFieldIfExists('Document Name');
-    const rdfSummary = regTable.getFieldIfExists('Plain-English Summary') ?? regTable.getFieldIfExists('Summary');
-    const rdfRisk    = regTable.getFieldIfExists('Enforcement Risk') ?? regTable.getFieldIfExists('Risk Level');
-    const rdfHack    = regTable.getFieldIfExists('Hackathon Automation Opportunity') ?? regTable.getFieldIfExists('AI Opportunity');
-
     // ── Derived data ─────────────────────────────────────────────────────────
-    const { liveTeams, freeAgents } = useMemo(() => {
-        const live = [], agents = [];
+    const { liveTeams } = useMemo(() => {
+        const live = [];
         submissions.forEach(r => {
             const name   = sfTeamName ? r.getCellValueAsString(sfTeamName) : '';
             const status = sfStatus   ? r.getCellValueAsString(sfStatus)   : '';
             if (TEST_NAMES.includes(name.trim())) return;
-            if (status === 'Free Agent') agents.push(r);
-            else live.push(r);
+            if (status !== 'Free Agent') live.push(r);
         });
-        return { liveTeams: live, freeAgents: agents };
+        return { liveTeams: live };
     }, [submissions, sfTeamName, sfStatus]);
 
-    const totalTeams     = liveTeams.length;
-    const submittedTeams = liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Submitted').length;
-    const registeredTeams= liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Registered').length;
-    const spotsLeft      = Math.max(0, MAX_TEAMS - totalTeams);
+    const totalTeams      = liveTeams.length;
+    const submittedTeams  = liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Submitted').length;
+    const registeredTeams = liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Registered').length;
+    const spotsLeft       = Math.max(0, MAX_TEAMS - totalTeams);
 
-    const prmCategories = useMemo(() => {
-        const cats = new Set(prmRecords.map(r => prmfCat ? r.getCellValueAsString(prmfCat) : '').filter(Boolean));
-        return ['All', ...Array.from(cats).sort()];
-    }, [prmRecords, prmfCat]);
-
-    const filteredPrms = useMemo(() =>
-        prmFilter === 'All' ? prmRecords : prmRecords.filter(r => prmfCat && r.getCellValueAsString(prmfCat) === prmFilter),
-        [prmRecords, prmFilter, prmfCat]
-    );
-
-    const copyPrompt = (id, text) => {
-        navigator.clipboard.writeText(text).catch(() => {});
-        setCopiedId(id);
-        setTimeout(() => setCopiedId(null), 2000);
-    };
-
-    const navCta = totalTeams > 40
-        ? `Register Now — ${spotsLeft} Left`
-        : `Register Now — ${MAX_TEAMS} Spots`;
-
-    // ── Renderers ────────────────────────────────────────────────────────────
-    const renderTeamRow = (r, i) => {
-        const name   = sfTeamName ? r.getCellValueAsString(sfTeamName) : '—';
-        const tech   = sfTech     ? (r.getCellValue(sfTech)?.name ?? '—') : '—';
-        const attend = sfAttend   ? (r.getCellValue(sfAttend)?.name ?? '—') : '—';
-        const status = sfStatus   ? r.getCellValueAsString(sfStatus) : '';
-        return (
-            <tr key={r.id}>
-                <td><span className="row-num">{i + 1}</span></td>
-                <td><span className="tnc">{name}</span></td>
-                <td>{tech}</td>
-                <td>{attend}</td>
-                <td><StatusBadge value={status} /></td>
-            </tr>
-        );
-    };
-
-    const renderFreeAgentRow = (r, i) => {
-        const m1      = sfMember1     ? r.getCellValue(sfMember1) : null;
-        const name    = m1?.[0]?.name ?? '—';
-        const tool    = sfTech        ? (r.getCellValue(sfTech)?.name ?? '—') : '—';
-        const interest= sfProbInterest? r.getCellValueAsString(sfProbInterest) : '—';
-        const skill   = sfSkillLevel  ? r.getCellValueAsString(sfSkillLevel)   : '—';
-        return (
-            <tr key={r.id}>
-                <td><span className="row-num">{i + 1}</span></td>
-                <td><span className="tnc">{name}</span></td>
-                <td>{tool}</td>
-                <td style={{ maxWidth: 200, color: T.muted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{interest || '—'}</td>
-                <td>{skill || '—'}</td>
-            </tr>
-        );
-    };
-
-    const renderProbCard = r => {
-        const id     = pfId     ? r.getCellValueAsString(pfId)    : '';
-        const title  = pfTitle  ? r.getCellValueAsString(pfTitle) : r.name;
-        const desc   = pfDesc   ? r.getCellValueAsString(pfDesc)  : '';
-        const diff   = pfDiff   ? (r.getCellValue(pfDiff)?.name ?? '') : '';
-        const impact = pfImpact ? (r.getCellValue(pfImpact)?.name ?? '') : '';
-        const domain = pfDomain ? r.getCellValueAsString(pfDomain) : '';
-        const claimed= pfClaimed? r.getCellValueAsString(pfClaimed): '';
-        const diffCls = diff === 'Easy' ? 'mt mt-easy' : diff === 'Medium' ? 'mt mt-medium' : diff === 'Hard' ? 'mt mt-hard' : 'mt mt-domain';
-        return (
-            <div key={r.id} className="prob-card" onClick={() => setSelProb(r)}>
-                {id && <div className="prob-id">{id}</div>}
-                <div className="prob-title">{title}</div>
-                {desc && <div className="prob-desc">{desc.slice(0, 120)}{desc.length > 120 ? '…' : ''}</div>}
-                <div className="prob-meta">
-                    {diff   && <span className={diffCls}>{diff}</span>}
-                    {impact === 'High' && <span className="mt mt-high">High Impact</span>}
-                    {domain && <span className="mt mt-domain">{domain}</span>}
-                </div>
-                {claimed && <div className="prob-claimed">🔍 {claimed}</div>}
-            </div>
-        );
-    };
-
-    const renderRegCard = r => {
-        const name    = rdfName    ? r.getCellValueAsString(rdfName)    : r.name;
-        const summary = rdfSummary ? r.getCellValueAsString(rdfSummary) : '';
-        const risk    = rdfRisk    ? r.getCellValueAsString(rdfRisk)    : '';
-        const display = name.replace('.pdf', '').replace(/_/g, ' ');
-        const u = risk.toUpperCase();
-        const riskCls   = u.includes('HIGH') ? 'risk risk-h' : u.includes('MEDIUM') ? 'risk risk-m' : u.includes('LOW') ? 'risk risk-l' : 'risk risk-u';
-        const riskLabel = u.includes('HIGH') ? 'High Risk' : u.includes('MEDIUM') ? 'Medium Risk' : u.includes('LOW') ? 'Low Risk' : risk || 'Unknown';
-        return (
-            <div key={r.id} className="reg-card" onClick={() => setSelReg(r)}>
-                <div className="reg-name">{display}</div>
-                {summary && <div className="reg-sum">{summary.slice(0, 100)}{summary.length > 100 ? '…' : ''}</div>}
-                {risk && <span className={riskCls}>{riskLabel}</span>}
-            </div>
-        );
-    };
-
-    const renderPromptCard = r => {
-        const title    = prmfTitle    ? r.getCellValueAsString(prmfTitle)    : r.name;
-        const cat      = prmfCat      ? r.getCellValueAsString(prmfCat)      : '';
-        const diff     = prmfDiff     ? r.getCellValueAsString(prmfDiff)     : '';
-        const text     = prmfText     ? r.getCellValueAsString(prmfText)     : '';
-        const produces = prmfProduces ? r.getCellValueAsString(prmfProduces) : '';
-        const diffCls  = diff === 'Beginner' ? 'pt-d-b' : diff === 'Intermediate' ? 'pt-d-i' : diff === 'Advanced' ? 'pt-d-a' : '';
-        const isCopied = copiedId === r.id;
-        return (
-            <div key={r.id} className="prompt-card">
-                <div className="pt-title">{title}</div>
-                <div className="pt-meta">
-                    {cat  && <span className="pt-cat">{cat}</span>}
-                    {diff && diffCls && <span className={diffCls}>{diff}</span>}
-                </div>
-                {produces && <div className="pt-produces">{produces}</div>}
-                {text && (
-                    <div className="pt-text-wrap">
-                        <div className="pt-text">{text}</div>
-                        <button className={`copy-btn${isCopied ? ' copied' : ''}`} onClick={() => copyPrompt(r.id, text)}>
-                            {isCopied ? '✓ Copied' : 'Copy'}
-                        </button>
-                    </div>
-                )}
-            </div>
-        );
-    };
+    const openModal = (screen = 0) => { setModalInitScreen(screen); setShowReg(true); };
 
     return (
         <div className="portal">
             <style>{css}</style>
 
-            {/* ── NAV ── */}
+            {/* ── STICKY NAV ── */}
             <nav className="nav">
                 <div className="nav-brand">
                     <div className="nav-spark"><SparkIcon size={16} /></div>
                     FY27 GG AI Hackathon
                 </div>
-                <button className="nav-cta" onClick={() => setShowReg(true)}>{navCta}</button>
+                <div className="nav-links">
+                    {NAV_SECTIONS.map(([id, label]) => (
+                        <a key={id} href={`#${id}`} className={`nav-link${activeSection === id ? ' active' : ''}`}>{label}</a>
+                    ))}
+                </div>
+                <div className="nav-right">
+                    <span className="nav-countdown">Closes {countdown}</span>
+                    <button className="nav-cta" onClick={() => openModal(0)}>Register Now →</button>
+                </div>
             </nav>
 
-            {/* ── HERO ── */}
-            <section className="hero">
+            {/* ── SECTION 1: HERO ── */}
+            <section id="hero" className="hero">
                 <div className="hero-inner">
                     <div className="hero-left">
                         <div className="hero-eyebrow">GG Digital Acceleration · FY27</div>
@@ -1165,12 +971,12 @@ function App() {
                             48 hours. Real data. Real problems. Use Airtable, Harvey, or CodePuppy to build an AI-powered solution for Walmart's Global Governance team — then pitch it.
                         </div>
                         <div className="hero-actions">
-                            <button className="btn-primary" onClick={() => setShowReg(true)}>
+                            <button className="btn-primary" onClick={() => openModal(0)}>
                                 <SparkIcon size={15} color="#0B2C5F" />
-                                Register Your Team
+                                Register Your Team →
                             </button>
                             <a className="btn-outline" href={RULES_URL} target="_blank" rel="noreferrer">
-                                📋 Read the Rules
+                                Read the Rules ↗
                             </a>
                         </div>
                     </div>
@@ -1185,7 +991,7 @@ function App() {
                 </div>
             </section>
 
-            {/* ── STAT BAR (6 columns) ── */}
+            {/* ── STAT BAR ── */}
             <div className="stat-bar">
                 <div className="stat-bar-inner">
                     <div className="stat-item">
@@ -1215,173 +1021,52 @@ function App() {
                 </div>
             </div>
 
-            {/* ── CONTENT ── */}
-            <div className="content-wrap">
-                <div className="tabs">
-                    {TABS.map(t => (
-                        <button key={t.id} className={`tab${tab === t.id ? ' active' : ''}`} onClick={() => setTab(t.id)}>
-                            {t.label}
-                        </button>
+            {/* ── PHASE TIMELINE ── */}
+            <div className="phase-section">
+                <div className="phase-timeline">
+                    {PHASES.map(p => (
+                        <div key={p.label} className="phase-node">
+                            <div className={`phase-pill ${p.active ? 'phase-pill-active' : 'phase-pill-inactive'}`}>{p.label}</div>
+                            <div className="phase-sub">{p.sub}</div>
+                        </div>
                     ))}
                 </div>
+            </div>
 
-                {/* ── TEAMS ── */}
-                {tab === 'teams' && (
-                    <div>
-                        <div className="sh"><span className="sl">Live</span><span className="st">Team Roster</span></div>
-                        <p className="ss">
-                            <span className="live-dot" />
-                            {totalTeams} team{totalTeams !== 1 ? 's' : ''} registered.{' '}
-                            Registration is open —{' '}
-                            <button style={{ background: 'none', border: 'none', color: T.blue, cursor: 'pointer', font: 'inherit', padding: 0, fontWeight: 600 }} onClick={() => setShowReg(true)}>add yours</button>.
-                        </p>
-                        <table className="tbl">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Team Name</th>
-                                    <th>Technology</th>
-                                    <th>Attendance</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {liveTeams.length === 0
-                                    ? <tr><td colSpan={5} className="empty">No teams registered yet — be the first!</td></tr>
-                                    : liveTeams.map(renderTeamRow)
-                                }
-                            </tbody>
-                        </table>
+            {/* ── SECTION 2: RULES & GUIDELINES ── */}
+            <section id="rules" className="sec-white">
+                <div className="sec-wrap">
+                    <span className="sec-label">Rules</span>
+                    <h2 className="sec-h2">Rules & Guidelines</h2>
+                    <p className="sec-sub">Everything you need to know before you build. Read this before registering.</p>
 
-                        {/* Free Agent Pool */}
-                        <div style={{ marginTop: 32 }}>
-                            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
-                                <div>
-                                    <div className="sh"><span className="sl">Pool</span><span className="st">Free Agent Pool</span></div>
-                                    <p className="ss" style={{ marginBottom: 0 }}>These associates are looking to be placed on a team.</p>
-                                </div>
-                                <button className="toggle-btn" style={{ marginTop: 4 }} onClick={() => setShowFreeAgents(s => !s)}>
-                                    {showFreeAgents ? '▲ Hide' : '▼ Show'}{freeAgents.length > 0 ? ` (${freeAgents.length})` : ''}
-                                </button>
-                            </div>
-                            {showFreeAgents && (
-                                <table className="tbl">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Name</th>
-                                            <th>Preferred Tool</th>
-                                            <th>Problem Interest</th>
-                                            <th>Skill Level</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {freeAgents.length === 0
-                                            ? <tr><td colSpan={5} className="empty">No free agents yet.</td></tr>
-                                            : freeAgents.map(renderFreeAgentRow)
-                                        }
-                                    </tbody>
-                                </table>
-                            )}
+                    <div className="rule-cards">
+                        <div className="rule-card">
+                            <div className="rule-icon">📋</div>
+                            <div className="rule-title">Eligibility</div>
+                            <div className="rule-desc">Open to all Walmart Home Office associates. Teams of 3–5; solo sign-ups will be matched to a team.</div>
                         </div>
-
-                        <div style={{ marginTop: 20, padding: '12px 16px', background: T.cloud, border: `1px solid ${T.border}`, borderRadius: 7, fontSize: 12, color: T.muted }}>
-                            Need to update your team? Contact the hackathon team via the <strong style={{ color: T.body }}>GG Digital Acceleration</strong> Teams channel.
+                        <div className="rule-card">
+                            <div className="rule-icon">⏱️</div>
+                            <div className="rule-title">Build Window</div>
+                            <div className="rule-desc">No building before March 16. All prototypes must be started and completed during the official 48-hour window.</div>
+                        </div>
+                        <div className="rule-card">
+                            <div className="rule-icon">🏆</div>
+                            <div className="rule-title">Judging</div>
+                            <div className="rule-desc">Projects scored on Impact (30%), Innovation (25%), Feasibility (25%), and Demo Quality (20%). Top 5 teams pitch to executive judges.</div>
                         </div>
                     </div>
-                )}
 
-                {/* ── PROBLEMS ── */}
-                {tab === 'problems' && (
+                    <a className="rules-link" href={RULES_URL} target="_blank" rel="noreferrer">
+                        Read Full Rules & Guidelines →
+                    </a>
+
                     <div>
-                        <div className="sh"><span className="sl">Open</span><span className="st">Problem Statements</span></div>
-                        <p className="ss">GG-specific challenges. Click any card to see the full brief. Multiple teams can tackle the same problem.</p>
-                        <div className="prob-grid">
-                            {probRecords.length > 0
-                                ? probRecords.map(renderProbCard)
-                                : <p style={{ color: T.muted, fontSize: 13 }}>Loading problem statements…</p>
-                            }
-                        </div>
-                    </div>
-                )}
-
-                {/* ── DATA & RESOURCES ── */}
-                {tab === 'data' && (
-                    <div>
-                        <div className="sh"><span className="sl">Regulatory</span><span className="st">Compliance Documents</span></div>
-                        <p className="ss">Regulations parsed by Harvey into plain-English summaries, risk levels, and hackathon automation opportunities. Click any card to explore.</p>
-                        <div className="reg-grid">
-                            {regDocs.length > 0
-                                ? regDocs.map(renderRegCard)
-                                : <p style={{ color: T.muted, fontSize: 13 }}>Loading regulatory documents…</p>
-                            }
-                        </div>
-                        <div className="callout-box">
-                            <strong>Store Locations, Distribution Centers, GG Directory, and Prompt Library</strong> are available in your Team Workspace once registered.
-                        </div>
-                    </div>
-                )}
-
-                {/* ── TEAM WORKSPACE ── */}
-                {tab === 'workspace' && (
-                    <div className="workspace-card">
-                        <div style={{ fontSize: 40, marginBottom: 18 }}>🔒</div>
-                        <div style={{ fontSize: 18, fontWeight: 800, color: T.deep, marginBottom: 10 }}>Your Team Workspace</div>
-                        <div style={{ fontSize: 13, color: T.muted, lineHeight: 1.7 }}>
-                            Once your team is registered and all members have confirmed, your workspace unlocks here — training calendar, shared notes, submission checklist, and team notifications.
-                        </div>
-                    </div>
-                )}
-
-                {/* ── GET INSPIRED ── */}
-                {tab === 'inspired' && (
-                    <div>
-                        {/* Phase Timeline */}
-                        <div className="phase-timeline">
-                            {PHASES.map((p, i) => (
-                                <React.Fragment key={p.label}>
-                                    <div className="phase-node">
-                                        <div className={`phase-pill ${p.active ? 'phase-pill-active' : 'phase-pill-inactive'}`}>{p.label}</div>
-                                        <div className="phase-sub">{p.sub}</div>
-                                    </div>
-                                    {i < PHASES.length - 1 && <div style={{ flex: '0 0 0', position: 'relative' }} />}
-                                </React.Fragment>
-                            ))}
-                        </div>
-
-                        <div className="ins-section">
-                            <div className="ins-label">Mashup Ideas — Combine datasets to build something unexpected</div>
-                            <div className="mashup-grid">
-                                {MASHUP_IDEAS.map(m => (
-                                    <div key={m.title} className="mashup-card">
-                                        <div className="mashup-icon">{m.icon}</div>
-                                        <div className="mashup-title">{m.title}</div>
-                                        <div className="mashup-desc">{m.desc}</div>
-                                        <div className="mashup-tags">{m.tables.map(t => <span key={t} className="mashup-tag">{t}</span>)}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="divider" />
-
-                        <div className="ins-section">
-                            <div className="ins-label">Technology Guides — What each tool does best</div>
-                            <div className="tg-grid">
-                                {TECH_GUIDES.map(g => (
-                                    <div key={g.name} className="tg-card">
-                                        <div className="tg-name">{g.name}</div>
-                                        <div className="tg-best">{g.best}</div>
-                                        <div className="tg-desc">{g.desc}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="divider" />
-
-                        <div className="ins-section">
-                            <div className="ins-label">Judging Criteria — How projects will be evaluated</div>
+                        <button className="rubric-toggle" onClick={() => setShowRubric(s => !s)}>
+                            {showRubric ? '▾' : '▸'} View Scoring Rubric
+                        </button>
+                        {showRubric && (
                             <div className="judge-grid">
                                 {JUDGING.map(j => (
                                     <div key={j.label} className="judge-card">
@@ -1393,81 +1078,241 @@ function App() {
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        )}
+                    </div>
+                </div>
+            </section>
 
-                        <div className="divider" />
+            {/* ── SECTION 3: TOOLS & ACCESS ── */}
+            <section id="tools" className="sec-cloud">
+                <div className="sec-wrap">
+                    <span className="sec-label">Tools</span>
+                    <h2 className="sec-h2">Choose Your Stack</h2>
+                    <p className="sec-sub">Free training is available for all three tools. Pick one — or combine them if your use case calls for it.</p>
 
-                        {/* Prompt Starter Kit — collapsible */}
-                        <div className="ins-section">
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>
-                                <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: T.blue }}>
-                                    Prompt Starter Kit
+                    <div className="tool-cards">
+                        <div className="tool-card">
+                            <div className="tool-bar" style={{ background: T.blue }} />
+                            <div className="tool-inner">
+                                <div className="tool-name">Airtable</div>
+                                <div className="tool-tagline">Best for: Structured data, interfaces, automations</div>
+                                <div className="tool-desc">Build operational interfaces, automated workflows, and dashboards. The base, views, and interface builder are your canvas.</div>
+                                <div className="tool-access-block">
+                                    Already provisioned for GG associates. If you don't have access, your license will be provisioned automatically when you register.
                                 </div>
-                                <button className="toggle-btn" onClick={() => setShowPrompts(s => !s)}>
-                                    {showPrompts ? '▲ Hide Prompts' : '▼ Show Prompts'}
-                                </button>
+                                <a className="tool-link" href="https://airtable.com/academy" target="_blank" rel="noreferrer">Get Training →</a>
                             </div>
-                            {showPrompts && (
-                                <>
-                                    <div className="filter-pills">
-                                        {prmCategories.map(c => (
-                                            <button key={c} className={`fp${prmFilter === c ? ' active' : ''}`} onClick={() => setPrmFilter(c)}>{c}</button>
-                                        ))}
-                                    </div>
-                                    <div className="prompt-grid">
-                                        {filteredPrms.length > 0
-                                            ? filteredPrms.map(renderPromptCard)
-                                            : <p style={{ color: T.muted, fontSize: 13 }}>No prompts in this category.</p>
-                                        }
-                                    </div>
-                                </>
-                            )}
+                        </div>
+                        <div className="tool-card">
+                            <div className="tool-bar" style={{ background: '#7C3AED' }} />
+                            <div className="tool-inner">
+                                <div className="tool-name">Harvey</div>
+                                <div className="tool-tagline">Best for: Document AI, natural language Q&A</div>
+                                <div className="tool-desc">Point Harvey at any PDF, policy doc, or regulation — ask questions, extract structured data, and draft content.</div>
+                                <div className="tool-access-block">
+                                    Contact Abby Worley to confirm your Harvey license before the event.
+                                </div>
+                                <span className="tool-link" style={{ cursor: 'default', opacity: 0.5 }}>Training available at kickoff</span>
+                            </div>
+                        </div>
+                        <div className="tool-card">
+                            <div className="tool-bar" style={{ background: '#059669' }} />
+                            <div className="tool-inner">
+                                <div className="tool-name">CodePuppy</div>
+                                <div className="tool-tagline">Best for: Custom code, integrations, APIs</div>
+                                <div className="tool-desc">Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations Airtable can't do natively.</div>
+                                <div className="tool-access-block">
+                                    Contact Michael [GG team] to confirm access. Note: new user provisioning is currently limited — request early.
+                                </div>
+                                <span className="tool-link" style={{ cursor: 'default', opacity: 0.5 }}>Training available at kickoff</span>
+                            </div>
                         </div>
                     </div>
-                )}
-            </div>
+
+                    <div className="callout-box">
+                        💡 <strong>Not sure which tool to pick?</strong> Join the weekly office hours — Thursdays 10–11am — to talk through your use case before the build window opens.
+                    </div>
+                </div>
+            </section>
+
+            {/* ── SECTION 4: HOW TO REGISTER ── */}
+            <section id="register" className="sec-white">
+                <div className="sec-wrap">
+                    <span className="sec-label">Registration</span>
+                    <h2 className="sec-h2">Join the Hackathon</h2>
+                    <p className="sec-sub">Registration closes March 9 at 5pm CT. Spots are limited to 50 teams.</p>
+
+                    <div className="reg-cols">
+                        <div className="reg-col-card" style={{ borderTop: `3px solid ${T.blue}` }}>
+                            <div className="reg-col-head">Team Registration</div>
+                            <ol className="step-list">
+                                {[
+                                    'Team captain fills out the registration form below.',
+                                    'Each teammate receives an email invitation to confirm and agree to the rules.',
+                                    'Once all members accept, your team is officially registered.',
+                                    "You'll receive a link to your Team Workspace.",
+                                ].map((step, i) => (
+                                    <li key={i} className="step-item">
+                                        <div className="step-num">{i + 1}</div>
+                                        <div className="step-text">{step}</div>
+                                    </li>
+                                ))}
+                            </ol>
+                            <div className="warn-note">⚠️ Minimum 3 members required. Maximum 5.</div>
+                            <button className="btn-primary" onClick={() => openModal(0)}>Register Your Team →</button>
+                        </div>
+
+                        <div className="reg-col-card" style={{ borderTop: `3px solid ${T.muted2}` }}>
+                            <div className="reg-col-head">No Team? No Problem.</div>
+                            <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.65, marginBottom: 16 }}>
+                                Sign up as a free agent and we'll match you with a team based on your skills and interests. Matching closes March 8.
+                            </p>
+                            <ul className="fa-bullets">
+                                <li className="fa-bullet">Tell us your preferred tool</li>
+                                <li className="fa-bullet">Share your problem area of interest</li>
+                                <li className="fa-bullet">Rate your AI skill level (1–5)</li>
+                            </ul>
+                            <button className="btn-outline-dark" onClick={() => openModal('freeagent')}>
+                                Sign Up as Free Agent →
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="already-reg">
+                        <strong style={{ color: T.deep }}>Already registered?</strong> Need to make a change to your team?{' '}
+                        Email the hackathon team or find us in the <strong style={{ color: T.deep }}>#gg-hackathon</strong> Teams channel.
+                    </div>
+                </div>
+            </section>
+
+            {/* ── SECTION 5: TEAM WORKSPACE PREVIEW ── */}
+            <section id="workspace" className="sec-dark">
+                <div className="sec-wrap">
+                    <span className="sec-label sec-label-dark">Workspace</span>
+                    <h2 className="sec-h2 sec-h2-white">Your Team Workspace</h2>
+                    <p className="sec-sub sec-sub-white">
+                        Every registered team gets a private Airtable workspace — unlocked once your registration is confirmed.
+                    </p>
+
+                    <div className="ws-preview-card">
+                        <div className="ws-lock-row">
+                            <div className="ws-lock-icon">🔒</div>
+                            <div className="ws-lock-label">Unlocks after registration is confirmed</div>
+                        </div>
+                        <div className="ws-feature-grid">
+                            {WORKSPACE_TILES.map(tile => (
+                                <div key={tile.label} className="ws-tile">
+                                    <div className="ws-tile-icon">{tile.icon}</div>
+                                    <div className="ws-tile-label">{tile.label}</div>
+                                    <div className="ws-tile-desc">{tile.desc}</div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="ws-note">
+                            This page will be a separate interface in the same Airtable app — you'll receive the link once your team is confirmed.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ── SECTION 6: HELP & SUPPORT ── */}
+            <section id="help" className="sec-cloud">
+                <div className="sec-wrap">
+                    <span className="sec-label">Support</span>
+                    <h2 className="sec-h2">We've Got You Covered</h2>
+                    <p className="sec-sub">Multiple support channels available before and during the event.</p>
+
+                    <div className="help-cards">
+                        {/* Card 1: FAQs */}
+                        <div className="help-card">
+                            <div className="help-card-icon">❓</div>
+                            <div className="help-card-title">Frequently Asked Questions</div>
+                            <div className="faq-list">
+                                {FAQS.map((item, i) => (
+                                    <div key={i} className="faq-item">
+                                        <button className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                                            <span>{item.q}</span>
+                                            <span className={`faq-chevron${openFaq === i ? ' open' : ''}`}>▸</span>
+                                        </button>
+                                        <div className={`faq-a${openFaq === i ? ' open' : ''}`}>{item.a}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Card 2: Associate Support */}
+                        <div className="help-card">
+                            <div className="help-card-icon">🙋</div>
+                            <div className="help-card-title">Associate Support</div>
+                            <div className="contact-blocks">
+                                <div className="contact-block">
+                                    <div className="contact-topic">Airtable Questions</div>
+                                    <div className="contact-name">Bennett Oliver</div>
+                                    <div className="contact-role">Account Executive</div>
+                                    <div className="contact-note">Office hours: Thursdays 10–11am CT</div>
+                                </div>
+                                <div className="contact-block">
+                                    <div className="contact-topic">Harvey Questions</div>
+                                    <div className="contact-name">Abby Worley</div>
+                                    <div className="contact-role">GG Digital Acceleration</div>
+                                </div>
+                                <div className="contact-block">
+                                    <div className="contact-topic">CodePuppy Questions</div>
+                                    <div className="contact-name">Michael [GG team]</div>
+                                    <div className="contact-role">GG Digital Acceleration</div>
+                                </div>
+                            </div>
+                            <div className="help-footer-note">For anything else → <strong>#gg-hackathon</strong> in Teams</div>
+                        </div>
+
+                        {/* Card 3: Mentor Program */}
+                        <div className="help-card">
+                            <div className="help-card-icon">🧑‍🏫</div>
+                            <div className="help-card-title">Mentor Program</div>
+                            <div className="mentor-body">
+                                Every registered team is assigned one internal mentor with relevant domain or technical expertise.
+                            </div>
+                            <ul className="mentor-bullets">
+                                <li className="mentor-bullet">1 mentor per team (subject to team count)</li>
+                                <li className="mentor-bullet">Available during the build window March 16–19</li>
+                                <li className="mentor-bullet">Matched based on your tool choice and problem area</li>
+                            </ul>
+                            <div className="mentor-note">
+                                Vendor support (Airtable, Harvey, CodePuppy) is available in addition to your mentor.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* ── FOOTER ── */}
-            <footer className="footer">
-                <div className="footer-brand">GG DIGITAL ACCELERATION · FY27 AI HACKATHON · 50-TEAM LIMIT · SCIENCE FAIR: MARCH 20</div>
-                <div className="footer-links">
-                    <a href={RULES_URL} target="_blank" rel="noreferrer">Rules</a>
-                    <a href={EXTERNAL_FORM_URL} target="_blank" rel="noreferrer">Submit Project</a>
+            <footer className="site-footer">
+                <div className="site-footer-top">
+                    <div className="site-footer-brand">
+                        <div className="nav-spark"><SparkIcon size={14} /></div>
+                        <span className="site-footer-brand-text">GG Digital Acceleration · AI Hackathon 2026</span>
+                    </div>
+                    <div className="site-footer-links">
+                        <button className="site-footer-link-cta" onClick={() => openModal(0)}>Register →</button>
+                        <a className="site-footer-link" href={RULES_URL} target="_blank" rel="noreferrer">Rules ↗</a>
+                        <span className="site-footer-link">#gg-hackathon</span>
+                    </div>
+                </div>
+                <div className="site-footer-bottom">
+                    50-team limit · Registration closes March 9 · Science Fair: March 20 · Bentonville & Virtual
                 </div>
             </footer>
 
-            {/* ── MODALS ── */}
+            {/* ── REGISTRATION MODAL ── */}
             {showReg && (
                 <RegistrationModal
+                    initialScreen={modalInitScreen}
                     onClose={() => setShowReg(false)}
                     onRegister={() => {}}
                     submissionsTable={subTable}
                     dirRecords={dirRecords}
                     dirNameField={dfName}
                     dirEmailField={dfEmail}
-                />
-            )}
-            {selProb && (
-                <ProblemDetailModal
-                    prob={selProb}
-                    onClose={() => setSelProb(null)}
-                    probIdF={pfId}
-                    probTitleF={pfTitle}
-                    probDescF={pfDesc}
-                    probDiffF={pfDiff}
-                    probImpactF={pfImpact}
-                    probDomainF={pfDomain}
-                    probClaimedF={pfClaimed}
-                />
-            )}
-            {selReg && (
-                <RegDocModal
-                    reg={selReg}
-                    onClose={() => setSelReg(null)}
-                    regNameF={rdfName}
-                    regSummaryF={rdfSummary}
-                    regRiskF={rdfRisk}
-                    regHackF={rdfHack}
                 />
             )}
         </div>
