@@ -1,5 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
+    CalendarBlankIcon, FolderSimpleIcon, ChatCircleIcon, CheckSquareIcon,
+    NotePencilIcon, UserCircleIcon, ClipboardTextIcon, TimerIcon, TrophyIcon,
+    QuestionIcon, HeadsetIcon, ChalkboardTeacherIcon, UsersThreeIcon,
+    HandWavingIcon, MagnifyingGlassIcon, LockSimpleIcon,
+} from '@phosphor-icons/react';
+import {
     initializeBlock,
     useBase,
     useRecords,
@@ -96,7 +102,7 @@ html,body{scroll-behavior:smooth;}
 .portal{background:${T.white};color:${T.body};font-family:'Bogle','Brandon Text','Inter',sans-serif;min-height:100vh;font-size:14px;line-height:1.5;}
 
 /* ── NAV ── */
-.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:60px;background:${T.white};border-bottom:1px solid ${T.border};box-shadow:${T.shadow};}
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 56px;height:60px;background:${T.white};border-bottom:1px solid ${T.border};box-shadow:${T.shadow};}
 .nav-brand{display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted};font-weight:600;flex-shrink:0;}
 .nav-spark{width:30px;height:30px;background:${T.heroGrad};border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .nav-links{display:flex;align-items:center;gap:5px;}
@@ -110,7 +116,7 @@ html,body{scroll-behavior:smooth;}
 
 /* ── SECTIONS ── */
 section[id]{scroll-margin-top:70px;}
-.sec-wrap{max-width:860px;margin:0 auto;padding:64px 40px;}
+.sec-wrap{max-width:1160px;margin:0 auto;padding:72px 56px;}
 .sec-white{background:${T.white};border-bottom:1px solid ${T.border};}
 .sec-cloud{background:${T.cloud};border-bottom:1px solid ${T.border};}
 .sec-dark{background:${T.heroGrad};}
@@ -118,14 +124,14 @@ section[id]{scroll-margin-top:70px;}
 .sec-label-dark{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.9);}
 .sec-h2{font-size:26px;font-weight:800;letter-spacing:-0.01em;color:${T.deep};margin-bottom:10px;line-height:1.2;}
 .sec-h2-white{color:${T.white};}
-.sec-sub{font-size:14px;color:${T.muted};line-height:1.65;max-width:560px;margin-bottom:36px;}
+.sec-sub{font-size:14px;color:${T.muted};line-height:1.65;max-width:640px;margin-bottom:36px;}
 .sec-sub-white{color:rgba(255,255,255,0.72);}
 
 /* ── HERO ── */
-.hero{background:${T.heroGrad};padding:52px 40px 60px;position:relative;overflow:hidden;}
+.hero{background:${T.heroGrad};padding:64px 56px 72px;position:relative;overflow:hidden;}
 .hero::after{content:'';position:absolute;top:-40%;right:-8%;width:55%;height:180%;background:radial-gradient(ellipse,rgba(44,142,244,0.18),transparent 65%);pointer-events:none;}
 .hero-inner{max-width:100%;position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:40px;}
-.hero-left{flex:1;min-width:0;max-width:600px;}
+.hero-left{flex:1;min-width:0;max-width:700px;}
 .hero-orbital{flex-shrink:0;position:relative;width:220px;height:220px;display:flex;align-items:center;justify-content:center;}
 .orb-ring{position:absolute;border-radius:50%;}
 .orb-r1{width:220px;height:220px;border:1px dashed rgba(255,255,255,0.15);animation:lpspin 32s linear infinite;}
@@ -164,8 +170,8 @@ section[id]{scroll-margin-top:70px;}
 .stat-label{font-family:'Inter',sans-serif;font-size:9px;color:${T.muted};letter-spacing:0.08em;text-transform:uppercase;}
 
 /* ── PHASE TIMELINE ── */
-.phase-section{background:${T.white};border-bottom:1px solid ${T.border};padding:20px 40px 16px;}
-.phase-timeline{display:flex;align-items:flex-start;max-width:860px;margin:0 auto;}
+.phase-section{background:${T.white};border-bottom:1px solid ${T.border};padding:20px 56px 16px;}
+.phase-timeline{display:flex;align-items:flex-start;max-width:1160px;margin:0 auto;}
 .phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
 .phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:${T.border};}
 .phase-pill{padding:5px 14px;border-radius:100px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;margin-bottom:7px;white-space:nowrap;position:relative;z-index:1;}
@@ -177,7 +183,7 @@ section[id]{scroll-margin-top:70px;}
 .rule-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
 .rule-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:24px 20px;transition:box-shadow 0.18s;}
 .rule-card:hover{box-shadow:${T.shadowM};}
-.rule-icon{font-size:22px;margin-bottom:12px;}
+.rule-icon{margin-bottom:14px;display:flex;}
 .rule-title{font-size:14px;font-weight:700;color:${T.deep};margin-bottom:8px;}
 .rule-desc{font-size:13px;color:${T.muted};line-height:1.65;}
 .rules-link{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:24px;}
@@ -227,7 +233,7 @@ section[id]{scroll-margin-top:70px;}
 .ws-lock-label{font-size:13px;color:${T.muted};font-weight:500;}
 .ws-feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
 .ws-tile{background:${T.cloud};border:1px solid ${T.border};border-radius:8px;padding:16px 14px;}
-.ws-tile-icon{font-size:20px;margin-bottom:8px;}
+.ws-tile-icon{margin-bottom:10px;display:flex;}
 .ws-tile-label{font-size:13px;font-weight:700;color:${T.deep};margin-bottom:4px;}
 .ws-tile-desc{font-size:12px;color:${T.muted};line-height:1.5;}
 .ws-note{font-size:12px;color:${T.muted};font-style:italic;line-height:1.6;}
@@ -235,7 +241,7 @@ section[id]{scroll-margin-top:70px;}
 /* ── HELP CARDS ── */
 .help-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;}
 .help-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:24px 20px;display:flex;flex-direction:column;}
-.help-card-icon{font-size:24px;margin-bottom:10px;}
+.help-card-icon{margin-bottom:12px;display:flex;}
 .help-card-title{font-size:15px;font-weight:800;color:${T.deep};margin-bottom:16px;}
 
 /* ── FAQ ACCORDION ── */
@@ -340,7 +346,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .opt-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
 .opt-card:hover::before{opacity:1;}
 .opt-card-dis{opacity:0.4;cursor:not-allowed;pointer-events:none;}
-.opt-card-icon{font-size:26px;}
+.opt-card-icon{margin-bottom:4px;display:flex;}
 .opt-card-title{font-size:14px;font-weight:800;color:${T.deep};}
 .opt-card-desc{font-size:12px;color:${T.muted};line-height:1.6;flex:1;}
 .opt-card-cta{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:${T.blue};}
@@ -357,6 +363,11 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(11,44,95,0.25);border-top-color:${T.deep};border-radius:50%;animation:spin .7s linear infinite;}
 
 /* ── MOBILE ── */
+@media(max-width:900px){
+  .rule-cards,.tool-cards{grid-template-columns:1fr 1fr;}
+  .help-cards{grid-template-columns:1fr;}
+  .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
+}
 @media(max-width:680px){
   .nav{padding:0 16px;}
   .nav-links{display:none;}
@@ -609,19 +620,19 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                     <div className="modal-body">
                         <div className="opt-cards">
                             <div className="opt-card" onClick={() => setScreen('team')}>
-                                <div className="opt-card-icon">👥</div>
+                                <div className="opt-card-icon"><UsersThreeIcon size={28} color={T.blue} weight="duotone" /></div>
                                 <div className="opt-card-title">Form a Team</div>
                                 <div className="opt-card-desc">Register your team of 3–5. You lead the build and submit at the end.</div>
                                 <div className="opt-card-cta">Get Started →</div>
                             </div>
                             <div className="opt-card" onClick={() => setScreen('agent')}>
-                                <div className="opt-card-icon">✋</div>
+                                <div className="opt-card-icon"><HandWavingIcon size={28} color={T.blue} weight="duotone" /></div>
                                 <div className="opt-card-title">Join as Free Agent</div>
                                 <div className="opt-card-desc">No team yet? We'll match you based on your skills and problem interest.</div>
                                 <div className="opt-card-cta">Sign Up →</div>
                             </div>
                             <div className="opt-card opt-card-dis">
-                                <div className="opt-card-icon">🔍</div>
+                                <div className="opt-card-icon"><MagnifyingGlassIcon size={28} color={T.muted2} weight="duotone" /></div>
                                 <div className="opt-card-title">Find a Team</div>
                                 <div className="opt-card-desc">Browse teams actively looking for members to join.</div>
                                 <div className="opt-card-soon">Coming Soon</div>
@@ -848,12 +859,12 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
 
 // ─── STATIC DATA ──────────────────────────────────────────────────────────────
 const WORKSPACE_TILES = [
-    { icon: '📅', label: 'Training Calendar',    desc: 'All office hours, sessions, and deadlines in one place.'               },
-    { icon: '📁', label: 'Resource Library',     desc: 'Rules, templates, data sets, and tool guides.'                         },
-    { icon: '💬', label: 'Team Announcements',   desc: 'Push notifications from the hackathon team directly to your workspace.' },
-    { icon: '📝', label: 'Submission Checklist', desc: 'Track your deliverables and submit your final project.'                 },
-    { icon: '👥', label: 'Team Notes',           desc: 'Shared scratchpad for your team during the build window.'              },
-    { icon: '🏅', label: 'Mentor Access',        desc: "Your assigned mentor's contact info and office hours."                 },
+    { Icon: CalendarBlankIcon, label: 'Training Calendar',    desc: 'All office hours, sessions, and deadlines in one place.'               },
+    { Icon: FolderSimpleIcon,  label: 'Resource Library',     desc: 'Rules, templates, data sets, and tool guides.'                         },
+    { Icon: ChatCircleIcon,    label: 'Team Announcements',   desc: 'Push notifications from the hackathon team directly to your workspace.' },
+    { Icon: CheckSquareIcon,   label: 'Submission Checklist', desc: 'Track your deliverables and submit your final project.'                 },
+    { Icon: NotePencilIcon,    label: 'Team Notes',           desc: 'Shared scratchpad for your team during the build window.'              },
+    { Icon: UserCircleIcon,    label: 'Mentor Access',        desc: "Your assigned mentor's contact info and office hours."                 },
 ];
 
 const FAQS = [
@@ -1042,17 +1053,17 @@ function App() {
 
                     <div className="rule-cards">
                         <div className="rule-card">
-                            <div className="rule-icon">📋</div>
+                            <div className="rule-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="rule-title">Eligibility</div>
                             <div className="rule-desc">Open to all Walmart Home Office associates. Teams of 3–5; solo sign-ups will be matched to a team.</div>
                         </div>
                         <div className="rule-card">
-                            <div className="rule-icon">⏱️</div>
+                            <div className="rule-icon"><TimerIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="rule-title">Build Window</div>
                             <div className="rule-desc">No building before March 16. All prototypes must be started and completed during the official 48-hour window.</div>
                         </div>
                         <div className="rule-card">
-                            <div className="rule-icon">🏆</div>
+                            <div className="rule-icon"><TrophyIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="rule-title">Judging</div>
                             <div className="rule-desc">Projects scored on Impact (30%), Innovation (25%), Feasibility (25%), and Demo Quality (20%). Top 5 teams pitch to executive judges.</div>
                         </div>
@@ -1196,13 +1207,13 @@ function App() {
 
                     <div className="ws-preview-card">
                         <div className="ws-lock-row">
-                            <div className="ws-lock-icon">🔒</div>
+                            <div className="ws-lock-icon"><LockSimpleIcon size={32} color={T.muted} weight="duotone" /></div>
                             <div className="ws-lock-label">Unlocks after registration is confirmed</div>
                         </div>
                         <div className="ws-feature-grid">
                             {WORKSPACE_TILES.map(tile => (
                                 <div key={tile.label} className="ws-tile">
-                                    <div className="ws-tile-icon">{tile.icon}</div>
+                                    <div className="ws-tile-icon"><tile.Icon size={22} color={T.blue} weight="duotone" /></div>
                                     <div className="ws-tile-label">{tile.label}</div>
                                     <div className="ws-tile-desc">{tile.desc}</div>
                                 </div>
@@ -1225,7 +1236,7 @@ function App() {
                     <div className="help-cards">
                         {/* Card 1: FAQs */}
                         <div className="help-card">
-                            <div className="help-card-icon">❓</div>
+                            <div className="help-card-icon"><QuestionIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="help-card-title">Frequently Asked Questions</div>
                             <div className="faq-list">
                                 {FAQS.map((item, i) => (
@@ -1242,7 +1253,7 @@ function App() {
 
                         {/* Card 2: Associate Support */}
                         <div className="help-card">
-                            <div className="help-card-icon">🙋</div>
+                            <div className="help-card-icon"><HeadsetIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="help-card-title">Associate Support</div>
                             <div className="contact-blocks">
                                 <div className="contact-block">
@@ -1267,7 +1278,7 @@ function App() {
 
                         {/* Card 3: Mentor Program */}
                         <div className="help-card">
-                            <div className="help-card-icon">🧑‍🏫</div>
+                            <div className="help-card-icon"><ChalkboardTeacherIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="help-card-title">Mentor Program</div>
                             <div className="mentor-body">
                                 Every registered team is assigned one internal mentor with relevant domain or technical expertise.
