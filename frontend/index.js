@@ -1,10 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
-    CalendarBlankIcon, FolderSimpleIcon, ChatCircleIcon, CheckSquareIcon,
-    NotePencilIcon, UserCircleIcon, ClipboardTextIcon, TimerIcon, TrophyIcon,
+    ClipboardTextIcon, TimerIcon, TrophyIcon,
     QuestionIcon, HeadsetIcon, ChalkboardTeacherIcon, UsersThreeIcon,
-    HandWavingIcon, MagnifyingGlassIcon, LockSimpleIcon, ArrowRightIcon,
-    WarningIcon, CalendarDotsIcon, SealCheckIcon,
+    HandWavingIcon, ArrowRightIcon, WarningIcon, SealCheckIcon,
+    LockSimpleIcon, MagnifyingGlassIcon, CalendarDotsIcon,
 } from '@phosphor-icons/react';
 import {
     initializeBlock,
@@ -12,15 +11,15 @@ import {
     useRecords,
 } from '@airtable/blocks/interface/ui';
 
-// ─── SAFE FIELD HELPERS ──────────────────────────────────────────────────────
-function safeGetCellValue(record, fieldName) {
-    try { return record.getCellValue(fieldName); } catch (e) { return null; }
+// ─── SAFE FIELD HELPERS ───────────────────────────────────────────────────────
+function safeGetCellValue(record, field) {
+    try { return record.getCellValue(field); } catch (e) { return null; }
 }
-function safeGetCellValueAsString(record, fieldName) {
-    try { return record.getCellValueAsString(fieldName); } catch (e) { return ''; }
+function safeGetCellValueAsString(record, field) {
+    try { return record.getCellValueAsString(field); } catch (e) { return ''; }
 }
 
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
 const EXTERNAL_FORM_URL  = 'https://airtable.com/app4AdZ5m3rWZ4kt8/pagX2wubHXk1Q7Em0/form';
 const RULES_URL          = 'https://teams.wal-mart.com/sites/GGDigitalAcceleration';
 const TEST_NAMES         = ['Test', 'Test ', 'Test2', 'test 5', 'Rest'];
@@ -29,7 +28,7 @@ const ATTENDANCE_OPTIONS = ['Virtual', 'In Person', 'Hybrid'];
 const HACKATHON_DEADLINE = new Date('2026-03-09T17:00:00');
 const MAX_TEAMS          = 50;
 
-// ─── WALMART SPARK SVG ────────────────────────────────────────────────────────
+// ─── WALMART SPARK SVG ───────────────────────────────────────────────────────
 const SPARK_PATHS = `<path d="M375.663,273.363c12.505-2.575,123.146-53.269,133.021-58.97c22.547-13.017,30.271-41.847,17.254-64.393s-41.847-30.271-64.393-17.254c-9.876,5.702-109.099,76.172-117.581,85.715c-9.721,10.937-11.402,26.579-4.211,39.033C346.945,269.949,361.331,276.314,375.663,273.363z"/><path d="M508.685,385.607c-9.876-5.702-120.516-56.396-133.021-58.97c-14.332-2.951-28.719,3.415-35.909,15.87c-7.191,12.455-5.51,28.097,4.211,39.033c8.482,9.542,107.705,80.013,117.581,85.715c22.546,13.017,51.376,5.292,64.393-17.254S531.231,398.624,508.685,385.607z"/><path d="M266.131,385.012c-14.382,0-27.088,9.276-31.698,23.164c-4.023,12.117-15.441,133.282-15.441,144.685c0,26.034,21.105,47.139,47.139,47.139c26.034,0,47.139-21.105,47.139-47.139c0-11.403-11.418-132.568-15.441-144.685C293.219,394.288,280.513,385.012,266.131,385.012z"/><path d="M156.599,326.637c-12.505,2.575-123.146,53.269-133.021,58.97C1.031,398.624-6.694,427.454,6.323,450c13.017,22.546,41.847,30.271,64.393,17.254c9.876-5.702,109.098-76.172,117.58-85.715c9.722-10.937,11.402-26.579,4.211-39.033S170.931,323.686,156.599,326.637z"/><path d="M70.717,132.746C48.171,119.729,19.341,127.454,6.323,150c-13.017,22.546-5.292,51.376,17.254,64.393c9.876,5.702,120.517,56.396,133.021,58.97c14.332,2.951,28.719-3.415,35.91-15.87c7.191-12.455,5.51-28.096-4.211-39.033C179.815,208.918,80.592,138.447,70.717,132.746z"/><path d="M266.131,0c-26.035,0-47.139,21.105-47.139,47.139c0,11.403,11.418,132.568,15.441,144.685c4.611,13.888,17.317,23.164,31.698,23.164s27.088-9.276,31.698-23.164c4.023-12.117,15.441-133.282,15.441-144.685C313.27,21.105,292.165,0,266.131,0z"/>`;
 
 function SparkIcon({ size = 20, color = 'white' }) {
@@ -40,33 +39,33 @@ function SparkIcon({ size = 20, color = 'white' }) {
     );
 }
 
-// ─── JUDGING ──────────────────────────────────────────────────────────────────
+// ─── JUDGING ─────────────────────────────────────────────────────────────────
 const JUDGING = [
-    { label: 'Impact',       weight: '30%', desc: 'Does it solve a real GG problem? Would it save time, reduce risk, or close a compliance gap?' },
-    { label: 'Innovation',   weight: '25%', desc: 'Does it use AI meaningfully — automating or augmenting a real decision, not just a dashboard?' },
-    { label: 'Feasibility',  weight: '25%', desc: 'Could it be deployed at Walmart with reasonable effort? Built on available data and tools?' },
-    { label: 'Demo Quality', weight: '20%', desc: 'Is the working prototype clear and compelling? Can you explain the problem it solves in 2 minutes?' },
+    { label: 'Relevance',       weight: '30%', desc: 'Does it solve a real GG problem? Would it save time, reduce risk, or close a compliance gap?' },
+    { label: 'Business Impact', weight: '25%', desc: 'Can you quantify the value? Think hours saved, risk reduced, or decisions improved per month.' },
+    { label: 'AI Integration',  weight: '25%', desc: 'Does it use AI meaningfully — automating or augmenting a real decision, not just a dashboard?' },
+    { label: 'Demo Quality',    weight: '20%', desc: 'Is the working prototype clear and compelling? Can you explain the problem it solves in 2 minutes?' },
 ];
 
-// ─── KEY DATES ────────────────────────────────────────────────────────────────
+// ─── KEY DATES ───────────────────────────────────────────────────────────────
 const KEY_DATES = [
-    { event: 'Free Agent Matching Closes',  date: 'March 8',              note: '' },
-    { event: 'Registration Closes',         date: 'March 9 · 5pm CT',     note: '50-team limit' },
-    { event: 'Final Team Changes',          date: 'March 14',             note: '' },
-    { event: 'Build Window Opens',          date: 'March 16 · 8am CT',    note: 'No building before this date' },
-    { event: 'Build Window Closes',         date: 'March 19 · 5pm CT',    note: '' },
-    { event: 'Science Fair (Presentations)',date: 'March 20',             note: 'Bentonville & Virtual' },
+    { event: 'Free Agent Matching Closes',   date: 'March 8',              note: '' },
+    { event: 'Registration Closes',          date: 'March 9 · 5pm CT',     note: '50-team limit' },
+    { event: 'Final Team Changes',           date: 'March 14',             note: '' },
+    { event: 'Build Window Opens',           date: 'March 16 · 8am CT',    note: 'No building before this date' },
+    { event: 'Build Window Closes',          date: 'March 19 · 5pm CT',    note: '' },
+    { event: 'Science Fair (Presentations)', date: 'March 20',             note: 'Bentonville & Virtual' },
 ];
 
-// ─── PHASE TIMELINE ───────────────────────────────────────────────────────────
+// ─── PHASE TIMELINE ──────────────────────────────────────────────────────────
 const PHASES = [
-    { label: 'Register', sub: 'Now Open — March 9',      active: true  },
-    { label: 'Train',    sub: 'Week of March 9',           active: false },
-    { label: 'Build',    sub: 'March 16–19 · 48 hrs',     active: false },
-    { label: 'Present',  sub: 'March 20 · Science Fair',  active: false },
+    { label: 'Register', sub: 'Now Open — March 9',     active: true  },
+    { label: 'Train',    sub: 'Week of March 9',          active: false },
+    { label: 'Build',    sub: 'March 16–19 · 48 hrs',    active: false },
+    { label: 'Present',  sub: 'March 20 · Science Fair', active: false },
 ];
 
-// ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
+// ─── DESIGN TOKENS ───────────────────────────────────────────────────────────
 const T = {
     blue:     '#0071CE',
     deep:     '#001E60',
@@ -86,7 +85,7 @@ const T = {
     shadowL:  '0 12px 40px rgba(0,0,0,0.13)',
 };
 
-// ─── COUNTDOWN ────────────────────────────────────────────────────────────────
+// ─── COUNTDOWN ───────────────────────────────────────────────────────────────
 function getCountdown() {
     const diff = HACKATHON_DEADLINE - new Date();
     if (diff <= 0) return 'Closed';
@@ -96,322 +95,283 @@ function getCountdown() {
     return `${d}d ${h}h ${m}m`;
 }
 
-// ─── CSS ──────────────────────────────────────────────────────────────────────
+// ─── CSS ─────────────────────────────────────────────────────────────────────
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-html,body{scroll-behavior:smooth;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-.portal{background:${T.white};color:${T.body};font-family:'Bogle','Brandon Text','Inter',sans-serif;min-height:100vh;font-size:14px;line-height:1.5;}
+.portal{background:${T.white};color:${T.body};font-family:'Bogle','Brandon Text','Inter',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:14px;line-height:1.5;}
 
-/* ── NAV ── */
-.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 56px;height:64px;background:${T.white};border-bottom:1px solid ${T.border};box-shadow:0 1px 0 ${T.border};}
-.nav-brand{display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.13em;text-transform:uppercase;color:${T.muted};font-weight:700;flex-shrink:0;}
-.nav-spark{width:32px;height:32px;background:${T.heroGrad};border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.nav-links{display:flex;align-items:center;gap:2px;}
-.nav-link{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:${T.muted};text-decoration:none;padding:6px 14px;border-radius:100px;border:1px solid transparent;transition:all 0.15s;white-space:nowrap;}
-.nav-link:hover{color:${T.blue};}
-.nav-link.active{color:${T.blue};background:${T.ice};border-color:${T.border2};}
-.nav-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
-.nav-countdown{font-family:'Inter',sans-serif;font-size:11px;color:${T.muted};white-space:nowrap;padding:5px 12px;background:${T.cloud};border-radius:100px;border:1px solid ${T.border};}
-.nav-cta{background:${T.yellow};color:${T.deep};border:none;padding:10px 22px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.05em;cursor:pointer;border-radius:6px;box-shadow:0 2px 6px rgba(255,194,32,0.3);transition:all 0.18s;white-space:nowrap;}
-.nav-cta:hover{background:#FFD050;box-shadow:0 4px 12px rgba(255,194,32,0.4);transform:translateY(-1px);}
+/* ── TOP BAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:58px;background:${T.heroGrad};flex-shrink:0;}
+.topbar-brand{display:flex;align-items:center;gap:10px;}
+.topbar-spark{width:30px;height:30px;display:flex;align-items:center;justify-content:center;}
+.topbar-title{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.92);letter-spacing:0.03em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-countdown{font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);padding:4px 12px;background:rgba(255,255,255,0.12);border-radius:100px;border:1px solid rgba(255,255,255,0.18);white-space:nowrap;}
+.topbar-cta{background:${T.yellow};color:${T.deep};border:none;padding:8px 18px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;border-radius:6px;box-shadow:0 2px 6px rgba(255,194,32,0.3);transition:all 0.18s;white-space:nowrap;}
+.topbar-cta:hover{background:#FFD050;transform:translateY(-1px);}
 
-/* ── SECTIONS ── */
-section[id]{scroll-margin-top:74px;}
-.sec-wrap{max-width:1200px;margin:0 auto;padding:72px 56px;}
-.sec-white{background:${T.white};border-bottom:1px solid ${T.border};}
-.sec-cloud{background:${T.cloud};border-bottom:1px solid ${T.border};}
-.sec-dark{background:${T.heroGrad};}
-.sec-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.blue};display:inline-block;margin-bottom:10px;}
-.sec-label-dark{color:rgba(255,255,255,0.75);}
-.sec-h2{font-size:32px;font-weight:800;letter-spacing:-0.02em;color:${T.deep};margin-bottom:10px;line-height:1.15;}
-.sec-h2-white{color:${T.white};}
-.sec-sub{font-size:15px;color:${T.muted};line-height:1.7;max-width:640px;margin-bottom:40px;}
-.sec-sub-white{color:rgba(255,255,255,0.72);}
-
-/* ── HERO ── */
-.hero{background:${T.heroGrad};padding:72px 56px 80px;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 65% 50%,rgba(44,142,244,0.22),transparent);pointer-events:none;}
-.hero-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:60px;}
-.hero-left{flex:1;min-width:0;max-width:680px;}
-.hero-orbital{flex-shrink:0;position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center;}
-.orb-ring{position:absolute;border-radius:50%;}
-.orb-r1{width:240px;height:240px;border:1px dashed rgba(255,255,255,0.12);animation:lpspin 32s linear infinite;}
-.orb-r2{width:172px;height:172px;border:1px solid rgba(255,255,255,0.10);animation:lpspin 22s linear infinite reverse;}
-.orb-r3{width:114px;height:114px;border:1px solid rgba(255,255,255,0.18);animation:lpspin 16s linear infinite;}
-.orb-core{position:relative;z-index:2;width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,0.10);border:2px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);}
-.orb-track{position:absolute;border-radius:50%;}
-.orb-t1{width:210px;height:210px;animation:lpspin 14s linear infinite;}
-.orb-t2{width:145px;height:145px;animation:lpspin 9s linear infinite reverse;}
-.orb-dot{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);border-radius:50%;}
-.orb-t1 .orb-dot{width:9px;height:9px;background:#FFC220;box-shadow:0 0 12px rgba(255,194,32,0.8),0 0 24px rgba(255,194,32,0.3);}
-.orb-t2 .orb-dot{width:6px;height:6px;background:white;box-shadow:0 0 8px rgba(255,255,255,0.8),0 0 16px rgba(255,255,255,0.3);}
-@keyframes lpspin{to{transform:rotate(360deg);}}
-.hero-eyebrow{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.60);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
-.hero-eyebrow::before{content:'';display:block;width:28px;height:1px;background:rgba(255,255,255,0.35);}
-.hero h1{font-size:54px;font-weight:800;line-height:1.04;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:20px;}
-.hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 40%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-byline{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:${T.white};margin-bottom:14px;opacity:0.9;}
-.hero-sub{font-size:16px;color:rgba(255,255,255,0.68);max-width:540px;line-height:1.68;margin-bottom:36px;}
-.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
-.btn-primary{display:inline-flex;align-items:center;gap:8px;background:${T.yellow};color:${T.deep};padding:13px 26px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;border-radius:6px;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.35);transition:all 0.18s;text-decoration:none;white-space:nowrap;}
-.btn-primary:hover{background:#FFD050;transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,194,32,0.4);}
-.btn-outline{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.10);color:${T.white};padding:13px 22px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;border-radius:6px;border:1px solid rgba(255,255,255,0.22);cursor:pointer;transition:all 0.18s;text-decoration:none;}
-.btn-outline:hover{background:rgba(255,255,255,0.18);}
-.btn-outline-dark{display:inline-flex;align-items:center;gap:7px;background:none;color:${T.deep};padding:13px 22px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;border-radius:6px;border:1px solid ${T.border2};cursor:pointer;transition:all 0.18s;}
-.btn-outline-dark:hover{background:${T.ice};border-color:${T.blue};color:${T.blue};}
-
-/* ── STAT BAR ── */
-.stat-bar{background:${T.white};border-bottom:1px solid ${T.border};}
-.stat-bar-inner{display:grid;grid-template-columns:repeat(6,1fr);max-width:1200px;margin:0 auto;}
-.stat-item{padding:20px 0;border-right:1px solid ${T.border};display:flex;flex-direction:column;gap:5px;align-items:center;text-align:center;}
-.stat-item:last-child{border-right:none;}
-.stat-num{font-family:'Inter',sans-serif;font-size:26px;font-weight:800;color:${T.blue};line-height:1;letter-spacing:-0.02em;}
-.stat-num-red{color:#C0392B;}
-.stat-num-sm{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:${T.blue};line-height:1.2;letter-spacing:-0.01em;}
-.stat-label{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};letter-spacing:0.06em;text-transform:uppercase;font-weight:500;}
-
-/* ── PHASE TIMELINE ── */
-.phase-section{background:${T.white};border-bottom:1px solid ${T.border};padding:22px 56px 18px;}
-.phase-timeline{display:flex;align-items:flex-start;max-width:1200px;margin:0 auto;}
+/* ── PHASE STRIP ── */
+.phase-strip{background:${T.white};border-bottom:1px solid ${T.border};padding:10px 32px;flex-shrink:0;}
+.phase-timeline{display:flex;align-items:flex-start;max-width:900px;}
 .phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
-.phase-node:not(:last-child)::after{content:'';position:absolute;top:15px;left:50%;width:100%;height:1px;background:${T.border};}
-.phase-pill{padding:6px 16px;border-radius:100px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;margin-bottom:8px;white-space:nowrap;position:relative;z-index:1;}
+.phase-node:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:1px;background:${T.border};}
+.phase-pill{padding:5px 14px;border-radius:100px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;margin-bottom:5px;white-space:nowrap;position:relative;z-index:1;}
 .phase-pill-active{background:${T.yellow};color:${T.deep};box-shadow:0 2px 8px rgba(255,194,32,0.35);}
 .phase-pill-inactive{background:${T.cloud};border:1px solid ${T.border};color:${T.muted2};}
-.phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};text-align:center;line-height:1.5;max-width:110px;}
+.phase-sub{font-family:'Inter',sans-serif;font-size:9px;color:${T.muted};text-align:center;line-height:1.5;max-width:100px;}
+
+/* ── TAB BAR ── */
+.tab-bar{background:${T.white};border-bottom:2px solid ${T.border};display:flex;padding:0 32px;flex-shrink:0;}
+.tab-btn{padding:0 18px;height:44px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.04em;color:${T.muted};border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;white-space:nowrap;}
+.tab-btn:hover{color:${T.blue};}
+.tab-btn.active{color:${T.blue};border-bottom-color:${T.blue};}
+
+/* ── PORTAL BODY ── */
+.portal-body{flex:1;overflow-y:auto;}
+.tab-wrap{padding:28px 32px 40px;max-width:1100px;margin:0 auto;}
+.tab-head{margin-bottom:24px;}
+.tab-h1{font-size:24px;font-weight:800;color:${T.deep};letter-spacing:-0.02em;margin-bottom:5px;}
+.tab-sub{font-size:13px;color:${T.muted};line-height:1.65;max-width:640px;}
+
+/* ── SECTION DIVIDERS ── */
+.sec-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.blue};display:inline-block;margin-bottom:8px;}
+.sec-h2{font-size:18px;font-weight:800;color:${T.deep};margin-bottom:5px;}
+.sec-sub{font-size:13px;color:${T.muted};line-height:1.65;margin-bottom:20px;}
+.section-block{margin-bottom:36px;}
+
+/* ── RULE CARDS ── */
+.rule-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.rule-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:22px 20px;transition:box-shadow 0.18s;}
+.rule-card:hover{box-shadow:${T.shadowM};}
+.rule-icon{margin-bottom:14px;display:flex;}
+.rule-title{font-size:14px;font-weight:700;color:${T.deep};margin-bottom:6px;}
+.rule-desc{font-size:12px;color:${T.muted};line-height:1.65;}
+
+/* ── KEY DATES TABLE ── */
+.key-dates-table{width:100%;border:1px solid ${T.border};border-radius:8px;overflow:hidden;margin-bottom:24px;}
+.kdt-head{background:${T.cloud};display:grid;grid-template-columns:1fr auto 1fr;padding:8px 18px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:${T.muted};}
+.kdt-row{display:grid;grid-template-columns:1fr auto 1fr;padding:11px 18px;border-top:1px solid ${T.border};align-items:center;gap:14px;}
+.kdt-event{font-size:12px;font-weight:600;color:${T.body};}
+.kdt-date{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.deep};text-align:center;white-space:nowrap;}
+.kdt-note{font-family:'Inter',sans-serif;font-size:11px;color:${T.muted};text-align:right;}
+.kdt-note-warn{color:#C0392B;font-weight:600;}
+
+/* ── JUDGE GRID ── */
+.judge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.judge-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:16px 14px;}
+.judge-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:6px;}
+.judge-label{font-size:13px;font-weight:800;color:${T.deep};line-height:1.2;}
+.judge-weight{font-family:'Inter',sans-serif;font-size:18px;font-weight:800;color:${T.blue};flex-shrink:0;}
+.judge-desc{font-size:11px;color:${T.muted};line-height:1.6;}
+
+/* ── TOOL CARDS ── */
+.tool-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.tool-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.18s;}
+.tool-card:hover{box-shadow:${T.shadowM};}
+.tool-bar{height:3px;flex-shrink:0;}
+.tool-inner{padding:18px 16px;display:flex;flex-direction:column;flex:1;}
+.tool-name{font-size:17px;font-weight:800;color:${T.deep};margin-bottom:3px;}
+.tool-tagline{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${T.muted2};margin-bottom:10px;}
+.tool-desc{font-size:12px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:12px;}
+.tool-access-block{background:${T.cloud};border:1px solid ${T.border};border-radius:5px;padding:10px 12px;font-size:11px;color:${T.muted};line-height:1.6;margin-bottom:10px;}
+.tool-link{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:5px;cursor:pointer;}
+.tool-link:hover{text-decoration:underline;}
+.tool-link-dim{color:${T.muted2};cursor:default;}
 
 /* ── PROBLEM CARDS ── */
-.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
 .prob-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:0;cursor:pointer;transition:all 0.18s;position:relative;overflow:hidden;display:flex;flex-direction:column;}
 .prob-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:${T.border};transition:background 0.18s;}
 .prob-card.diff-Easy::before{background:#27AE60;}
 .prob-card.diff-Medium::before{background:#E67E22;}
 .prob-card.diff-Hard::before{background:#C0392B;}
 .prob-card:hover{border-color:#C5D6EC;box-shadow:${T.shadowM};}
-.prob-card-inner{padding:18px 18px 18px 22px;display:flex;flex-direction:column;flex:1;}
-.prob-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
-.prob-card-id{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted2};letter-spacing:0.08em;font-weight:600;}
-.prob-card-impact{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;background:${T.ice};color:${T.blue};flex-shrink:0;}
-.prob-card-title{font-size:14px;font-weight:700;color:${T.deep};margin-bottom:8px;line-height:1.35;}
-.prob-card-desc{font-size:12px;color:${T.muted};line-height:1.6;flex:1;margin-bottom:12px;}
+.prob-card-inner{padding:14px 14px 14px 18px;display:flex;flex-direction:column;flex:1;}
+.prob-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:6px;}
+.prob-card-id{font-family:'Inter',sans-serif;font-size:9px;color:${T.muted2};letter-spacing:0.08em;font-weight:600;}
+.prob-card-impact{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:${T.ice};color:${T.blue};flex-shrink:0;}
+.prob-card-title{font-size:13px;font-weight:700;color:${T.deep};margin-bottom:6px;line-height:1.35;}
+.prob-card-desc{font-size:11px;color:${T.muted};line-height:1.6;flex:1;margin-bottom:10px;}
 .prob-card-footer{display:flex;align-items:center;justify-content:space-between;}
-.prob-card-tags{display:flex;gap:5px;flex-wrap:wrap;}
-.ptag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;}
+.prob-card-tags{display:flex;gap:4px;flex-wrap:wrap;}
+.ptag{font-family:'Inter',sans-serif;font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;}
 .ptag-domain{background:${T.cloud};color:${T.muted};}
 .ptag-easy{background:#E8F8EF;color:#1A7F37;}
 .ptag-medium{background:#FEF3E4;color:#92610A;}
 .ptag-hard{background:#FEE8E8;color:#C0392B;}
 .prob-card-arrow{color:${T.muted2};transition:all 0.15s;flex-shrink:0;}
 .prob-card:hover .prob-card-arrow{color:${T.blue};transform:translateX(2px);}
-.prob-note{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:14px 20px;font-size:13px;color:${T.muted};line-height:1.6;}
-.prob-note strong{color:${T.deep};}
 
-/* ── RULE CARDS ── */
-.rule-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
-.rule-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:26px 22px;transition:box-shadow 0.18s;}
-.rule-card:hover{box-shadow:${T.shadowM};}
-.rule-icon{margin-bottom:16px;display:flex;}
-.rule-title{font-size:15px;font-weight:700;color:${T.deep};margin-bottom:8px;}
-.rule-desc{font-size:13px;color:${T.muted};line-height:1.65;}
-.rules-link{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:32px;}
-.rules-link:hover{text-decoration:underline;}
-
-/* ── KEY DATES TABLE ── */
-.key-dates-table{width:100%;border:1px solid ${T.border};border-radius:8px;overflow:hidden;margin-bottom:32px;}
-.kdt-head{background:${T.cloud};display:grid;grid-template-columns:1fr auto 1fr;padding:10px 20px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:${T.muted};}
-.kdt-row{display:grid;grid-template-columns:1fr auto 1fr;padding:13px 20px;border-top:1px solid ${T.border};align-items:center;gap:16px;}
-.kdt-event{font-size:13px;font-weight:600;color:${T.body};}
-.kdt-date{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.deep};text-align:center;white-space:nowrap;}
-.kdt-note{font-family:'Inter',sans-serif;font-size:11px;color:${T.muted};text-align:right;}
-.kdt-note-warn{color:#C0392B;font-weight:600;}
-.judge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-.judge-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:20px 18px;}
-.judge-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px;}
-.judge-label{font-size:14px;font-weight:800;color:${T.deep};line-height:1.2;}
-.judge-weight{font-family:'Inter',sans-serif;font-size:20px;font-weight:800;color:${T.blue};flex-shrink:0;}
-.judge-desc{font-size:12px;color:${T.muted};line-height:1.6;}
-
-/* ── TOOL CARDS ── */
-.tool-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
-.tool-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.18s;}
-.tool-card:hover{box-shadow:${T.shadowM};}
-.tool-bar{height:4px;flex-shrink:0;}
-.tool-inner{padding:22px 20px;display:flex;flex-direction:column;flex:1;}
-.tool-name{font-size:19px;font-weight:800;color:${T.deep};margin-bottom:4px;}
-.tool-tagline{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:${T.muted2};margin-bottom:13px;}
-.tool-desc{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:16px;}
-.tool-access-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:13px 14px;font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:14px;}
-.tool-link{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:5px;cursor:pointer;}
-.tool-link:hover{text-decoration:underline;}
-.tool-link-dim{color:${T.muted2};cursor:default;}
-.callout-box{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:16px 20px;font-size:13px;color:${T.muted};line-height:1.7;}
-.callout-box strong{color:${T.deep};}
-
-/* ── REGISTRATION COLS ── */
-.reg-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
-.reg-col-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:30px 26px;display:flex;flex-direction:column;}
-.reg-col-head{font-size:17px;font-weight:800;color:${T.deep};margin-bottom:22px;}
-.step-list{list-style:none;display:flex;flex-direction:column;gap:16px;margin-bottom:22px;}
-.step-item{display:flex;gap:14px;align-items:flex-start;}
-.step-num{width:26px;height:26px;border-radius:50%;background:${T.blue};color:${T.white};font-family:'Inter',sans-serif;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0px;}
-.step-text{font-size:13px;color:${T.body};line-height:1.6;padding-top:3px;}
-.warn-note{background:#FEF9EC;border:1px solid #F0D060;border-radius:6px;padding:11px 14px;font-size:12px;color:#7A5A00;margin-bottom:22px;line-height:1.5;display:flex;align-items:flex-start;gap:8px;}
-.fa-bullets{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:22px;}
-.fa-bullet{font-size:13px;color:${T.body};padding-left:18px;position:relative;line-height:1.55;}
+/* ── REGISTRATION TAB ── */
+.reg-option-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+.reg-option-card{background:${T.white};border:1px solid ${T.border};border-radius:10px;padding:30px 26px;display:flex;flex-direction:column;transition:all 0.18s;cursor:pointer;}
+.reg-option-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
+.reg-option-icon{margin-bottom:14px;}
+.reg-option-h{font-size:17px;font-weight:800;color:${T.deep};margin-bottom:8px;}
+.reg-option-desc{font-size:13px;color:${T.muted};line-height:1.7;flex:1;margin-bottom:20px;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:${T.yellow};color:${T.deep};padding:11px 22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:6px;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.35);transition:all 0.18s;text-decoration:none;white-space:nowrap;}
+.btn-primary:hover{background:#FFD050;transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,194,32,0.4);}
+.btn-outline-dark{display:inline-flex;align-items:center;gap:7px;background:none;color:${T.deep};padding:11px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:6px;border:1px solid ${T.border2};cursor:pointer;transition:all 0.18s;}
+.btn-outline-dark:hover{background:${T.ice};border-color:${T.blue};color:${T.blue};}
+.already-reg{background:${T.cloud};border:1px solid ${T.border};border-radius:8px;padding:16px 20px;font-size:13px;color:${T.muted};line-height:1.6;}
+.warn-note{background:#FEF9EC;border:1px solid #F0D060;border-radius:6px;padding:10px 13px;font-size:12px;color:#7A5A00;margin-bottom:18px;line-height:1.5;display:flex;align-items:flex-start;gap:8px;}
+.fa-bullets{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.fa-bullet{font-size:13px;color:${T.body};padding-left:16px;position:relative;line-height:1.55;}
 .fa-bullet::before{content:'→';position:absolute;left:0;color:${T.muted2};}
-.already-reg{background:${T.cloud};border:1px solid ${T.border};border-radius:8px;padding:18px 22px;font-size:13px;color:${T.muted};line-height:1.6;}
+
+/* ── TEAM PORTAL ── */
+.portal-stats{display:flex;align-items:center;gap:24px;padding:12px 0;margin-bottom:20px;border-bottom:1px solid ${T.border};}
+.portal-stat{display:flex;flex-direction:column;gap:2px;}
+.portal-stat-num{font-family:'Inter',sans-serif;font-size:22px;font-weight:800;color:${T.blue};line-height:1;letter-spacing:-0.02em;}
+.portal-stat-num-red{color:#C0392B;}
+.portal-stat-label{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};text-transform:uppercase;letter-spacing:0.06em;}
+.portal-stat-div{width:1px;height:32px;background:${T.border};}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.team-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:16px 18px;cursor:pointer;transition:all 0.18s;}
+.team-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
+.team-card-name{font-size:14px;font-weight:700;color:${T.deep};margin-bottom:7px;line-height:1.3;}
+.team-card-meta{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.team-badge{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:0.06em;}
+.team-badge-registered{background:${T.ice};color:${T.blue};}
+.team-badge-submitted{background:#E8F8EF;color:#1A7F37;}
+.team-badge-free-agent{background:${T.cloud};color:${T.muted};}
+.team-card-count{font-family:'Inter',sans-serif;font-size:11px;color:${T.muted2};}
+.team-card-members{font-size:11px;color:${T.muted};line-height:1.6;}
+.team-empty{text-align:center;padding:60px 20px;color:${T.muted};font-size:14px;}
 
 /* ── HELP CARDS ── */
-.help-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;}
-.help-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:26px 22px;display:flex;flex-direction:column;}
-.help-card-icon{margin-bottom:14px;display:flex;}
-.help-card-title{font-size:16px;font-weight:800;color:${T.deep};margin-bottom:18px;}
-
-/* ── FAQ ACCORDION ── */
+.help-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;}
+.help-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:22px 20px;display:flex;flex-direction:column;}
+.help-card-icon{margin-bottom:12px;display:flex;}
+.help-card-title{font-size:15px;font-weight:800;color:${T.deep};margin-bottom:14px;}
 .faq-list{display:flex;flex-direction:column;}
 .faq-item{border-bottom:1px solid ${T.border};}
 .faq-item:first-child{border-top:1px solid ${T.border};}
-.faq-q{width:100%;text-align:left;background:none;border:none;padding:13px 0;font-size:13px;font-weight:600;color:${T.body};cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;transition:color 0.15s;font-family:inherit;line-height:1.45;}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:11px 0;font-size:12px;font-weight:600;color:${T.body};cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;transition:color 0.15s;font-family:inherit;line-height:1.45;}
 .faq-q:hover{color:${T.blue};}
-.faq-chevron{font-size:11px;flex-shrink:0;margin-top:3px;transition:transform 0.2s ease;color:${T.muted2};}
+.faq-chevron{font-size:10px;flex-shrink:0;margin-top:2px;transition:transform 0.2s ease;color:${T.muted2};}
 .faq-chevron.open{transform:rotate(90deg);}
-.faq-a{font-size:13px;color:${T.muted};line-height:1.65;max-height:0;overflow:hidden;transition:max-height 0.25s ease,opacity 0.2s,padding 0.2s;opacity:0;padding-bottom:0;}
-.faq-a.open{max-height:120px;opacity:1;padding-bottom:13px;}
-
-/* ── CONTACT BLOCKS ── */
-.contact-blocks{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
-.contact-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:13px 14px;}
-.contact-topic{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:${T.muted};margin-bottom:4px;}
-.contact-name{font-size:13px;font-weight:700;color:${T.deep};}
-.contact-role{font-size:12px;color:${T.muted};}
-.contact-note{font-size:11px;color:${T.muted2};margin-top:2px;font-style:italic;}
-.help-footer-note{font-size:12px;color:${T.muted};margin-top:auto;padding-top:14px;border-top:1px solid ${T.border};}
-.mentor-body{font-size:13px;color:${T.muted};line-height:1.65;margin-bottom:14px;}
-.mentor-bullets{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
-.mentor-bullet{font-size:13px;color:${T.body};padding-left:18px;position:relative;line-height:1.5;}
+.faq-a{font-size:12px;color:${T.muted};line-height:1.65;max-height:0;overflow:hidden;transition:max-height 0.25s ease,opacity 0.2s,padding 0.2s;opacity:0;padding-bottom:0;}
+.faq-a.open{max-height:120px;opacity:1;padding-bottom:11px;}
+.contact-blocks{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.contact-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:11px 13px;}
+.contact-topic{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:${T.muted};margin-bottom:3px;}
+.contact-name{font-size:12px;font-weight:700;color:${T.deep};}
+.contact-role{font-size:11px;color:${T.muted};}
+.contact-note{font-size:10px;color:${T.muted2};margin-top:2px;font-style:italic;}
+.help-footer-note{font-size:12px;color:${T.muted};margin-top:auto;padding-top:12px;border-top:1px solid ${T.border};}
+.mentor-body{font-size:12px;color:${T.muted};line-height:1.65;margin-bottom:12px;}
+.mentor-bullets{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:12px;}
+.mentor-bullet{font-size:12px;color:${T.body};padding-left:16px;position:relative;line-height:1.5;}
 .mentor-bullet::before{content:'✓';position:absolute;left:0;color:${T.blue};font-weight:700;}
-.mentor-note{font-size:12px;color:${T.muted2};font-style:italic;line-height:1.5;margin-top:auto;}
 
-/* ── FOOTER ── */
-.site-footer{background:${T.deep};padding:32px 56px 28px;}
-.site-footer-top{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto 20px;}
-.site-footer-brand{display:flex;align-items:center;gap:12px;}
-.site-footer-brand-text{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);}
-.site-footer-links{display:flex;align-items:center;gap:20px;}
-.site-footer-link{font-family:'Inter',sans-serif;font-size:12px;color:rgba(255,255,255,0.5);text-decoration:none;cursor:pointer;transition:color 0.15s;background:none;border:none;}
-.site-footer-link:hover{color:rgba(255,255,255,0.9);}
-.site-footer-link-cta{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.yellow};cursor:pointer;background:none;border:none;transition:color 0.15s;}
-.site-footer-link-cta:hover{color:#FFD050;}
-.site-footer-bottom{max-width:1200px;margin:0 auto;font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.05em;border-top:1px solid rgba(255,255,255,0.08);padding-top:20px;}
+/* ── CALLOUT ── */
+.callout-box{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:14px 18px;font-size:13px;color:${T.muted};line-height:1.7;margin-bottom:20px;}
+.callout-box strong{color:${T.deep};}
 
 /* ── MODAL ── */
 .modal-overlay{position:fixed;inset:0;z-index:999;background:rgba(0,30,96,0.55);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn 0.18s ease;}
 .modal{background:${T.white};border:1px solid ${T.border};border-radius:12px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:${T.shadowL};animation:slideUp 0.22s ease;scrollbar-width:thin;scrollbar-color:${T.muted2} transparent;}
-.modal-header{padding:26px 28px 20px;border-bottom:1px solid ${T.border};display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:${T.white};z-index:10;}
-.modal-title{font-size:19px;font-weight:800;color:${T.deep};}
+.modal-sm{max-width:440px;}
+.modal-header{padding:22px 24px 18px;border-bottom:1px solid ${T.border};display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:${T.white};z-index:10;}
+.modal-title{font-size:18px;font-weight:800;color:${T.deep};}
 .modal-subtitle{font-size:12px;color:${T.muted};margin-top:3px;}
-.modal-close{background:none;border:none;cursor:pointer;color:${T.muted};font-size:18px;line-height:1;padding:4px;border-radius:4px;transition:all 0.15s;flex-shrink:0;}
+.modal-close{background:none;border:none;cursor:pointer;color:${T.muted};font-size:17px;line-height:1;padding:4px;border-radius:4px;transition:all 0.15s;flex-shrink:0;}
 .modal-close:hover{color:${T.body};background:${T.cloud};}
 .modal-back{background:none;border:none;cursor:pointer;color:${T.muted};font-size:12px;display:flex;align-items:center;gap:4px;padding:0;transition:color 0.15s;font-family:'Inter',sans-serif;font-weight:600;}
 .modal-back:hover{color:${T.body};}
-.modal-body{padding:24px 28px 26px;}
-.fs{margin-bottom:26px;}
-.fs-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.blue};margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid ${T.border};}
-.fr{margin-bottom:15px;}
-.fr-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:15px;}
-.form-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:${T.body};}
+.modal-body{padding:20px 24px 22px;}
+.fs{margin-bottom:22px;}
+.fs-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.blue};margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid ${T.border};}
+.fr{margin-bottom:13px;}
+.fr-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:13px;}
+.form-label{display:block;font-size:13px;font-weight:700;margin-bottom:5px;color:${T.body};}
 .form-label .req{color:#C0392B;margin-left:2px;}
-.fh{font-size:12px;color:${T.muted};margin-bottom:8px;line-height:1.5;}
-.fi{width:100%;background:${T.white};border:1px solid ${T.border};border-radius:6px;padding:9px 12px;color:${T.body};font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color 0.15s;}
+.fh{font-size:12px;color:${T.muted};margin-bottom:7px;line-height:1.5;}
+.fi{width:100%;background:${T.white};border:1px solid ${T.border};border-radius:6px;padding:8px 11px;color:${T.body};font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color 0.15s;}
 .fi:focus{border-color:${T.blue};box-shadow:0 0 0 3px rgba(0,113,206,0.10);}
 .fi::placeholder{color:${T.muted2};}
-textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
-.radio-group{display:flex;gap:7px;flex-wrap:wrap;}
+textarea.fi{resize:vertical;min-height:68px;line-height:1.5;}
+.radio-group{display:flex;gap:6px;flex-wrap:wrap;}
 .rp{position:relative;}
 .rp input{position:absolute;opacity:0;width:0;height:0;}
-.rp label{display:inline-block;padding:6px 13px;border:1px solid ${T.border};border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;color:${T.muted};white-space:nowrap;}
+.rp label{display:inline-block;padding:5px 12px;border:1px solid ${T.border};border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;color:${T.muted};white-space:nowrap;}
 .rp input:checked + label{border-color:${T.blue};color:${T.blue};background:${T.ice};}
 .rp label:hover{border-color:${T.blue};color:${T.blue};}
 .ms-wrap{position:relative;}
 .ms-results{position:absolute;top:calc(100% + 4px);left:0;right:0;background:${T.white};border:1px solid ${T.border2};border-radius:8px;z-index:20;max-height:200px;overflow-y:auto;box-shadow:${T.shadowM};}
-.ms-item{padding:10px 13px;cursor:pointer;transition:background 0.12s;border-bottom:1px solid ${T.border};}
+.ms-item{padding:9px 12px;cursor:pointer;transition:background 0.12s;border-bottom:1px solid ${T.border};}
 .ms-item:last-child{border-bottom:none;}
 .ms-item:hover{background:${T.cloud};}
 .ms-name{font-size:13px;font-weight:600;color:${T.body};}
 .ms-email{font-size:11px;color:${T.muted};margin-top:1px;font-family:'Inter',sans-serif;}
-.ms-sel{display:flex;align-items:center;justify-content:space-between;background:${T.ice};border:1px solid ${T.border2};border-radius:6px;padding:9px 12px;margin-top:5px;}
+.ms-sel{display:flex;align-items:center;justify-content:space-between;background:${T.ice};border:1px solid ${T.border2};border-radius:6px;padding:8px 11px;margin-top:4px;}
 .ms-sel-name{font-size:13px;font-weight:600;color:${T.deep};}
 .ms-sel-email{font-size:11px;color:${T.muted};font-family:'Inter',sans-serif;}
-.ms-clear{background:none;border:none;cursor:pointer;color:${T.muted2};font-size:16px;padding:2px;transition:color 0.15s;}
+.ms-clear{background:none;border:none;cursor:pointer;color:${T.muted2};font-size:15px;padding:2px;transition:color 0.15s;}
 .ms-clear:hover{color:#C0392B;}
-.ck-row{display:flex;align-items:flex-start;gap:10px;}
+.ck-row{display:flex;align-items:flex-start;gap:9px;}
 .ck-row input[type="checkbox"]{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:${T.blue};cursor:pointer;}
 .ck-label{font-size:13px;line-height:1.55;color:${T.body};}
 .ck-label a{color:${T.blue};text-decoration:none;}
 .ck-label a:hover{text-decoration:underline;}
-.modal-footer{padding:18px 28px 24px;border-top:1px solid ${T.border};display:flex;align-items:center;justify-content:space-between;gap:12px;}
-.submit-btn{background:${T.yellow};color:${T.deep};border:none;padding:12px 28px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:6px;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.3);transition:all 0.18s;display:flex;align-items:center;gap:8px;}
+.modal-footer{padding:16px 24px 20px;border-top:1px solid ${T.border};display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.submit-btn{background:${T.yellow};color:${T.deep};border:none;padding:11px 24px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:6px;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.3);transition:all 0.18s;display:flex;align-items:center;gap:7px;}
 .submit-btn:hover{background:#FFD050;transform:translateY(-1px);}
 .submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
 .cancel-btn{background:none;border:none;color:${T.muted};font-size:13px;cursor:pointer;transition:color 0.15s;}
 .cancel-btn:hover{color:${T.body};}
-.success-wrap{text-align:center;padding:52px 32px;}
-.success-title{font-size:22px;font-weight:800;margin-bottom:8px;color:${T.deep};}
-.success-sub{font-size:14px;color:${T.muted};line-height:1.65;max-width:380px;margin:0 auto 28px;}
-.ferr{font-size:12px;color:#C0392B;margin-top:5px;}
-.submit-err{background:#FEE8E8;border:1px solid rgba(192,57,43,0.25);border-radius:6px;padding:10px 13px;font-size:13px;color:#C0392B;margin-bottom:14px;}
-.opt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.opt-card{background:${T.white};border:1px solid ${T.border};border-radius:10px;padding:26px 20px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;}
+.success-wrap{text-align:center;padding:44px 28px;}
+.success-title{font-size:20px;font-weight:800;margin-bottom:7px;color:${T.deep};}
+.success-sub{font-size:13px;color:${T.muted};line-height:1.65;max-width:360px;margin:0 auto 24px;}
+.ferr{font-size:12px;color:#C0392B;margin-top:4px;}
+.submit-err{background:#FEE8E8;border:1px solid rgba(192,57,43,0.25);border-radius:6px;padding:9px 12px;font-size:12px;color:#C0392B;margin-bottom:12px;}
+.opt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.opt-card{background:${T.white};border:1px solid ${T.border};border-radius:10px;padding:22px 16px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden;}
 .opt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${T.deep},${T.blue});opacity:0;transition:opacity 0.18s;}
 .opt-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
 .opt-card:hover::before{opacity:1;}
 .opt-card-dis{opacity:0.35;cursor:not-allowed;pointer-events:none;}
-.opt-card-icon{margin-bottom:4px;display:flex;}
-.opt-card-title{font-size:14px;font-weight:800;color:${T.deep};}
-.opt-card-desc{font-size:12px;color:${T.muted};line-height:1.6;flex:1;}
+.opt-card-icon{margin-bottom:2px;display:flex;}
+.opt-card-title{font-size:13px;font-weight:800;color:${T.deep};}
+.opt-card-desc{font-size:11px;color:${T.muted};line-height:1.6;flex:1;}
 .opt-card-cta{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:${T.blue};}
 .opt-card-soon{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;color:${T.muted2};padding:3px 8px;background:${T.cloud};border:1px solid ${T.border};border-radius:3px;display:inline-block;}
-.hint-toggle{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:${T.blue};cursor:pointer;background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;margin-bottom:8px;}
-.hint-box{background:${T.ice};border:1px solid ${T.border2};border-radius:5px;padding:10px 14px;font-size:12px;color:${T.muted};line-height:1.7;margin-bottom:4px;}
+.hint-toggle{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:${T.blue};cursor:pointer;background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;margin-bottom:7px;}
+.hint-box{background:${T.ice};border:1px solid ${T.border2};border-radius:5px;padding:9px 12px;font-size:12px;color:${T.muted};line-height:1.7;margin-bottom:4px;}
 
-/* ── SHARED UTILS ── */
-.divider{height:1px;background:${T.border};margin:32px 0;}
+/* ── WORKSPACE COMING SOON BTN ── */
+.ws-coming-soon{width:100%;padding:12px 18px;background:${T.cloud};border:1px solid ${T.border};border-radius:6px;color:${T.muted2};font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:not-allowed;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+
+/* ── MEMBER LIST ── */
+.member-list{display:flex;flex-direction:column;gap:7px;margin-bottom:20px;}
+.member-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:${T.cloud};border-radius:6px;}
+.member-badge{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px;background:${T.ice};color:${T.blue};text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;}
+.member-name{font-size:13px;font-weight:600;color:${T.body};}
+
+/* ── SHARED ── */
+.divider{height:1px;background:${T.border};margin:24px 0;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,30,96,0.18);border-top-color:${T.deep};border-radius:50%;animation:spin .7s linear infinite;}
-.live-dot{display:inline-block;width:7px;height:7px;background:#27AE60;border-radius:50%;animation:pulse 2s infinite;margin-right:5px;vertical-align:middle;}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(0,30,96,0.18);border-top-color:${T.deep};border-radius:50%;animation:spin .7s linear infinite;}
+.live-dot{display:inline-block;width:6px;height:6px;background:#27AE60;border-radius:50%;margin-right:5px;vertical-align:middle;}
+.rules-link{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.rules-link:hover{text-decoration:underline;}
 
 /* ── RESPONSIVE ── */
-@media(max-width:1024px){
-  .prob-grid{grid-template-columns:repeat(2,1fr);}
-  .judge-grid{grid-template-columns:repeat(2,1fr);}
-}
-@media(max-width:900px){
-  .rule-cards,.tool-cards,.help-cards{grid-template-columns:1fr 1fr;}
-  .kdt-head,.kdt-row{grid-template-columns:1fr auto;}
-  .kdt-note{display:none;}
+@media(max-width:1000px){
+  .prob-grid,.judge-grid,.team-grid{grid-template-columns:repeat(2,1fr);}
 }
 @media(max-width:680px){
-  .nav{padding:0 16px;height:56px;}
-  .nav-links{display:none;}
-  .nav-countdown{display:none;}
-  .hero{padding:36px 16px 48px;}
-  .hero-orbital{display:none;}
-  .hero-inner{gap:0;}
-  .hero h1{font-size:38px;}
-  .sec-wrap{padding:48px 20px;}
-  .phase-section{padding:16px 16px 12px;}
-  .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
-  .rule-cards,.tool-cards,.help-cards,.prob-grid,.judge-grid{grid-template-columns:1fr;}
-  .reg-cols{grid-template-columns:1fr;}
-  .opt-cards{grid-template-columns:1fr;}
+  .topbar{padding:0 16px;}
+  .tab-wrap{padding:20px 16px 32px;}
+  .rule-cards,.tool-cards,.help-cards,.reg-option-cards{grid-template-columns:1fr;}
+  .prob-grid,.judge-grid,.team-grid,.opt-cards{grid-template-columns:1fr;}
   .fr-2{grid-template-columns:1fr;}
-  .site-footer{padding:24px 16px 20px;}
-  .site-footer-top{flex-direction:column;gap:16px;align-items:flex-start;}
-  .site-footer-links{flex-wrap:wrap;gap:12px;}
+  .kdt-head,.kdt-row{grid-template-columns:1fr auto;}
+  .kdt-note{display:none;}
 }
 `;
 
@@ -438,25 +398,93 @@ function ProblemDetailModal({ prob, onClose, pfId, pfTitle, pfDesc, pfDiff, pfIm
                     <button className="modal-close" onClick={onClose}>✕</button>
                 </div>
                 <div className="modal-body">
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 18 }}>
                         {diff   && <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 4, background: diffColor + '18', color: diffColor }}>{diff}</span>}
                         {impact === 'High' && <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 4, background: T.ice, color: T.blue }}>High Impact</span>}
                         {domain && <span style={{ fontFamily: 'Inter,sans-serif', fontSize: 11, fontWeight: 600, padding: '3px 9px', borderRadius: 4, background: T.cloud, color: T.muted }}>{domain}</span>}
                     </div>
                     {desc && (
-                        <div style={{ marginBottom: 20 }}>
-                            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: T.muted, marginBottom: 8 }}>Problem Description</div>
+                        <div style={{ marginBottom: 18 }}>
+                            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: T.muted, marginBottom: 7 }}>Problem Description</div>
                             <div style={{ fontSize: 14, color: T.body, lineHeight: 1.7 }}>{desc}</div>
                         </div>
                     )}
                     {claimed && (
-                        <div style={{ marginBottom: 20 }}>
-                            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: T.muted, marginBottom: 8 }}>Being Explored By</div>
-                            <div style={{ fontSize: 13, color: T.blue, fontWeight: 600 }}>🔍 {claimed}</div>
+                        <div style={{ marginBottom: 18 }}>
+                            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: T.muted, marginBottom: 7 }}>Being Explored By</div>
+                            <div style={{ fontSize: 13, color: T.blue, fontWeight: 600 }}>{claimed}</div>
                         </div>
                     )}
-                    <div style={{ background: T.ice, border: `1px solid ${T.border2}`, borderRadius: 6, padding: '12px 14px', fontSize: 13, color: T.muted, lineHeight: 1.6 }}>
+                    <div style={{ background: T.ice, border: `1px solid ${T.border2}`, borderRadius: 6, padding: '11px 14px', fontSize: 13, color: T.muted, lineHeight: 1.6 }}>
                         Multiple teams can work on the same problem. Pick whichever best fits your expertise and the tool you plan to use.
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ─── TEAM DETAIL MODAL ────────────────────────────────────────────────────────
+function TeamDetailModal({ team, onClose, sfTeamName, sfStatus, sfUseCase, memberFields }) {
+    const name    = sfTeamName ? team.getCellValueAsString(sfTeamName) : team.name;
+    const status  = sfStatus   ? team.getCellValueAsString(sfStatus)   : '';
+    const useCase = sfUseCase  ? team.getCellValueAsString(sfUseCase)  : '';
+
+    const members = memberFields.flatMap((f, i) => {
+        if (!f) return [];
+        try {
+            const val = team.getCellValue(f);
+            return val ? val.map(v => ({ name: v.name, captain: i === 0 })) : [];
+        } catch { return []; }
+    }).filter(Boolean);
+
+    const badgeClass = status === 'Submitted' ? 'team-badge-submitted' : 'team-badge-registered';
+
+    return (
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+            <div className="modal modal-sm">
+                <div className="modal-header">
+                    <div style={{ flex: 1 }}>
+                        <div className="modal-title">{name}</div>
+                        <div className="modal-subtitle">{members.length} member{members.length !== 1 ? 's' : ''}</div>
+                    </div>
+                    <button className="modal-close" onClick={onClose}>✕</button>
+                </div>
+                <div className="modal-body">
+                    <div style={{ marginBottom: 18 }}>
+                        <span className={`team-badge ${badgeClass}`}>{status || 'Registered'}</span>
+                    </div>
+
+                    {members.length > 0 && (
+                        <div style={{ marginBottom: 20 }}>
+                            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: T.muted, marginBottom: 10 }}>Team Members</div>
+                            <div className="member-list">
+                                {members.map((m, i) => (
+                                    <div key={i} className="member-row">
+                                        {m.captain && <span className="member-badge">Captain</span>}
+                                        <span className="member-name">{m.name}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {useCase && (
+                        <div style={{ marginBottom: 20 }}>
+                            <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: T.muted, marginBottom: 7 }}>Use Case</div>
+                            <div style={{ fontSize: 13, color: T.muted, lineHeight: 1.65 }}>{useCase}</div>
+                        </div>
+                    )}
+
+                    <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: T.muted, marginBottom: 10 }}>Team Workspace</div>
+                        <button className="ws-coming-soon" disabled>
+                            <LockSimpleIcon size={15} color={T.muted2} />
+                            Coming Soon
+                        </button>
+                        <div style={{ fontSize: 11, color: T.muted2, lineHeight: 1.5 }}>
+                            Team Workspace unlocks during the build window March 16–19.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -523,7 +551,7 @@ function MemberSearch({ label, optional, dirRecords, nameField, emailField, sele
     );
 }
 
-// ─── CREATE RECORD (RETRY ON CONFLICT) ────────────────────────────────────────
+// ─── CREATE RECORD (RETRY ON CONFLICT) ───────────────────────────────────────
 async function createRecordWithRetry(table, fields, attempts = 3) {
     let lastErr = null;
     for (let i = 0; i < attempts; i++) {
@@ -655,8 +683,8 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
             <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
                 <div className="modal">
                     <div className="success-wrap">
-                        <div style={{ marginBottom: 18 }}>
-                            <SealCheckIcon size={52} color={isAgent ? T.blue : '#27AE60'} weight="duotone" />
+                        <div style={{ marginBottom: 16 }}>
+                            <SealCheckIcon size={48} color={isAgent ? T.blue : '#27AE60'} weight="duotone" />
                         </div>
                         <div className="success-title">{isAgent ? "You're in the pool!" : 'Team registered!'}</div>
                         <div className="success-sub">
@@ -665,7 +693,9 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                                 : <><strong>Teammates will receive an invitation to confirm.</strong> Your team is locked in once all members accept.</>
                             }
                         </div>
-                        <button className="btn-primary" onClick={onClose}>Back to Portal</button>
+                        <button className="btn-primary" onClick={onClose}>
+                            {isAgent ? 'Done' : 'View Registration Portal →'}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -685,19 +715,19 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                 <div className="modal-body">
                     <div className="opt-cards">
                         <div className="opt-card" onClick={() => setScreen('team')}>
-                            <div className="opt-card-icon"><UsersThreeIcon size={28} color={T.blue} weight="duotone" /></div>
+                            <div className="opt-card-icon"><UsersThreeIcon size={26} color={T.blue} weight="duotone" /></div>
                             <div className="opt-card-title">Form a Team</div>
                             <div className="opt-card-desc">Register your team of 3–5. Captain leads the build and submits the final project.</div>
                             <div className="opt-card-cta">Get Started →</div>
                         </div>
                         <div className="opt-card" onClick={() => setScreen('agent')}>
-                            <div className="opt-card-icon"><HandWavingIcon size={28} color={T.blue} weight="duotone" /></div>
+                            <div className="opt-card-icon"><HandWavingIcon size={26} color={T.blue} weight="duotone" /></div>
                             <div className="opt-card-title">Join as Free Agent</div>
                             <div className="opt-card-desc">No team yet? We'll match you based on your skills and problem interest by March 8.</div>
                             <div className="opt-card-cta">Sign Up →</div>
                         </div>
                         <div className="opt-card opt-card-dis">
-                            <div className="opt-card-icon"><MagnifyingGlassIcon size={28} color={T.muted2} weight="duotone" /></div>
+                            <div className="opt-card-icon"><MagnifyingGlassIcon size={26} color={T.muted2} weight="duotone" /></div>
                             <div className="opt-card-title">Find a Team</div>
                             <div className="opt-card-desc">Browse teams actively looking for members.</div>
                             <div className="opt-card-soon">Coming Soon</div>
@@ -796,7 +826,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                             <label className="form-label">Team Name<span className="req">*</span></label>
                             <input className="fi" placeholder="e.g. The Compliance Crushers" value={teamName} onChange={e => setTeamName(e.target.value)} />
                             {errors.teamName && <div className="ferr">{errors.teamName}</div>}
-                            <button className="hint-toggle" style={{ marginTop: 10 }} onClick={() => setShowHint(h => !h)}>
+                            <button className="hint-toggle" style={{ marginTop: 9 }} onClick={() => setShowHint(h => !h)}>
                                 {showHint ? '▾' : '▸'} Recommended Team Structure
                             </button>
                             {showHint && <div className="hint-box">One person on business case · one on the tech build · one on UX/presentation.</div>}
@@ -818,7 +848,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                                 </div>
                                 {errors.technology && <div className="ferr">{errors.technology}</div>}
                                 {technology === 'Other' && (
-                                    <div style={{ marginTop: 10 }}>
+                                    <div style={{ marginTop: 9 }}>
                                         <input className="fi" placeholder="Specify technology…" value={otherTech} onChange={e => setOtherTech(e.target.value)} />
                                         {errors.otherTech && <div className="ferr">{errors.otherTech}</div>}
                                     </div>
@@ -847,7 +877,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                     </div>
                     <div className="fs">
                         <div className="fs-title">Your Team</div>
-                        <div className="fh" style={{ marginBottom: 14 }}>Teams of 3–5. Captain + at least 2 more members required.</div>
+                        <div className="fh" style={{ marginBottom: 12 }}>Teams of 3–5. Captain + at least 2 more members required.</div>
                         <MemberSearch label="Team Captain" dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={captain} onSelect={setCaptain} />
                         {errors.captain && <div className="ferr" style={{ marginTop: -8, marginBottom: 10 }}>{errors.captain}</div>}
                         <MemberSearch label="Member 2" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member2} onSelect={setMember2} />
@@ -877,76 +907,62 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
     );
 }
 
-// ─── STATIC DATA ──────────────────────────────────────────────────────────────
-const WORKSPACE_TILES = [
-    { Icon: CalendarBlankIcon, label: 'Training Calendar',    desc: 'Office hours, sessions, and deadlines in one place.'                  },
-    { Icon: FolderSimpleIcon,  label: 'Resource Library',     desc: 'Rules, templates, data sets, and tool guides.'                        },
-    { Icon: ChatCircleIcon,    label: 'Team Announcements',   desc: 'Push notifications from the hackathon team.'                          },
-    { Icon: CheckSquareIcon,   label: 'Submission Checklist', desc: 'Track deliverables and submit your final project.'                    },
-    { Icon: NotePencilIcon,    label: 'Team Notes',           desc: 'Shared scratchpad for your team during the build window.'             },
-    { Icon: UserCircleIcon,    label: 'Mentor Access',        desc: "Your assigned mentor's contact info and office hours."                },
-];
-
+// ─── STATIC DATA ─────────────────────────────────────────────────────────────
 const FAQS = [
-    { q: 'Can I use more than one tool?',                                a: 'Yes, if your use case calls for it. Just note one primary tool on your registration.' },
-    { q: "What if a teammate can't participate?",                        a: 'Submit a team change request via the #gg-hackathon Teams channel. Changes must be finalized before March 14.' },
-    { q: 'Do we need a problem picked before registering?',              a: 'No. You can refine your use case after registration. Use the Problem Statements section above for inspiration.' },
-    { q: 'When does the build window start?',                            a: 'Monday March 16 at 8am CT. No building before then — but you can plan, attend training, and prepare.' },
-    { q: 'Who judges the submissions?',                                  a: 'A panel of GG leadership and invited executives. Top 5 teams present at the Science Fair on March 20.' },
-    { q: 'What format is the final submission?',                         a: 'A working prototype demo (3–5 minutes) plus a brief writeup. Full submission checklist is in your Team Workspace.' },
+    { q: 'Can I use more than one tool?',                  a: 'Yes, if your use case calls for it. Just note one primary tool on your registration.' },
+    { q: "What if a teammate can't participate?",          a: 'Submit a team change request via the #gg-hackathon Teams channel. Changes must be finalized before March 14.' },
+    { q: 'Do we need a problem picked before registering?',a: 'No. You can refine your use case after registration. Use the Challenges tab for inspiration — or create your own.' },
+    { q: 'When does the build window start?',              a: 'Monday March 16 at 8am CT. No building before then — but you can plan, attend training, and prepare.' },
+    { q: 'Who judges the submissions?',                    a: 'A panel of GG leadership and invited executives. Top 5 teams present at the Science Fair on March 20.' },
+    { q: 'What format is the final submission?',           a: 'A working prototype demo (3–5 minutes) plus a brief writeup. Full submission checklist coming during build week.' },
 ];
 
-const NAV_SECTIONS = [
-    ['problems',  'Challenges'],
-    ['rules',     'Rules'     ],
-    ['tools',     'Tools'     ],
-    ['register',  'Register'  ],
-    ['help',      'Help'      ],
+const TABS = [
+    ['rules',      'Rules & Guidelines'],
+    ['register',   'Register'],
+    ['teams',      'Registration Portal'],
+    ['challenges', 'Challenges & Tools'],
+    ['help',       'Help'],
 ];
 
-// ─── APP ──────────────────────────────────────────────────────────────────────
+// ─── APP ─────────────────────────────────────────────────────────────────────
 function App() {
     const base = useBase();
 
     const subTable  = base.getTableByNameIfExists('Hackathon Submissions') ?? base.tables[0];
     const probTable = base.getTableByNameIfExists('Problem Statements')    ?? base.tables[0];
     const dirTable  = base.getTableByNameIfExists('GG Directory')          ?? base.tables[0];
-    const prmTable  = base.getTableByNameIfExists('Prompt Library')        ?? base.tables[0];
-    const regTable  = base.getTableByNameIfExists('Regulatory Documents')  ?? base.tables[0];
 
     const submissions = useRecords(subTable);
     const probRecords = useRecords(probTable);
     const dirRecords  = useRecords(dirTable);
-    const prmRecords  = useRecords(prmTable);
-    const regDocs     = useRecords(regTable);
 
-    const [showReg,         setShowReg]        = useState(false);
-    const [modalInitScreen, setModalInitScreen]= useState(0);
-    const [selProb,         setSelProb]        = useState(null);
-    const [activeSection,   setActiveSection]  = useState('hero');
-    const [openFaq,         setOpenFaq]        = useState(null);
-    const [countdown,       setCountdown]      = useState(getCountdown);
+    const [tab,            setTab]           = useState('rules');
+    const [showReg,        setShowReg]       = useState(false);
+    const [modalInitScreen,setModalInitScreen]= useState(0);
+    const [selProb,        setSelProb]       = useState(null);
+    const [selTeam,        setSelTeam]       = useState(null);
+    const [justRegistered, setJustRegistered]= useState(false);
+    const [openFaq,        setOpenFaq]       = useState(null);
+    const [countdown,      setCountdown]     = useState(getCountdown);
 
     useEffect(() => {
         const id = setInterval(() => setCountdown(getCountdown()), 1000);
         return () => clearInterval(id);
     }, []);
 
-    useEffect(() => {
-        const ids = ['hero', 'problems', 'rules', 'tools', 'register', 'help'];
-        const obs = new IntersectionObserver(
-            entries => { entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id); }); },
-            { threshold: 0.2, rootMargin: '-64px 0px -40% 0px' }
-        );
-        ids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
-        return () => obs.disconnect();
-    }, []);
-
-    // Field detection: submissions
+    // ── Field detection: submissions ──
     const sfTeamName = subTable.getFieldIfExists('Team Name');
     const sfStatus   = subTable.getFieldIfExists('Submission Status');
+    const sfUseCase  = subTable.getFieldIfExists('Use Case');
+    const sfMember1  = subTable.getFieldIfExists('Team Member # 1 ( Captain)');
+    const sfMember2  = subTable.getFieldIfExists('Team Member # 2');
+    const sfMember3  = subTable.getFieldIfExists('Team Member # 3');
+    const sfMember4  = subTable.getFieldIfExists('Team Member # 4');
+    const sfMember5  = subTable.getFieldIfExists('Team Member # 5');
+    const memberFields = [sfMember1, sfMember2, sfMember3, sfMember4, sfMember5];
 
-    // Field detection: problems
+    // ── Field detection: problems ──
     const pfId      = probTable.getFieldIfExists('Problem ID');
     const pfTitle   = probTable.getFieldIfExists('Name')        ?? probTable.getFieldIfExists('Problem');
     const pfDesc    = probTable.getFieldIfExists('Description') ?? probTable.getFieldIfExists('Current State');
@@ -955,29 +971,34 @@ function App() {
     const pfDomain  = probTable.getFieldIfExists('Domain')      ?? probTable.getFieldIfExists('Category');
     const pfClaimed = probTable.getFieldIfExists('Claimed By')  ?? probTable.getFieldIfExists('Teams Exploring');
 
-    // Field detection: directory
+    // ── Field detection: directory ──
     const dfName  = dirTable.getFieldIfExists('Name')  ?? dirTable.getFieldIfExists('Associate Name');
     const dfEmail = dirTable.getFieldIfExists('Email') ?? dirTable.getFieldIfExists('Work Email');
 
-    // Derived stats
-    const { liveTeams } = useMemo(() => {
-        const live = [];
+    // ── Derived stats ──
+    const { liveTeams, freeAgents } = useMemo(() => {
+        const live = [], free = [];
         submissions.forEach(r => {
             const name   = sfTeamName ? r.getCellValueAsString(sfTeamName) : '';
             const status = sfStatus   ? r.getCellValueAsString(sfStatus)   : '';
             if (TEST_NAMES.includes(name.trim())) return;
-            if (status !== 'Free Agent') live.push(r);
+            if (status === 'Free Agent') free.push(r);
+            else live.push(r);
         });
-        return { liveTeams: live };
+        return { liveTeams: live, freeAgents: free };
     }, [submissions, sfTeamName, sfStatus]);
 
-    const totalTeams      = liveTeams.length;
-    const submittedTeams  = liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Submitted').length;
-    const registeredTeams = liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Registered').length;
-    const spotsLeft       = Math.max(0, MAX_TEAMS - totalTeams);
+    const totalTeams = liveTeams.length;
+    const spotsLeft  = Math.max(0, MAX_TEAMS - totalTeams);
 
     const openModal = (screen = 0) => { setModalInitScreen(screen); setShowReg(true); };
 
+    const handleModalClose = () => {
+        setShowReg(false);
+        if (justRegistered) { setTab('teams'); setJustRegistered(false); }
+    };
+
+    // ── Problem card render ──
     const renderProbCard = r => {
         const id     = pfId     ? r.getCellValueAsString(pfId)    : '';
         const title  = pfTitle  ? r.getCellValueAsString(pfTitle) : r.name;
@@ -1000,97 +1021,349 @@ function App() {
                             {domain && <span className="ptag ptag-domain">{domain}</span>}
                             {diff && diffCls && <span className={diffCls}>{diff}</span>}
                         </div>
-                        <div className="prob-card-arrow"><ArrowRightIcon size={14} /></div>
+                        <div className="prob-card-arrow"><ArrowRightIcon size={13} /></div>
                     </div>
                 </div>
             </div>
         );
     };
 
-    return (
-        <div className="portal">
-            <style>{css}</style>
+    // ── Tab: Rules & Guidelines ──
+    const renderRulesTab = () => (
+        <div className="tab-wrap">
+            <div className="tab-head">
+                <div className="tab-h1">Rules & Guidelines</div>
+                <div className="tab-sub">Everything you need to know before you build. <a className="rules-link" href={RULES_URL} target="_blank" rel="noreferrer">Full doc ↗</a></div>
+            </div>
 
-            {/* ── STICKY NAV ── */}
-            <nav className="nav">
-                <div className="nav-brand">
-                    <div className="nav-spark"><SparkIcon size={17} /></div>
-                    FY27 GG AI Hackathon
-                </div>
-                <div className="nav-links">
-                    {NAV_SECTIONS.map(([id, label]) => (
-                        <a key={id} href={`#${id}`} className={`nav-link${activeSection === id ? ' active' : ''}`}>{label}</a>
-                    ))}
-                </div>
-                <div className="nav-right">
-                    <span className="nav-countdown">Closes {countdown}</span>
-                    <button className="nav-cta" onClick={() => openModal(0)}>Register Now →</button>
-                </div>
-            </nav>
-
-            {/* ── HERO ── */}
-            <section id="hero" className="hero">
-                <div className="hero-inner">
-                    <div className="hero-left">
-                        <div className="hero-eyebrow">GG Digital Acceleration · FY27 · Science Fair March 20</div>
-                        <h1>FY27 GG<br /><span className="accent">AI Hackathon</span></h1>
-                        <div className="hero-byline">Build something that matters. Win something that counts.</div>
-                        <div className="hero-sub">
-                            48 hours. Real data. Real problems. Use Airtable, Harvey, or CodePuppy to build an AI-powered solution for Walmart's Global Governance team — then pitch it to leadership.
-                        </div>
-                        <div className="hero-actions">
-                            <button className="btn-primary" onClick={() => openModal(0)}>
-                                <SparkIcon size={15} color="#001E60" />
-                                Register Your Team →
-                            </button>
-                            <a className="btn-outline" href="#problems">
-                                See the Challenges ↓
-                            </a>
-                        </div>
+            <div className="section-block">
+                <div className="rule-cards">
+                    <div className="rule-card">
+                        <div className="rule-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
+                        <div className="rule-title">Eligibility</div>
+                        <div className="rule-desc">Open to all Walmart Home Office associates. Teams of 3–5; solo sign-ups matched to a team before March 8.</div>
                     </div>
-                    <div className="hero-orbital">
-                        <div className="orb-ring orb-r1" />
-                        <div className="orb-ring orb-r2" />
-                        <div className="orb-ring orb-r3" />
-                        <div className="orb-track orb-t1"><div className="orb-dot" /></div>
-                        <div className="orb-track orb-t2"><div className="orb-dot" /></div>
-                        <div className="orb-core"><SparkIcon size={30} /></div>
+                    <div className="rule-card">
+                        <div className="rule-icon"><TimerIcon size={28} color={T.blue} weight="duotone" /></div>
+                        <div className="rule-title">Build Window</div>
+                        <div className="rule-desc">No building before March 16 at 8am CT. All prototypes must be started and completed during the official 48-hour window.</div>
                     </div>
-                </div>
-            </section>
-
-            {/* ── STAT BAR ── */}
-            <div className="stat-bar">
-                <div className="stat-bar-inner">
-                    <div className="stat-item">
-                        <div className="stat-num">{totalTeams}</div>
-                        <div className="stat-label">Teams Registered</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-num">{submittedTeams}</div>
-                        <div className="stat-label">Submitted</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-num">{registeredTeams}</div>
-                        <div className="stat-label">Confirmed</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-num">{probRecords.length || 12}</div>
-                        <div className="stat-label">Problem Tracks</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className={`stat-num${spotsLeft <= 10 ? ' stat-num-red' : ''}`}>{spotsLeft}</div>
-                        <div className="stat-label">Spots Remaining</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-num-sm">{countdown}</div>
-                        <div className="stat-label">Registration Closes</div>
+                    <div className="rule-card">
+                        <div className="rule-icon"><TrophyIcon size={28} color={T.blue} weight="duotone" /></div>
+                        <div className="rule-title">Judging</div>
+                        <div className="rule-desc">Projects scored on Relevance, Business Impact, AI Integration, and Demo Quality. Top 5 present to executive judges.</div>
                     </div>
                 </div>
             </div>
 
-            {/* ── PHASE TIMELINE ── */}
-            <div className="phase-section">
+            <div className="section-block">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <h3 style={{ fontSize: 15, fontWeight: 700, color: T.deep }}>Key Dates</h3>
+                </div>
+                <div className="key-dates-table">
+                    <div className="kdt-head">
+                        <span>Event</span>
+                        <span style={{ textAlign: 'center' }}>Date</span>
+                        <span style={{ textAlign: 'right' }}>Note</span>
+                    </div>
+                    {KEY_DATES.map(row => (
+                        <div key={row.event} className="kdt-row">
+                            <span className="kdt-event">{row.event}</span>
+                            <span className="kdt-date">{row.date}</span>
+                            {row.note && <span className={`kdt-note${row.note.includes('limit') || row.note.includes('before') ? ' kdt-note-warn' : ''}`}>{row.note}</span>}
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="section-block">
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: T.deep, marginBottom: 12 }}>Scoring Rubric</h3>
+                <div className="judge-grid">
+                    {JUDGING.map(j => (
+                        <div key={j.label} className="judge-card">
+                            <div className="judge-top">
+                                <div className="judge-label">{j.label}</div>
+                                <div className="judge-weight">{j.weight}</div>
+                            </div>
+                            <div className="judge-desc">{j.desc}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    // ── Tab: Register ──
+    const renderRegisterTab = () => (
+        <div className="tab-wrap">
+            <div className="tab-head">
+                <div className="tab-h1">Join the Hackathon</div>
+                <div className="tab-sub">Registration closes <strong>March 9 at 5pm CT</strong>. {spotsLeft} of {MAX_TEAMS} spots remaining.</div>
+            </div>
+
+            <div className="reg-option-cards">
+                <div className="reg-option-card" style={{ borderTop: `3px solid ${T.blue}` }} onClick={() => openModal(0)}>
+                    <div className="reg-option-icon"><UsersThreeIcon size={32} color={T.blue} weight="duotone" /></div>
+                    <div className="reg-option-h">Register Your Team</div>
+                    <div className="reg-option-desc">
+                        Have a team of 3–5 ready? Register now. Captain fills out the form, teammates confirm, and you're in. You can refine your problem statement any time before March 16.
+                    </div>
+                    <div className="warn-note" style={{ marginBottom: 0 }}>
+                        <WarningIcon size={15} color="#7A5A00" weight="fill" style={{ flexShrink: 0, marginTop: 1 }} />
+                        <span>Minimum 3 members to register as a team. Max 5.</span>
+                    </div>
+                    <div style={{ marginTop: 20 }}>
+                        <button className="btn-primary" onClick={e => { e.stopPropagation(); openModal(0); }}>
+                            Register a Team →
+                        </button>
+                    </div>
+                </div>
+
+                <div className="reg-option-card" style={{ borderTop: `3px solid ${T.muted2}` }}>
+                    <div className="reg-option-icon"><HandWavingIcon size={32} color={T.muted} weight="duotone" /></div>
+                    <div className="reg-option-h">No Team Yet? No Problem.</div>
+                    <div className="reg-option-desc">
+                        Sign up as a free agent. We'll match you with a compatible team based on your skills, preferred tool, and problem area. Matching closes <strong>March 8</strong>.
+                    </div>
+                    <ul className="fa-bullets">
+                        <li className="fa-bullet">Tell us your preferred tool</li>
+                        <li className="fa-bullet">Share your problem area of interest</li>
+                        <li className="fa-bullet">Rate your AI skill level (1–5)</li>
+                    </ul>
+                    <button className="btn-outline-dark" onClick={() => openModal('freeagent')}>
+                        Sign Up as Free Agent →
+                    </button>
+                </div>
+            </div>
+
+            <div className="already-reg">
+                <strong style={{ color: T.body }}>Already registered?</strong> Need to make changes?{' '}
+                Post in <strong style={{ color: T.body }}>#gg-hackathon</strong> on Teams. Roster changes close <strong style={{ color: T.body }}>March 14</strong>.
+            </div>
+        </div>
+    );
+
+    // ── Tab: Registration Portal (Teams) ──
+    const renderTeamsTab = () => (
+        <div className="tab-wrap">
+            <div className="tab-head">
+                <div className="tab-h1">Registration Portal</div>
+                <div className="tab-sub">All registered teams. Click a team to view details and access your workspace.</div>
+            </div>
+
+            <div className="portal-stats">
+                <div className="portal-stat">
+                    <div className="portal-stat-num">{totalTeams}</div>
+                    <div className="portal-stat-label">Teams Registered</div>
+                </div>
+                <div className="portal-stat-div" />
+                <div className="portal-stat">
+                    <div className={`portal-stat-num${spotsLeft <= 10 ? ' portal-stat-num-red' : ''}`}>{spotsLeft}</div>
+                    <div className="portal-stat-label">Spots Left</div>
+                </div>
+                <div className="portal-stat-div" />
+                <div className="portal-stat">
+                    <div className="portal-stat-num">{freeAgents.length}</div>
+                    <div className="portal-stat-label">Free Agents</div>
+                </div>
+                <div style={{ marginLeft: 'auto' }}>
+                    <button className="btn-primary" onClick={() => openModal(0)}>+ Register a Team</button>
+                </div>
+            </div>
+
+            {liveTeams.length === 0 ? (
+                <div className="team-empty">
+                    <CalendarDotsIcon size={36} color={T.muted2} weight="duotone" style={{ marginBottom: 12 }} />
+                    <div>No teams registered yet — be the first.</div>
+                </div>
+            ) : (
+                <div className="team-grid">
+                    {liveTeams.map(r => {
+                        const name   = sfTeamName ? r.getCellValueAsString(sfTeamName) : r.name;
+                        const status = sfStatus   ? r.getCellValueAsString(sfStatus)   : '';
+                        const members = memberFields.flatMap(f => {
+                            if (!f) return [];
+                            try { const v = r.getCellValue(f); return v ? v.map(m => m.name) : []; } catch { return []; }
+                        }).filter(Boolean);
+                        const badgeCls = status === 'Submitted' ? 'team-badge-submitted' : 'team-badge-registered';
+                        return (
+                            <div key={r.id} className="team-card" onClick={() => setSelTeam(r)}>
+                                <div className="team-card-name">{name}</div>
+                                <div className="team-card-meta">
+                                    <span className={`team-badge ${badgeCls}`}>{status || 'Registered'}</span>
+                                    <span className="team-card-count">{members.length} member{members.length !== 1 ? 's' : ''}</span>
+                                </div>
+                                {members.length > 0 && (
+                                    <div className="team-card-members">{members.join(' · ')}</div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+
+    // ── Tab: Challenges & Tools ──
+    const renderChallengesTab = () => (
+        <div className="tab-wrap">
+            <div className="tab-head">
+                <div className="tab-h1">Challenges & Tools</div>
+                <div className="tab-sub">Browse curated problem statements or define your own — then pick the right tool to build your solution.</div>
+            </div>
+
+            {/* Own problem statement callout */}
+            <div className="callout-box" style={{ marginBottom: 28 }}>
+                <strong>You can define your own problem statement.</strong> The challenges below are starting points curated by GG leadership, but teams are encouraged to identify real problems they face. Judges will evaluate on <strong>relevance to GG</strong>, <strong>business impact</strong>, and <strong>how well AI is incorporated</strong> — not whether you picked a provided challenge.
+            </div>
+
+            {/* Problem statements */}
+            <div className="section-block">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <div>
+                        <span className="sec-label">Problem Statements</span>
+                        <div className="sec-h2">Curated GG Challenges</div>
+                    </div>
+                    <div style={{ fontFamily: 'Inter,sans-serif', fontSize: 11, color: T.muted }}>
+                        <span className="live-dot" />Live from Airtable
+                    </div>
+                </div>
+                {probRecords.length > 0 ? (
+                    <div className="prob-grid">{probRecords.map(renderProbCard)}</div>
+                ) : (
+                    <div style={{ padding: '36px 0', textAlign: 'center', color: T.muted, fontSize: 13 }}>
+                        Problem statements are being finalized — check back before March 9.
+                    </div>
+                )}
+            </div>
+
+            {/* Tools */}
+            <div className="section-block">
+                <span className="sec-label">Tools</span>
+                <div className="sec-h2" style={{ marginBottom: 5 }}>Choose Your Stack</div>
+                <div className="sec-sub">Free training available for all three. Confirm access before March 9.</div>
+                <div className="tool-cards">
+                    <div className="tool-card">
+                        <div className="tool-bar" style={{ background: T.blue }} />
+                        <div className="tool-inner">
+                            <div className="tool-name">Airtable</div>
+                            <div className="tool-tagline">Best for: Structured data, interfaces, automations</div>
+                            <div className="tool-desc">Build operational interfaces, automated workflows, and dashboards on top of GG's existing data — no code required.</div>
+                            <div className="tool-access-block">✓ Already provisioned for all GG associates. License activates automatically at registration.</div>
+                            <a className="tool-link" href="https://airtable.com/academy" target="_blank" rel="noreferrer">Get Training <ArrowRightIcon size={11} /></a>
+                        </div>
+                    </div>
+                    <div className="tool-card">
+                        <div className="tool-bar" style={{ background: '#7C3AED' }} />
+                        <div className="tool-inner">
+                            <div className="tool-name">Harvey</div>
+                            <div className="tool-tagline">Best for: Document AI, natural language Q&A</div>
+                            <div className="tool-desc">Point Harvey at any PDF, policy doc, or regulation — ask questions, extract structured data, and draft content at scale.</div>
+                            <div className="tool-access-block">⚠ Contact <strong>Abby Worley</strong> to confirm your Harvey license. Allow 2–3 business days.</div>
+                            <span className="tool-link tool-link-dim">Training at kickoff</span>
+                        </div>
+                    </div>
+                    <div className="tool-card">
+                        <div className="tool-bar" style={{ background: '#059669' }} />
+                        <div className="tool-inner">
+                            <div className="tool-name">CodePuppy</div>
+                            <div className="tool-tagline">Best for: Custom code, integrations, APIs</div>
+                            <div className="tool-desc">Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations beyond no-code tools.</div>
+                            <div className="tool-access-block">⚠ Contact <strong>Michael [GG team]</strong> to confirm access early — provisioning is limited.</div>
+                            <span className="tool-link tool-link-dim">Training at kickoff</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="callout-box">
+                    <strong>Not sure which tool to pick?</strong> Join weekly office hours — Thursdays 10–11am CT — to talk through your use case. Your assigned mentor can also advise.
+                </div>
+            </div>
+        </div>
+    );
+
+    // ── Tab: Help ──
+    const renderHelpTab = () => (
+        <div className="tab-wrap">
+            <div className="tab-head">
+                <div className="tab-h1">Help & Support</div>
+                <div className="tab-sub">Multiple support channels available before and during the event.</div>
+            </div>
+            <div className="help-cards">
+                <div className="help-card">
+                    <div className="help-card-icon"><QuestionIcon size={28} color={T.blue} weight="duotone" /></div>
+                    <div className="help-card-title">Frequently Asked Questions</div>
+                    <div className="faq-list">
+                        {FAQS.map((item, i) => (
+                            <div key={i} className="faq-item">
+                                <button className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                                    <span>{item.q}</span>
+                                    <span className={`faq-chevron${openFaq === i ? ' open' : ''}`}>▸</span>
+                                </button>
+                                <div className={`faq-a${openFaq === i ? ' open' : ''}`}>{item.a}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="help-card">
+                    <div className="help-card-icon"><HeadsetIcon size={28} color={T.blue} weight="duotone" /></div>
+                    <div className="help-card-title">Associate Support</div>
+                    <div className="contact-blocks">
+                        <div className="contact-block">
+                            <div className="contact-topic">Airtable Questions</div>
+                            <div className="contact-name">Bennett Oliver</div>
+                            <div className="contact-role">Account Executive</div>
+                            <div className="contact-note">Office hours: Thursdays 10–11am CT</div>
+                        </div>
+                        <div className="contact-block">
+                            <div className="contact-topic">Harvey Questions</div>
+                            <div className="contact-name">Abby Worley</div>
+                            <div className="contact-role">GG Digital Acceleration</div>
+                        </div>
+                        <div className="contact-block">
+                            <div className="contact-topic">CodePuppy Questions</div>
+                            <div className="contact-name">Michael [GG team]</div>
+                            <div className="contact-role">GG Digital Acceleration</div>
+                        </div>
+                    </div>
+                    <div className="help-footer-note">For anything else → <strong>#gg-hackathon</strong> in Teams</div>
+                </div>
+
+                <div className="help-card">
+                    <div className="help-card-icon"><ChalkboardTeacherIcon size={28} color={T.blue} weight="duotone" /></div>
+                    <div className="help-card-title">Mentor Program</div>
+                    <div className="mentor-body">Every registered team is assigned one internal mentor with relevant domain or technical expertise.</div>
+                    <ul className="mentor-bullets">
+                        <li className="mentor-bullet">1 mentor per team (subject to team count)</li>
+                        <li className="mentor-bullet">Active during the build window March 16–19</li>
+                        <li className="mentor-bullet">Matched on your tool choice and problem area</li>
+                    </ul>
+                    <div style={{ background: T.ice, border: `1px solid ${T.border2}`, borderRadius: 6, padding: '10px 13px', fontSize: 12, color: T.muted, lineHeight: 1.6 }}>
+                        Vendor support from Airtable, Harvey, and CodePuppy is available in addition to your assigned mentor.
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="portal">
+            <style>{css}</style>
+
+            {/* ── TOP BAR ── */}
+            <div className="topbar">
+                <div className="topbar-brand">
+                    <div className="topbar-spark"><SparkIcon size={16} /></div>
+                    <span className="topbar-title">FY27 GG AI Hackathon</span>
+                </div>
+                <div className="topbar-right">
+                    <span className="topbar-countdown">Closes {countdown}</span>
+                    <button className="topbar-cta" onClick={() => openModal(0)}>Register Now →</button>
+                </div>
+            </div>
+
+            {/* ── PHASE STRIP ── */}
+            <div className="phase-strip">
                 <div className="phase-timeline">
                     {PHASES.map(p => (
                         <div key={p.label} className="phase-node">
@@ -1101,287 +1374,30 @@ function App() {
                 </div>
             </div>
 
-            {/* ── SECTION 1: PROBLEM STATEMENTS ── */}
-            <section id="problems" className="sec-cloud">
-                <div className="sec-wrap">
-                    <span className="sec-label">Challenges</span>
-                    <h2 className="sec-h2">Pick Your Problem</h2>
-                    <p className="sec-sub">
-                        GG-specific challenges designed for this hackathon. Multiple teams can work on the same problem — pick the one that fits your expertise and the tool you plan to use.
-                    </p>
-                    {probRecords.length > 0 ? (
-                        <div className="prob-grid">{probRecords.map(renderProbCard)}</div>
-                    ) : (
-                        <div style={{ padding: '48px 0', textAlign: 'center', color: T.muted, fontSize: 14 }}>
-                            Problem statements are being finalized — check back before March 9.
-                        </div>
-                    )}
-                    <div className="prob-note">
-                        <strong>Not sure which to pick?</strong> Register first — you can finalize your problem statement after March 9. The build window doesn't open until March 16.
-                    </div>
-                </div>
-            </section>
+            {/* ── TAB BAR ── */}
+            <div className="tab-bar">
+                {TABS.map(([id, label]) => (
+                    <button key={id} className={`tab-btn${tab === id ? ' active' : ''}`} onClick={() => setTab(id)}>
+                        {label}
+                    </button>
+                ))}
+            </div>
 
-            {/* ── SECTION 2: RULES & GUIDELINES ── */}
-            <section id="rules" className="sec-white">
-                <div className="sec-wrap">
-                    <span className="sec-label">Rules</span>
-                    <h2 className="sec-h2">Rules & Guidelines</h2>
-                    <p className="sec-sub">Everything you need to know before you build.</p>
-
-                    <div className="rule-cards">
-                        <div className="rule-card">
-                            <div className="rule-icon"><ClipboardTextIcon size={30} color={T.blue} weight="duotone" /></div>
-                            <div className="rule-title">Eligibility</div>
-                            <div className="rule-desc">Open to all Walmart Home Office associates. Teams of 3–5; solo sign-ups will be matched to a team before March 8.</div>
-                        </div>
-                        <div className="rule-card">
-                            <div className="rule-icon"><TimerIcon size={30} color={T.blue} weight="duotone" /></div>
-                            <div className="rule-title">Build Window</div>
-                            <div className="rule-desc">No building before March 16 at 8am CT. All prototypes must be started and completed during the official 48-hour build window.</div>
-                        </div>
-                        <div className="rule-card">
-                            <div className="rule-icon"><TrophyIcon size={30} color={T.blue} weight="duotone" /></div>
-                            <div className="rule-title">Judging</div>
-                            <div className="rule-desc">Projects scored on Impact (30%), Innovation (25%), Feasibility (25%), and Demo Quality (20%). Top 5 present to executive judges.</div>
-                        </div>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                        <h3 style={{ fontSize: 16, fontWeight: 700, color: T.deep }}>Key Dates</h3>
-                        <a className="rules-link" style={{ marginBottom: 0 }} href={RULES_URL} target="_blank" rel="noreferrer">Full Rules & Guidelines ↗</a>
-                    </div>
-                    <div className="key-dates-table">
-                        <div className="kdt-head">
-                            <span>Event</span>
-                            <span style={{ textAlign: 'center' }}>Date</span>
-                            <span style={{ textAlign: 'right' }}>Note</span>
-                        </div>
-                        {KEY_DATES.map(row => (
-                            <div key={row.event} className="kdt-row">
-                                <span className="kdt-event">{row.event}</span>
-                                <span className="kdt-date">{row.date}</span>
-                                {row.note && <span className={`kdt-note${row.note.includes('limit') || row.note.includes('before') ? ' kdt-note-warn' : ''}`}>{row.note}</span>}
-                            </div>
-                        ))}
-                    </div>
-
-                    <h3 style={{ fontSize: 16, fontWeight: 700, color: T.deep, marginBottom: 12 }}>Scoring Rubric</h3>
-                    <div className="judge-grid">
-                        {JUDGING.map(j => (
-                            <div key={j.label} className="judge-card">
-                                <div className="judge-top">
-                                    <div className="judge-label">{j.label}</div>
-                                    <div className="judge-weight">{j.weight}</div>
-                                </div>
-                                <div className="judge-desc">{j.desc}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* ── SECTION 3: TOOLS & ACCESS ── */}
-            <section id="tools" className="sec-cloud">
-                <div className="sec-wrap">
-                    <span className="sec-label">Tools</span>
-                    <h2 className="sec-h2">Choose Your Stack</h2>
-                    <p className="sec-sub">Free training is available for all three tools. Pick one — or combine them if your use case calls for it. Confirm access before March 9.</p>
-
-                    <div className="tool-cards">
-                        <div className="tool-card">
-                            <div className="tool-bar" style={{ background: T.blue }} />
-                            <div className="tool-inner">
-                                <div className="tool-name">Airtable</div>
-                                <div className="tool-tagline">Best for: Structured data, interfaces, automations</div>
-                                <div className="tool-desc">Build operational interfaces, automated workflows, and dashboards on top of GG's existing data — no code required.</div>
-                                <div className="tool-access-block">
-                                    ✓ Already provisioned for all GG associates. Your license activates automatically at registration.
-                                </div>
-                                <a className="tool-link" href="https://airtable.com/academy" target="_blank" rel="noreferrer">
-                                    Get Training <ArrowRightIcon size={12} />
-                                </a>
-                            </div>
-                        </div>
-                        <div className="tool-card">
-                            <div className="tool-bar" style={{ background: '#7C3AED' }} />
-                            <div className="tool-inner">
-                                <div className="tool-name">Harvey</div>
-                                <div className="tool-tagline">Best for: Document AI, natural language Q&A</div>
-                                <div className="tool-desc">Point Harvey at any PDF, policy doc, or regulation — ask questions, extract structured data, and draft content at scale.</div>
-                                <div className="tool-access-block">
-                                    ⚠ Contact <strong>Abby Worley</strong> to confirm your Harvey license before the event. Allow 2–3 business days.
-                                </div>
-                                <span className="tool-link tool-link-dim">Training at kickoff</span>
-                            </div>
-                        </div>
-                        <div className="tool-card">
-                            <div className="tool-bar" style={{ background: '#059669' }} />
-                            <div className="tool-inner">
-                                <div className="tool-name">CodePuppy</div>
-                                <div className="tool-tagline">Best for: Custom code, integrations, APIs</div>
-                                <div className="tool-desc">Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations that go beyond no-code tools.</div>
-                                <div className="tool-access-block">
-                                    ⚠ Contact <strong>Michael [GG team]</strong> to confirm access early — new user provisioning is limited.
-                                </div>
-                                <span className="tool-link tool-link-dim">Training at kickoff</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="callout-box">
-                        💡 <strong>Not sure which tool to pick?</strong> Join weekly office hours — Thursdays 10–11am CT — to talk through your use case before the build window opens. Your assigned mentor can also advise.
-                    </div>
-                </div>
-            </section>
-
-            {/* ── SECTION 4: HOW TO REGISTER ── */}
-            <section id="register" className="sec-white">
-                <div className="sec-wrap">
-                    <span className="sec-label">Registration</span>
-                    <h2 className="sec-h2">Join the Hackathon</h2>
-                    <p className="sec-sub">Registration closes <strong>March 9 at 5pm CT</strong>. Spots are limited to {MAX_TEAMS} teams — {spotsLeft} remaining.</p>
-
-                    <div className="reg-cols">
-                        <div className="reg-col-card" style={{ borderTop: `3px solid ${T.blue}` }}>
-                            <div className="reg-col-head">Team Registration</div>
-                            <ol className="step-list">
-                                {[
-                                    'Team captain fills out the registration form.',
-                                    'Teammates receive invitations to confirm and agree to the rules.',
-                                    'Once all members accept, your team is officially registered.',
-                                    "You'll receive a link to your private Team Workspace.",
-                                ].map((step, i) => (
-                                    <li key={i} className="step-item">
-                                        <div className="step-num">{i + 1}</div>
-                                        <div className="step-text">{step}</div>
-                                    </li>
-                                ))}
-                            </ol>
-                            <div className="warn-note">
-                                <WarningIcon size={16} color="#7A5A00" weight="fill" style={{ flexShrink: 0, marginTop: 1 }} />
-                                <span>Minimum 3 members required to register as a team. Maximum 5. You can add members after registration.</span>
-                            </div>
-                            <button className="btn-primary" onClick={() => openModal(0)}>Register Your Team →</button>
-                        </div>
-
-                        <div className="reg-col-card" style={{ borderTop: `3px solid ${T.muted2}` }}>
-                            <div className="reg-col-head">No Team? No Problem.</div>
-                            <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, marginBottom: 18 }}>
-                                Sign up as a free agent and we'll match you with a team based on your skills and interests. <strong style={{ color: T.body }}>Matching closes March 8.</strong>
-                            </p>
-                            <ul className="fa-bullets">
-                                <li className="fa-bullet">Tell us your preferred tool</li>
-                                <li className="fa-bullet">Share your problem area of interest</li>
-                                <li className="fa-bullet">Rate your AI skill level (1–5)</li>
-                            </ul>
-                            <button className="btn-outline-dark" onClick={() => openModal('freeagent')}>
-                                Sign Up as Free Agent →
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="already-reg">
-                        <strong style={{ color: T.body }}>Already registered?</strong> Need to change your team roster or update information?{' '}
-                        Find us in the <strong style={{ color: T.body }}>#gg-hackathon</strong> Teams channel. Team changes close <strong style={{ color: T.body }}>March 14</strong>.
-                    </div>
-                </div>
-            </section>
-
-            {/* ── SECTION 5: HELP & SUPPORT ── */}
-            <section id="help" className="sec-cloud">
-                <div className="sec-wrap">
-                    <span className="sec-label">Support</span>
-                    <h2 className="sec-h2">We've Got You Covered</h2>
-                    <p className="sec-sub">Multiple support channels available before and during the event.</p>
-
-                    <div className="help-cards">
-                        <div className="help-card">
-                            <div className="help-card-icon"><QuestionIcon size={30} color={T.blue} weight="duotone" /></div>
-                            <div className="help-card-title">Frequently Asked Questions</div>
-                            <div className="faq-list">
-                                {FAQS.map((item, i) => (
-                                    <div key={i} className="faq-item">
-                                        <button className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                                            <span>{item.q}</span>
-                                            <span className={`faq-chevron${openFaq === i ? ' open' : ''}`}>▸</span>
-                                        </button>
-                                        <div className={`faq-a${openFaq === i ? ' open' : ''}`}>{item.a}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="help-card">
-                            <div className="help-card-icon"><HeadsetIcon size={30} color={T.blue} weight="duotone" /></div>
-                            <div className="help-card-title">Associate Support</div>
-                            <div className="contact-blocks">
-                                <div className="contact-block">
-                                    <div className="contact-topic">Airtable Questions</div>
-                                    <div className="contact-name">Bennett Oliver</div>
-                                    <div className="contact-role">Account Executive</div>
-                                    <div className="contact-note">Office hours: Thursdays 10–11am CT</div>
-                                </div>
-                                <div className="contact-block">
-                                    <div className="contact-topic">Harvey Questions</div>
-                                    <div className="contact-name">Abby Worley</div>
-                                    <div className="contact-role">GG Digital Acceleration</div>
-                                </div>
-                                <div className="contact-block">
-                                    <div className="contact-topic">CodePuppy Questions</div>
-                                    <div className="contact-name">Michael [GG team]</div>
-                                    <div className="contact-role">GG Digital Acceleration</div>
-                                </div>
-                            </div>
-                            <div className="help-footer-note">For anything else → <strong>#gg-hackathon</strong> in Teams</div>
-                        </div>
-
-                        <div className="help-card">
-                            <div className="help-card-icon"><ChalkboardTeacherIcon size={30} color={T.blue} weight="duotone" /></div>
-                            <div className="help-card-title">Mentor Program</div>
-                            <div className="mentor-body">
-                                Every registered team is assigned one internal mentor with relevant domain or technical expertise.
-                            </div>
-                            <ul className="mentor-bullets">
-                                <li className="mentor-bullet">1 mentor per team (subject to team count)</li>
-                                <li className="mentor-bullet">Active during the build window March 16–19</li>
-                                <li className="mentor-bullet">Matched on your tool choice and problem area</li>
-                            </ul>
-                            <div style={{ background: T.ice, border: `1px solid ${T.border2}`, borderRadius: 6, padding: '10px 14px', fontSize: 12, color: T.muted, lineHeight: 1.6, marginBottom: 14 }}>
-                                Vendor support from Airtable, Harvey, and CodePuppy is available in addition to your assigned mentor.
-                            </div>
-                            <div className="mentor-note">
-                                Team Workspace — training calendar, shared notes, submission checklist — unlocks after registration is confirmed. <strong style={{ color: T.muted }}>Available in the GG Hackathon Workspace extension.</strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* ── FOOTER ── */}
-            <footer className="site-footer">
-                <div className="site-footer-top">
-                    <div className="site-footer-brand">
-                        <div className="nav-spark"><SparkIcon size={15} /></div>
-                        <span className="site-footer-brand-text">GG Digital Acceleration · FY27 AI Hackathon</span>
-                    </div>
-                    <div className="site-footer-links">
-                        <button className="site-footer-link-cta" onClick={() => openModal(0)}>Register Now →</button>
-                        <a className="site-footer-link" href={RULES_URL} target="_blank" rel="noreferrer">Rules ↗</a>
-                        <span className="site-footer-link">#gg-hackathon</span>
-                    </div>
-                </div>
-                <div className="site-footer-bottom">
-                    50-team limit · Registration closes March 9 @ 5pm CT · Build window March 16–19 · Science Fair March 20 · Bentonville & Virtual
-                </div>
-            </footer>
+            {/* ── TAB CONTENT ── */}
+            <div className="portal-body">
+                {tab === 'rules'      && renderRulesTab()}
+                {tab === 'register'   && renderRegisterTab()}
+                {tab === 'teams'      && renderTeamsTab()}
+                {tab === 'challenges' && renderChallengesTab()}
+                {tab === 'help'       && renderHelpTab()}
+            </div>
 
             {/* ── MODALS ── */}
             {showReg && (
                 <RegistrationModal
                     initialScreen={modalInitScreen}
-                    onClose={() => setShowReg(false)}
-                    onRegister={() => {}}
+                    onClose={handleModalClose}
+                    onRegister={() => setJustRegistered(true)}
                     submissionsTable={subTable}
                     dirRecords={dirRecords}
                     dirNameField={dfName}
@@ -1394,6 +1410,16 @@ function App() {
                     onClose={() => setSelProb(null)}
                     pfId={pfId} pfTitle={pfTitle} pfDesc={pfDesc}
                     pfDiff={pfDiff} pfImpact={pfImpact} pfDomain={pfDomain} pfClaimed={pfClaimed}
+                />
+            )}
+            {selTeam && (
+                <TeamDetailModal
+                    team={selTeam}
+                    onClose={() => setSelTeam(null)}
+                    sfTeamName={sfTeamName}
+                    sfStatus={sfStatus}
+                    sfUseCase={sfUseCase}
+                    memberFields={memberFields}
                 />
             )}
         </div>
