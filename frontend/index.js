@@ -93,8 +93,8 @@ const FAQS = [
 const TABS = [
     ['rules',      'Rules & Guidelines'],
     ['register',   'Register'],
-    ['teams',      'Registration Portal'],
-    ['challenges', 'Challenges & Tools'],
+    ['teams',      'Teams'],
+    ['challenges', 'Challenges'],
     ['help',       'Help'],
 ];
 
@@ -108,7 +108,7 @@ html,body{scroll-behavior:smooth;}
 .portal-body{flex:1;overflow-y:auto;}
 
 /* ── HERO ── */
-.hero{background:${T.heroGrad};padding:44px 56px 52px;position:relative;overflow:hidden;flex-shrink:0;}
+.hero{background:${T.heroGrad};padding:26px 56px 30px;position:relative;overflow:hidden;flex-shrink:0;}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 65% 50%,rgba(44,142,244,0.22),transparent);pointer-events:none;}
 .hero-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:48px;}
 .hero-left{flex:1;min-width:0;max-width:640px;}
@@ -127,7 +127,7 @@ html,body{scroll-behavior:smooth;}
 @keyframes lpspin{to{transform:rotate(360deg);}}
 .hero-eyebrow{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
 .hero-eyebrow::before{content:'';display:block;width:22px;height:1px;background:rgba(255,255,255,0.35);}
-.hero h1{font-size:42px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:14px;}
+.hero h1{font-size:36px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:12px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 40%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero-byline{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:${T.white};margin-bottom:10px;opacity:0.9;}
 .hero-sub{font-size:14px;color:rgba(255,255,255,0.65);max-width:500px;line-height:1.65;margin-bottom:26px;}
@@ -140,13 +140,13 @@ html,body{scroll-behavior:smooth;}
 .btn-outline-dark:hover{background:${T.ice};border-color:${T.blue};color:${T.blue};}
 
 /* ── STAT BAR ── */
-.stat-bar{background:${T.white};border-bottom:1px solid ${T.border};}
+.stat-bar{background:${T.white};}
 .stat-bar-inner{display:grid;grid-template-columns:repeat(6,1fr);max-width:1200px;margin:0 auto;}
 .stat-item{padding:16px 0;border-right:1px solid ${T.border};display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;}
 .stat-item:last-child{border-right:none;}
 .stat-num{font-family:'Inter',sans-serif;font-size:22px;font-weight:800;color:${T.blue};line-height:1;letter-spacing:-0.02em;}
 .stat-num-red{color:#C0392B;}
-.stat-num-sm{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.blue};line-height:1.2;letter-spacing:-0.01em;}
+.stat-num-sm{font-family:'Inter',sans-serif;font-size:15px;font-weight:800;color:${T.blue};line-height:1.2;letter-spacing:-0.01em;}
 .stat-label{font-family:'Inter',sans-serif;font-size:9px;color:${T.muted};letter-spacing:0.06em;text-transform:uppercase;font-weight:500;}
 
 /* ── PHASE STRIP ── */
@@ -169,10 +169,10 @@ html,body{scroll-behavior:smooth;}
 .sec-white{background:${T.white};border-bottom:1px solid ${T.border};}
 .sec-cloud{background:${T.cloud};border-bottom:1px solid ${T.border};}
 .sec-dark{background:${T.heroGrad};}
-.sec-wrap{max-width:1200px;margin:0 auto;padding:48px 56px;}
-.sec-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.blue};display:inline-block;margin-bottom:10px;}
-.sec-h2{font-size:26px;font-weight:800;letter-spacing:-0.02em;color:${T.deep};margin-bottom:8px;line-height:1.15;}
-.sec-sub{font-size:14px;color:${T.muted};line-height:1.7;max-width:640px;margin-bottom:32px;}
+.sec-wrap{max-width:1200px;margin:0 auto;padding:32px 56px;}
+.sec-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${T.blue};display:inline-block;margin-bottom:8px;}
+.sec-h2{font-size:26px;font-weight:800;letter-spacing:-0.02em;color:${T.deep};margin-bottom:6px;line-height:1.15;}
+.sec-sub{font-size:14px;color:${T.muted};line-height:1.7;max-width:640px;margin-bottom:24px;}
 
 /* ── RULE CARDS ── */
 .rule-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
@@ -196,7 +196,7 @@ html,body{scroll-behavior:smooth;}
 .judge-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:20px 18px;}
 .judge-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px;}
 .judge-label{font-size:14px;font-weight:800;color:${T.deep};line-height:1.2;}
-.judge-weight{font-family:'Inter',sans-serif;font-size:20px;font-weight:800;color:${T.blue};flex-shrink:0;}
+.judge-weight{font-family:'Inter',sans-serif;font-size:16px;font-weight:800;color:${T.blue};flex-shrink:0;}
 .judge-desc{font-size:12px;color:${T.muted};line-height:1.6;}
 
 /* ── REGISTRATION ── */
@@ -214,12 +214,6 @@ html,body{scroll-behavior:smooth;}
 .already-reg{background:${T.cloud};border:1px solid ${T.border};border-radius:8px;padding:18px 22px;font-size:13px;color:${T.muted};line-height:1.6;}
 
 /* ── TEAM PORTAL ── */
-.portal-stats{display:flex;align-items:center;gap:28px;padding-bottom:24px;margin-bottom:28px;border-bottom:1px solid ${T.border};}
-.portal-stat{display:flex;flex-direction:column;gap:3px;}
-.portal-stat-num{font-family:'Inter',sans-serif;font-size:28px;font-weight:800;color:${T.blue};line-height:1;letter-spacing:-0.02em;}
-.portal-stat-num-red{color:#C0392B;}
-.portal-stat-label{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};text-transform:uppercase;letter-spacing:0.07em;font-weight:500;}
-.portal-stat-div{width:1px;height:36px;background:${T.border};}
 .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 .team-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:20px 20px;cursor:pointer;transition:all 0.18s;}
 .team-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
@@ -241,10 +235,11 @@ html,body{scroll-behavior:smooth;}
 .tool-name{font-size:19px;font-weight:800;color:${T.deep};margin-bottom:4px;}
 .tool-tagline{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:${T.muted2};margin-bottom:13px;}
 .tool-desc{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:16px;}
-.tool-access-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:13px 14px;font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:14px;}
-.tool-link{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:5px;cursor:pointer;}
+.tool-access-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:13px 14px;font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:14px;display:flex;align-items:flex-start;gap:7px;}
+.tool-link{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:5px;cursor:pointer;margin-top:auto;}
 .tool-link:hover{text-decoration:underline;}
 .tool-link-dim{color:${T.muted2};cursor:default;}
+.tool-note-badge{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:${T.muted2};padding:4px 10px;background:${T.cloud};border:1px solid ${T.border};border-radius:4px;display:inline-flex;align-items:center;gap:5px;margin-top:auto;width:fit-content;}
 
 /* ── PROBLEM CARDS ── */
 .prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
@@ -259,7 +254,7 @@ html,body{scroll-behavior:smooth;}
 .prob-card-id{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted2};letter-spacing:0.08em;font-weight:600;}
 .prob-card-impact{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;background:${T.ice};color:${T.blue};flex-shrink:0;}
 .prob-card-title{font-size:14px;font-weight:700;color:${T.deep};margin-bottom:8px;line-height:1.35;}
-.prob-card-desc{font-size:12px;color:${T.muted};line-height:1.6;flex:1;margin-bottom:12px;}
+.prob-card-desc{font-size:12px;color:${T.muted};line-height:1.6;flex:1;margin-bottom:12px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
 .prob-card-footer{display:flex;align-items:center;justify-content:space-between;}
 .prob-card-tags{display:flex;gap:5px;flex-wrap:wrap;}
 .ptag{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px;}
@@ -273,7 +268,7 @@ html,body{scroll-behavior:smooth;}
 .prob-note strong{color:${T.deep};}
 
 /* ── HELP CARDS ── */
-.help-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;}
+.help-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch;}
 .help-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:26px 22px;display:flex;flex-direction:column;}
 .help-card-icon{margin-bottom:14px;display:flex;}
 .help-card-title{font-size:16px;font-weight:800;color:${T.deep};margin-bottom:18px;}
@@ -284,8 +279,8 @@ html,body{scroll-behavior:smooth;}
 .faq-q:hover{color:${T.blue};}
 .faq-chevron{font-size:11px;flex-shrink:0;margin-top:3px;transition:transform 0.2s ease;color:${T.muted2};}
 .faq-chevron.open{transform:rotate(90deg);}
-.faq-a{font-size:13px;color:${T.muted};line-height:1.65;max-height:0;overflow:hidden;transition:max-height 0.25s ease,opacity 0.2s,padding 0.2s;opacity:0;padding-bottom:0;}
-.faq-a.open{max-height:120px;opacity:1;padding-bottom:13px;}
+.faq-a{font-size:13px;color:${T.muted};line-height:1.65;max-height:0;overflow:hidden;transition:max-height 0.3s ease,opacity 0.2s,padding 0.2s;opacity:0;padding-bottom:0;}
+.faq-a.open{max-height:300px;opacity:1;padding-bottom:13px;}
 .contact-blocks{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
 .contact-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:13px 14px;}
 .contact-topic{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:${T.muted};margin-bottom:4px;}
@@ -366,7 +361,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .success-sub{font-size:14px;color:${T.muted};line-height:1.65;max-width:380px;margin:0 auto 28px;}
 .ferr{font-size:12px;color:#C0392B;margin-top:5px;}
 .submit-err{background:#FEE8E8;border:1px solid rgba(192,57,43,0.25);border-radius:6px;padding:10px 13px;font-size:13px;color:#C0392B;margin-bottom:14px;}
-.opt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.opt-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
 .opt-card{background:${T.white};border:1px solid ${T.border};border-radius:10px;padding:26px 20px;cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;}
 .opt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${T.deep},${T.blue});opacity:0;transition:opacity 0.18s;}
 .opt-card:hover{border-color:${T.border2};box-shadow:${T.shadowM};}
@@ -524,7 +519,7 @@ function MemberSearch({ label, optional, dirRecords, nameField, emailField, sele
         <div className="fr">
             <label className="form-label">{label}{!optional && <span className="req">*</span>}</label>
             {label.includes('Captain') && <div className="fh">Primary contact — submits the final project.</div>}
-            {optional && <div className="fh">Optional — teams need 3 minimum, can have up to 5.</div>}
+            {optional && label === 'Member 2' && <div className="fh">Optional — teams need 3 minimum, can have up to 5.</div>}
             <div className="ms-wrap">
                 <input className="fi" placeholder="Search by name or email…" value={query}
                     onChange={e => { setQuery(e.target.value); setOpen(true); }}
@@ -680,7 +675,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                         {isAgent ? "We'll match you with a team based on your skills and interests before March 8."
                             : <><strong>Teammates will receive an invitation to confirm.</strong> Your team is locked in once all members accept.</>}
                     </div>
-                    <button className="btn-primary" onClick={onClose}>{isAgent ? 'Done' : 'View Registration Portal →'}</button>
+                    <button className="btn-primary" onClick={onClose}>{isAgent ? 'Done' : 'View Teams →'}</button>
                 </div></div>
             </div>
         );
@@ -707,12 +702,6 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                             <div className="opt-card-desc">No team yet? We'll match you based on your skills and problem interest by March 8.</div>
                             <div className="opt-card-cta">Sign Up →</div>
                         </div>
-                        <div className="opt-card opt-card-dis">
-                            <div className="opt-card-icon"><MagnifyingGlassIcon size={28} color={T.muted2} weight="duotone" /></div>
-                            <div className="opt-card-title">Find a Team</div>
-                            <div className="opt-card-desc">Browse teams actively looking for members.</div>
-                            <div className="opt-card-soon">Coming Soon</div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -723,9 +712,9 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
         <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
             <div className="modal">
                 <div className="modal-header">
-                    <div>
-                        <button className="modal-back" onClick={() => setScreen(0)}>← Back</button>
-                        <div className="modal-title" style={{ marginTop: 7 }}>Join as Free Agent</div>
+                    <button className="modal-back" onClick={() => setScreen(0)}>← Back</button>
+                    <div style={{ flex: 1 }}>
+                        <div className="modal-title">Join as Free Agent</div>
                         <div className="modal-subtitle">FY27 GG AI Hackathon · Matching closes March 8</div>
                     </div>
                     <button className="modal-close" onClick={onClose}>✕</button>
@@ -752,7 +741,11 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
         <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
             <div className="modal">
                 <div className="modal-header">
-                    <div><button className="modal-back" onClick={() => setScreen(0)}>← Back</button><div className="modal-title" style={{ marginTop: 7 }}>Register Your Team</div><div className="modal-subtitle">FY27 GG AI Hackathon · {MAX_TEAMS}-team limit</div></div>
+                    <button className="modal-back" onClick={() => setScreen(0)}>← Back</button>
+                    <div style={{ flex: 1 }}>
+                        <div className="modal-title">Register Your Team</div>
+                        <div className="modal-subtitle">FY27 GG AI Hackathon · {MAX_TEAMS}-team limit</div>
+                    </div>
                     <button className="modal-close" onClick={onClose}>✕</button>
                 </div>
                 <div className="modal-body">
@@ -868,7 +861,7 @@ function App() {
                         {impact === 'High' && <span className="prob-card-impact">High Impact</span>}
                     </div>
                     <div className="prob-card-title">{title}</div>
-                    {desc && <div className="prob-card-desc">{desc.slice(0, 130)}{desc.length > 130 ? '…' : ''}</div>}
+                    {desc && <div className="prob-card-desc">{desc}</div>}
                     <div className="prob-card-footer">
                         <div className="prob-card-tags">
                             {domain && <span className="ptag ptag-domain">{domain}</span>}
@@ -939,7 +932,9 @@ function App() {
                 {/* ── TAB BAR ── */}
                 <div className="tab-bar">
                     {TABS.map(([id, label]) => (
-                        <button key={id} className={`tab-btn${tab === id ? ' active' : ''}`} onClick={() => setTab(id)}>{label}</button>
+                        <button key={id} className={`tab-btn${tab === id ? ' active' : ''}`} onClick={() => setTab(id)}>
+                            {id === 'teams' && <span className="live-dot" />}{label}
+                        </button>
                     ))}
                 </div>
             </div>
@@ -1023,8 +1018,7 @@ function App() {
                                 </div>
                             </div>
                             <div className="already-reg">
-                                <strong style={{ color: T.body }}>Already registered?</strong> Need to change your team roster or update information?{' '}
-                                Find us in <strong style={{ color: T.body }}>#gg-hackathon</strong> on Teams. Team changes close <strong style={{ color: T.body }}>March 14</strong>.
+                                <strong style={{ color: T.body }}>Already registered?</strong> Find <strong style={{ color: T.body }}>#gg-hackathon</strong> on Teams for roster changes. Closes <strong style={{ color: T.body }}>March 14</strong>.
                             </div>
                         </div>
                     </div>
@@ -1034,18 +1028,12 @@ function App() {
                 {tab === 'teams' && <>
                     <div className="sec-cloud">
                         <div className="sec-wrap">
-                            <span className="sec-label">Registration Portal</span>
-                            <h2 className="sec-h2">Registered Teams</h2>
-                            <p className="sec-sub">All registered teams. Click a team to view members and access your workspace.</p>
-                            <div className="portal-stats">
-                                <div className="portal-stat"><div className="portal-stat-num">{totalTeams}</div><div className="portal-stat-label">Teams Registered</div></div>
-                                <div className="portal-stat-div" />
-                                <div className="portal-stat"><div className={`portal-stat-num${spotsLeft <= 10 ? ' portal-stat-num-red' : ''}`}>{spotsLeft}</div><div className="portal-stat-label">Spots Left</div></div>
-                                <div className="portal-stat-div" />
-                                <div className="portal-stat"><div className="portal-stat-num">{freeAgents.length}</div><div className="portal-stat-label">Free Agents</div></div>
-                                <div style={{ marginLeft: 'auto' }}>
-                                    <button className="btn-primary" onClick={() => openModal(0)}>+ Register a Team</button>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
+                                <div>
+                                    <span className="sec-label">Registration Portal</span>
+                                    <h2 className="sec-h2" style={{ marginBottom: 0 }}>Registered Teams</h2>
                                 </div>
+                                <button className="btn-primary" onClick={() => openModal(0)}>+ Register a Team</button>
                             </div>
                             {liveTeams.length === 0 ? (
                                 <div className="team-empty">
@@ -1087,7 +1075,7 @@ function App() {
                             <h2 className="sec-h2">Pick Your Problem</h2>
                             <p className="sec-sub">GG-specific challenges designed for this hackathon. Multiple teams can work on the same problem.</p>
                             <div className="callout-box">
-                                <strong>You can define your own problem statement.</strong> These challenges are starting points curated by GG leadership, but teams are encouraged to identify problems they face in their own work. Judges will evaluate on <strong>relevance to GG</strong>, <strong>business impact</strong>, and <strong>how well AI is incorporated</strong>.
+                                <strong>You can define your own problem statement.</strong> Judges evaluate on <strong>relevance to GG</strong>, <strong>business impact</strong>, and <strong>AI integration</strong>.
                             </div>
                             {probRecords.length > 0 ? (
                                 <div className="prob-grid">{probRecords.map(renderProbCard)}</div>
@@ -1103,9 +1091,9 @@ function App() {
                             <h2 className="sec-h2">Choose Your Stack</h2>
                             <p className="sec-sub">Free training is available for all three tools. Pick one — or combine them if your use case calls for it. Confirm access before March 9.</p>
                             <div className="tool-cards">
-                                <div className="tool-card"><div className="tool-bar" style={{ background: T.blue }} /><div className="tool-inner"><div className="tool-name">Airtable</div><div className="tool-tagline">Best for: Structured data, interfaces, automations</div><div className="tool-desc">Build operational interfaces, automated workflows, and dashboards on top of GG's existing data — no code required.</div><div className="tool-access-block">✓ Already provisioned for all GG associates. Your license activates automatically at registration.</div><a className="tool-link" href="https://airtable.com/academy" target="_blank" rel="noreferrer">Get Training <ArrowRightIcon size={12} /></a></div></div>
-                                <div className="tool-card"><div className="tool-bar" style={{ background: '#7C3AED' }} /><div className="tool-inner"><div className="tool-name">Harvey</div><div className="tool-tagline">Best for: Document AI, natural language Q&A</div><div className="tool-desc">Point Harvey at any PDF, policy doc, or regulation — ask questions, extract structured data, and draft content at scale.</div><div className="tool-access-block">⚠ Contact <strong>Abby Worley</strong> to confirm your Harvey license before the event. Allow 2–3 business days.</div><span className="tool-link tool-link-dim">Training at kickoff</span></div></div>
-                                <div className="tool-card"><div className="tool-bar" style={{ background: '#059669' }} /><div className="tool-inner"><div className="tool-name">CodePuppy</div><div className="tool-tagline">Best for: Custom code, integrations, APIs</div><div className="tool-desc">Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations that go beyond no-code tools.</div><div className="tool-access-block">⚠ Contact <strong>Michael [GG team]</strong> to confirm access early — new user provisioning is limited.</div><span className="tool-link tool-link-dim">Training at kickoff</span></div></div>
+                                <div className="tool-card"><div className="tool-bar" style={{ background: T.blue }} /><div className="tool-inner"><div className="tool-name">Airtable</div><div className="tool-tagline">Best for: Structured data, interfaces, automations</div><div className="tool-desc">Build operational interfaces, automated workflows, and dashboards on top of GG's existing data — no code required.</div><div className="tool-access-block"><SealCheckIcon size={14} color="#27AE60" weight="fill" style={{ flexShrink: 0, marginTop: 1 }} /><span>Already provisioned for all GG associates. Your license activates automatically at registration.</span></div><a className="tool-link" href="https://airtable.com/academy" target="_blank" rel="noreferrer">Get Training <ArrowRightIcon size={12} /></a></div></div>
+                                <div className="tool-card"><div className="tool-bar" style={{ background: '#7C3AED' }} /><div className="tool-inner"><div className="tool-name">Harvey</div><div className="tool-tagline">Best for: Document AI, natural language Q&A</div><div className="tool-desc">Point Harvey at any PDF, policy doc, or regulation — ask questions, extract structured data, and draft content at scale.</div><div className="tool-access-block"><WarningIcon size={14} color="#E67E22" weight="fill" style={{ flexShrink: 0, marginTop: 1 }} /><span>Contact <strong>Abby Worley</strong> to confirm your Harvey license before the event. Allow 2–3 business days.</span></div><span className="tool-note-badge">Training at kickoff</span></div></div>
+                                <div className="tool-card"><div className="tool-bar" style={{ background: '#059669' }} /><div className="tool-inner"><div className="tool-name">CodePuppy</div><div className="tool-tagline">Best for: Custom code, integrations, APIs</div><div className="tool-desc">Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations that go beyond no-code tools.</div><div className="tool-access-block"><WarningIcon size={14} color="#E67E22" weight="fill" style={{ flexShrink: 0, marginTop: 1 }} /><span>Contact <strong>Michael [GG team]</strong> to confirm access early — new user provisioning is limited.</span></div><span className="tool-note-badge">Training at kickoff</span></div></div>
                             </div>
                             <div className="callout-box">💡 <strong>Not sure which tool to pick?</strong> Join weekly office hours — Thursdays 10–11am CT — to talk through your use case before the build window opens.</div>
                         </div>
