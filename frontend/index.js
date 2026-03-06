@@ -1500,14 +1500,14 @@ function App() {
         return {
             rules:   find('Official Rules'),
             prizes:  find('Prizes and Payout'),
-            reginfo: find('Official Rules', dfDocEligibility) || find('Registration Info') || `## Eligibility & Team Formation
+            reginfo: `## Eligibility & Team Formation
 
 - **Open Participation:** The event is open to all domestic and international Walmart associates across all departments.
 - **Team Size:** Teams may consist of up to 5 members.
 - **Team Allocation:** The Global Governance hosting committee may assign individual participants to teams with fewer than 5 members to ensure full participation.
 - **Mentorship:** Each team will be assigned a dedicated technical mentor.
 
-## Hourly Associate Participation
+## Hourly Associates
 
 - Hourly (non-exempt) associates may participate only during their scheduled work hours.
 - Participation must adhere to the Walmart Associate Pay Policy.
