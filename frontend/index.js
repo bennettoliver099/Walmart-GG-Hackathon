@@ -537,6 +537,8 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .step-card-hero .submit-err{background:rgba(185,28,28,0.2);color:#FCA5A5;}
 .step-card-hero .add-self-form{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);}
 .step-card-hero .add-self-title{color:white;}
+.step-card-hero .add-self-highlight{background:rgba(185,28,28,0.25);border-color:rgba(255,100,100,0.6);}
+.step-card-hero .add-self-link-alert{color:#FCA5A5 !important;}
 .step-card-hero .ms-input{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);color:white;}
 .step-card-hero .ms-input::placeholder{color:rgba(255,255,255,0.4);}
 .step-card-hero .ms-input:focus{border-color:rgba(255,255,255,0.5);}
@@ -642,6 +644,9 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 /* ── ADD YOURSELF FORM ── */
 .add-self-form{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:8px;padding:20px;margin-top:12px;}
 .add-self-title{font-size:13px;font-weight:700;color:#0B2C5F;margin-bottom:14px;}
+.add-self-highlight{background:rgba(185,28,28,0.15);border:1.5px solid #B91C1C;border-radius:8px;padding:10px 14px;animation:pulse-red 1.5s ease-in-out 3;}
+.add-self-link-alert{color:#B91C1C !important;font-weight:800 !important;font-size:13px !important;}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(185,28,28,0);}50%{box-shadow:0 0 12px 4px rgba(185,28,28,0.25);}}
 
 /* ── MOBILE ── */
 @media(max-width:900px){
@@ -757,7 +762,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 `;
 
 // ─── MEMBER SEARCH ────────────────────────────────────────────────────────────
-function MemberSearch({ label, optional, dirRecords, nameField, emailField, selected, onSelect }) {
+function MemberSearch({ label, optional, dirRecords, nameField, emailField, selected, onSelect, onNoResults }) {
     const [query, setQuery] = useState('');
     const [open, setOpen]   = useState(false);
 
@@ -770,6 +775,11 @@ function MemberSearch({ label, optional, dirRecords, nameField, emailField, sele
             return name.toLowerCase().includes(q) || email.toLowerCase().includes(q);
         }).slice(0, 8);
     }, [query, dirRecords, nameField, emailField]);
+
+    const hasNoResults = query.trim().length >= 3 && filtered.length === 0;
+    useEffect(() => {
+        if (onNoResults) onNoResults(hasNoResults);
+    }, [hasNoResults, onNoResults]);
 
     if (selected) return (
         <div className="fr">
@@ -1574,6 +1584,7 @@ function RegistrationSection({
 
     // ── Add Yourself form state ───────────────────────────────────────────────
     const [showAddSelf,     setShowAddSelf]    = useState(false);
+    const [noDirectoryMatch, setNoDirectoryMatch] = useState(false);
     const [addFirstName,    setAddFirstName]   = useState('');
     const [addLastName,     setAddLastName]    = useState('');
     const [addEmail,        setAddEmail]       = useState('');
@@ -1870,6 +1881,7 @@ function RegistrationSection({
                             emailField={dfEmail}
                             selected={selfSelected}
                             onSelect={handleSelfSelect}
+                            onNoResults={setNoDirectoryMatch}
                         />
 
                         {duplicateStatus === 'on-team' && (
@@ -1885,9 +1897,9 @@ function RegistrationSection({
                             </div>
                         )}
 
-                        <div style={{marginTop:12}}>
-                            <button className="hub-card-link" onClick={() => setShowAddSelf(true)}>
-                                Can't find your name? Add yourself to the directory →
+                        <div style={{marginTop:12}} className={noDirectoryMatch ? 'add-self-highlight' : ''}>
+                            <button className={`hub-card-link${noDirectoryMatch ? ' add-self-link-alert' : ''}`} onClick={() => setShowAddSelf(true)}>
+                                {noDirectoryMatch ? '⚠ Not found — ' : ''}Can't find your name? Add yourself to the directory →
                             </button>
                         </div>
 
