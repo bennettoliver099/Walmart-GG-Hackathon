@@ -26,6 +26,7 @@ const TEST_NAMES            = ['Test', 'Test ', 'Test2', 'test 5', 'Rest'];
 const TECH_OPTIONS          = ['Airtable', 'CodePuppy', 'Harvey', 'Other'];
 const ATTENDANCE_OPTIONS    = ['Virtual', 'In Person', 'Hybrid'];
 const HACKATHON_DEADLINE    = new Date('2026-03-09T17:00:00');
+const HERO_COUNTDOWN_TARGET = new Date('2026-05-04T05:00:00Z'); // May 4, 2026 midnight CDT
 const MAX_TEAMS             = 50;
 
 // ─── WALMART SPARK SVG ────────────────────────────────────────────────────────
@@ -94,6 +95,22 @@ function getCountdown() {
     return `${d}d ${h}h ${m}m`;
 }
 
+function useCountdown(target) {
+    const [now, setNow] = useState(Date.now);
+    useEffect(() => {
+        const id = setInterval(() => setNow(Date.now()), 1000);
+        return () => clearInterval(id);
+    }, []);
+    const diff = target.getTime() - now;
+    if (diff <= 0) return null;
+    return {
+        d: String(Math.floor(diff / 86400000)).padStart(2, '0'),
+        h: String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0'),
+        m: String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0'),
+        s: String(Math.floor((diff % 60000) / 1000)).padStart(2, '0'),
+    };
+}
+
 // ─── CSS ──────────────────────────────────────────────────────────────────────
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -128,11 +145,12 @@ section[id]{scroll-margin-top:70px;}
 .sec-sub-white{color:rgba(255,255,255,0.72);}
 
 /* ── HERO ── */
-.hero{background:${T.heroGrad};padding:64px 56px 72px;position:relative;overflow:hidden;}
+.hero{background:${T.heroGrad};padding:88px 56px 88px;position:relative;overflow:hidden;}
 .hero::after{content:'';position:absolute;top:-40%;right:-8%;width:55%;height:180%;background:radial-gradient(ellipse,rgba(44,142,244,0.18),transparent 65%);pointer-events:none;}
 .hero-inner{max-width:1160px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
 .hero-left{min-width:0;}
-.hero-orbital{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center;margin:0 auto;}
+.hero-right{display:grid;place-items:center;margin:0 auto;}.hero-right>*{grid-area:1/1;}
+.hero-orbital{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center;}
 .orb-ring{position:absolute;border-radius:50%;}
 .orb-r1{width:300px;height:300px;border:1px dashed rgba(255,255,255,0.15);animation:lpspin 32s linear infinite;}
 .orb-r2{width:218px;height:218px;border:1px solid rgba(255,255,255,0.12);animation:lpspin 22s linear infinite reverse;}
@@ -145,16 +163,24 @@ section[id]{scroll-margin-top:70px;}
 .orb-t1 .orb-dot{width:11px;height:11px;background:#FFC220;box-shadow:0 0 12px rgba(255,194,32,0.7),0 0 24px rgba(255,194,32,0.3);}
 .orb-t2 .orb-dot{width:8px;height:8px;background:white;box-shadow:0 0 9px rgba(255,255,255,0.7),0 0 18px rgba(255,255,255,0.3);}
 @keyframes lpspin{to{transform:rotate(360deg);}}
-.hero-phases{display:flex;align-items:flex-start;margin-bottom:32px;gap:0;width:100%;}
+.hero-phases-br{position:absolute;bottom:28px;right:56px;display:flex;align-items:flex-start;gap:0;z-index:2;}
+.hero-phases-br .hero-phase-node{flex:none;min-width:76px;}
 .hero-phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
 .hero-phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:rgba(255,255,255,0.2);}
 .hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.4;max-width:90px;margin-top:6px;}
-.hero-h1-pre{display:block;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.45);-webkit-text-fill-color:rgba(255,255,255,0.45);background:none;margin-bottom:10px;}
-.hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:20px;}
+.hero-h1-pre{display:block;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.45);-webkit-text-fill-color:rgba(255,255,255,0.45);background:none;margin-bottom:12px;}
+.hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:16px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 50%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-byline{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:${T.white};letter-spacing:0.01em;margin-bottom:16px;}
-.hero-sub{font-size:14px;color:rgba(255,255,255,0.68);max-width:480px;line-height:1.7;margin-bottom:40px;}
+.hero-byline{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:${T.white};letter-spacing:0.01em;margin-bottom:20px;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.68);max-width:480px;line-height:1.7;margin-bottom:32px;}
 .hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.hero-countdown{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;}
+.hero-countdown-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:2px;}
+.countdown-blocks{display:flex;align-items:flex-end;gap:2px;}
+.countdown-block{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.countdown-num{font-family:'Inter',sans-serif;font-size:38px;font-weight:800;line-height:1;color:#fff;min-width:52px;text-align:center;letter-spacing:-0.03em;}
+.countdown-unit{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:${T.yellow};}
+.countdown-sep{font-size:26px;font-weight:700;color:rgba(255,255,255,0.3);padding-bottom:14px;align-self:flex-end;margin:0 2px;}
 .btn-primary{display:inline-flex;align-items:center;gap:8px;background:${T.yellow};color:${T.deep};padding:11px 22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.35);transition:all 0.18s;text-decoration:none;white-space:nowrap;}
 .btn-primary:hover{background:#FFD050;transform:translateY(-1px);}
 .btn-outline{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);color:${T.white};padding:11px 22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:1px solid rgba(255,255,255,0.22);cursor:pointer;transition:all 0.18s;text-decoration:none;}
@@ -395,18 +421,17 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 }
 @media(max-width:900px){
   .hero-inner{grid-template-columns:1fr;gap:40px;}
-  .hero-orbital{width:220px;height:220px;}
-  .orb-r1{width:220px;height:220px;} .orb-r2{width:160px;height:160px;} .orb-r3{width:108px;height:108px;}
-  .orb-core{width:72px;height:72px;}
-  .orb-t1{width:194px;height:194px;} .orb-t2{width:136px;height:136px;}
+  .hero-right{transform:scale(0.78);transform-origin:center;}
+  .hero-phases-br{right:20px;bottom:16px;}
 }
 @media(max-width:680px){
   .nav{padding:0 16px;}
   .nav-links{display:none;}
   .nav-countdown{display:none;}
-  .hero{padding:32px 16px 40px;}
+  .hero{padding:40px 16px 56px;}
   .hero-orbital{display:none;}
   .hero-inner{gap:0;}
+  .hero-phases-br{display:none;}
   .sec-wrap{padding:40px 20px;}
   .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
   .phase-section{padding:16px 16px 12px;}
@@ -999,6 +1024,7 @@ function App() {
     const [openFaq,         setOpenFaq]        = useState(null);
     const [showRubric,      setShowRubric]     = useState(false);
     const [countdown,       setCountdown]      = useState(getCountdown);
+    const cd = useCountdown(HERO_COUNTDOWN_TARGET);
 
     useEffect(() => {
         const id = setInterval(() => setCountdown(getCountdown()), 1000);
@@ -1083,14 +1109,6 @@ function App() {
             <section id="hero" className="hero">
                 <div className="hero-inner">
                     <div className="hero-left">
-                        <div className="hero-phases">
-                            {PHASES.map(p => (
-                                <div key={p.label} className="hero-phase-node">
-                                    <div className={`phase-pill ${p.active ? 'phase-pill-active' : 'phase-pill-inactive'}`}>{p.label}</div>
-                                    <div className="hero-phase-sub">{p.sub}</div>
-                                </div>
-                            ))}
-                        </div>
                         <h1><span className="hero-h1-pre">FY27</span>Global Governance<br /><span className="accent">AI Hackathon</span></h1>
                         <div className="hero-byline">Build something that matters. Win something that counts.</div>
                         <div className="hero-sub">
@@ -1106,14 +1124,55 @@ function App() {
                             </a>
                         </div>
                     </div>
-                    <div className="hero-orbital">
-                        <div className="orb-ring orb-r1" />
-                        <div className="orb-ring orb-r2" />
-                        <div className="orb-ring orb-r3" />
-                        <div className="orb-track orb-t1"><div className="orb-dot" /></div>
-                        <div className="orb-track orb-t2"><div className="orb-dot" /></div>
-                        <div className="orb-core"><SparkIcon size={38} /></div>
+                    <div className="hero-right">
+                        <div className="hero-orbital">
+                            <div className="orb-ring orb-r1" />
+                            <div className="orb-ring orb-r2" />
+                            <div className="orb-ring orb-r3" />
+                            <div className="orb-track orb-t1"><div className="orb-dot" /></div>
+                            <div className="orb-track orb-t2"><div className="orb-dot" /></div>
+                            <div className="orb-core" />
+                        </div>
+                        {cd ? (
+                            <div className="hero-countdown">
+                                <div className="hero-countdown-label">Hackathon Begins</div>
+                                <div className="countdown-blocks">
+                                    <div className="countdown-block">
+                                        <div className="countdown-num">{cd.d}</div>
+                                        <div className="countdown-unit">Days</div>
+                                    </div>
+                                    <div className="countdown-sep">:</div>
+                                    <div className="countdown-block">
+                                        <div className="countdown-num">{cd.h}</div>
+                                        <div className="countdown-unit">Hours</div>
+                                    </div>
+                                    <div className="countdown-sep">:</div>
+                                    <div className="countdown-block">
+                                        <div className="countdown-num">{cd.m}</div>
+                                        <div className="countdown-unit">Min</div>
+                                    </div>
+                                    <div className="countdown-sep">:</div>
+                                    <div className="countdown-block">
+                                        <div className="countdown-num">{cd.s}</div>
+                                        <div className="countdown-unit">Sec</div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="hero-countdown">
+                                <div className="hero-countdown-label">Hackathon Begins</div>
+                                <div style={{fontSize:'22px',fontWeight:800,color:'#fff',letterSpacing:'-0.02em'}}>Soon</div>
+                            </div>
+                        )}
                     </div>
+                </div>
+                <div className="hero-phases-br">
+                    {PHASES.map(p => (
+                        <div key={p.label} className="hero-phase-node">
+                            <div className={`phase-pill ${p.active ? 'phase-pill-active' : 'phase-pill-inactive'}`}>{p.label}</div>
+                            <div className="hero-phase-sub">{p.sub}</div>
+                        </div>
+                    ))}
                 </div>
             </section>
 
