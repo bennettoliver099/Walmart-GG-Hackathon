@@ -282,9 +282,10 @@ section[id]{scroll-margin-top:70px;}
 .tool-name{font-size:18px;font-weight:800;color:${T.deep};margin-bottom:4px;}
 .tool-tagline{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:${T.muted2};margin-bottom:12px;}
 .tool-desc{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:14px;}
-.tool-access-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:12px 14px;font-size:12px;color:${T.muted};line-height:1.6;margin-bottom:14px;}
-.tool-link{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
-.tool-link:hover{text-decoration:underline;}
+.tool-contact-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:12px 14px;margin-top:auto;}
+.tool-contact-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted2};margin-bottom:4px;}
+.tool-contact-name{font-size:14px;font-weight:700;color:${T.deep};margin-bottom:2px;}
+.tool-contact-role{font-size:12px;color:${T.muted};}
 .callout-box{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:16px 20px;font-size:13px;color:${T.muted};line-height:1.7;}
 .callout-box strong{color:${T.deep};}
 /* ── HACKATHON DOCS ── */
@@ -1742,8 +1743,8 @@ function App() {
             <section id="tools" className="sec-cloud">
                 <div className="sec-wrap">
                     <span className="sec-label">Tools</span>
-                    <h2 className="sec-h2">Choose Your Stack</h2>
-                    <p className="sec-sub">Free training is available for all three tools. Pick one — or combine them if your use case calls for it.</p>
+                    <h2 className="sec-h2">Tool Selection</h2>
+                    <p className="sec-sub" style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}>Free training is available for all three tools. Pick one — or combine them if your use case calls for it.</p>
 
                     <div className="tool-cards">
                         <div className="tool-card">
@@ -1752,10 +1753,11 @@ function App() {
                                 <div className="tool-name">Airtable</div>
                                 <div className="tool-tagline">Best for: Structured data, interfaces, automations</div>
                                 <div className="tool-desc">Build operational interfaces, automated workflows, and dashboards. The base, views, and interface builder are your canvas.</div>
-                                <div className="tool-access-block">
-                                    Already provisioned for Global Governance associates. If you don't have access, your license will be provisioned automatically when you register.
+                                <div className="tool-contact-block">
+                                    <div className="tool-contact-label">Point of Contact</div>
+                                    <div className="tool-contact-name">Nick Hammons</div>
+                                    <div className="tool-contact-role">Airtable · Embedded Delivery Team</div>
                                 </div>
-                                <a className="tool-link" href="https://airtable.com/academy" target="_blank" rel="noreferrer">Get Training →</a>
                             </div>
                         </div>
                         <div className="tool-card">
@@ -1764,10 +1766,11 @@ function App() {
                                 <div className="tool-name">Harvey</div>
                                 <div className="tool-tagline">Best for: Document AI, natural language Q&A</div>
                                 <div className="tool-desc">Point Harvey at any PDF, policy doc, or regulation — ask questions, extract structured data, and draft content.</div>
-                                <div className="tool-access-block">
-                                    Contact Abby Worley to confirm your Harvey license before the event.
+                                <div className="tool-contact-block">
+                                    <div className="tool-contact-label">Point of Contact</div>
+                                    <div className="tool-contact-name">Abby Worley</div>
+                                    <div className="tool-contact-role">Harvey · GG Digital Acceleration</div>
                                 </div>
-                                <span className="tool-link" style={{ cursor: 'default', opacity: 0.5 }}>Training available at kickoff</span>
                             </div>
                         </div>
                         <div className="tool-card">
@@ -1775,17 +1778,14 @@ function App() {
                             <div className="tool-inner">
                                 <div className="tool-name">CodePuppy</div>
                                 <div className="tool-tagline">Best for: Custom code, integrations, APIs</div>
-                                <div className="tool-desc">Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations Airtable can't do natively.</div>
-                                <div className="tool-access-block">
-                                    Contact Michael [GG team] to confirm access. Note: new user provisioning is currently limited — request early.
+                                <div className="tool-desc">Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations.</div>
+                                <div className="tool-contact-block">
+                                    <div className="tool-contact-label">Point of Contact</div>
+                                    <div className="tool-contact-name">Michael Chapman</div>
+                                    <div className="tool-contact-role">CodePuppy · GG Digital Acceleration</div>
                                 </div>
-                                <span className="tool-link" style={{ cursor: 'default', opacity: 0.5 }}>Training available at kickoff</span>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="callout-box">
-                        💡 <strong>Not sure which tool to pick?</strong> Join the weekly office hours — Thursdays 10–11am — to talk through your use case before the build window opens.
                     </div>
                 </div>
             </section>
