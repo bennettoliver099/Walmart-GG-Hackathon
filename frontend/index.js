@@ -286,8 +286,6 @@ section[id]{scroll-margin-top:70px;}
 .prod-card-hover-label{font-size:14px;font-weight:800;color:white;white-space:nowrap;text-align:center;letter-spacing:0.02em;}
 .prod-card-hover-btn{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:white;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.4);border-radius:100px;padding:8px 22px;white-space:nowrap;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:all 0.2s;}
 .prod-card:hover .prod-card-hover-btn:hover{background:rgba(255,255,255,0.3);}
-.prod-card-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);z-index:1;pointer-events:none;transition:opacity 0.3s;}
-.prod-card:hover .prod-card-hint{opacity:0;}
 /* ── PRODUCT MODAL ── */
 .pm-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px 20px;border-bottom:1px solid ${T.border};}
 .pm-header-left{display:flex;align-items:center;gap:16px;}
@@ -2878,33 +2876,37 @@ function App() {
                     <span className="sec-label">Tools</span>
                     <h2 className="sec-h2">Tool Selection</h2>
                     <p className="sec-sub">Free training is available for all tools. Pick one — or combine them if your use case calls for it.</p>
+                    <p className="sec-sub" style={{marginTop:6}}><strong>Click any card for details, resources, and training links.</strong></p>
 
                     <div className="prod-grid">
-                        {prodRecords.map(prod => {
-                            const name    = safeGetCellValueAsString(prod, 'Name');
-                            const logo    = safeGetCellValue(prod, 'Logo');
-                            const logoUrl = Array.isArray(logo) && logo.length > 0
-                                ? (logo[0].thumbnails?.large?.url || logo[0].url)
-                                : null;
-                            const desc     = safeGetCellValue(prod, 'Product Description');
-                            const descText = desc && typeof desc === 'object' && desc.value
-                                ? desc.value
-                                : safeGetCellValueAsString(prod, 'Product Description');
-                            return (
-                                <button key={prod.id} className="prod-card" onClick={() => setProductModal(prod)}>
-                                    {logoUrl
-                                        ? <img src={logoUrl} alt={name} className="prod-card-bg" />
-                                        : <div className="prod-card-bg-fallback" />
-                                    }
-                                    <div className="prod-card-shade" />
-                                    <div className="prod-card-hint">Click for details</div>
-                                    <div className="prod-card-overlay">
-                                        <div className="prod-card-hover-label">View Product Details</div>
-                                        <div className="prod-card-hover-btn">Explore {name} →</div>
-                                    </div>
-                                </button>
-                            );
-                        })}
+                        {(() => {
+                            const ORDER = ['airtable','harvey','code puppy','dataiku'];
+                            const sorted = [...prodRecords].sort((a, b) => {
+                                const ai = ORDER.indexOf(safeGetCellValueAsString(a, 'Name').toLowerCase());
+                                const bi = ORDER.indexOf(safeGetCellValueAsString(b, 'Name').toLowerCase());
+                                return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+                            });
+                            return sorted.map(prod => {
+                                const name    = safeGetCellValueAsString(prod, 'Name');
+                                const logo    = safeGetCellValue(prod, 'Logo');
+                                const logoUrl = Array.isArray(logo) && logo.length > 0
+                                    ? (logo[0].thumbnails?.large?.url || logo[0].url)
+                                    : null;
+                                return (
+                                    <button key={prod.id} className="prod-card" onClick={() => setProductModal(prod)}>
+                                        {logoUrl
+                                            ? <img src={logoUrl} alt={name} className="prod-card-bg" />
+                                            : <div className="prod-card-bg-fallback" />
+                                        }
+                                        <div className="prod-card-shade" />
+                                        <div className="prod-card-overlay">
+                                            <div className="prod-card-hover-label">View Product Details</div>
+                                            <div className="prod-card-hover-btn">Explore {name} →</div>
+                                        </div>
+                                    </button>
+                                );
+                            });
+                        })()}
                     </div>
                 </div>
             </section>
