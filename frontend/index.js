@@ -274,15 +274,20 @@ section[id]{scroll-margin-top:70px;}
 .hub-md a:hover{text-decoration:underline;}
 
 /* ── PRODUCT CARDS ── */
-.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
-.prod-card{background:${T.white};border:1px solid ${T.border};border-radius:12px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;transition:all 0.2s;box-shadow:${T.shadow};border-top:3px solid ${T.blue};font-family:inherit;}
-.prod-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(11,44,95,0.12);border-color:${T.blue};}
-.prod-card-logo-wrap{width:72px;height:72px;border-radius:16px;overflow:hidden;margin-bottom:16px;display:flex;align-items:center;justify-content:center;background:${T.cloud};border:1px solid ${T.border};}
-.prod-card-logo{width:100%;height:100%;object-fit:cover;}
-.prod-card-logo-placeholder{font-size:28px;font-weight:800;color:${T.blue};}
-.prod-card-name{font-size:16px;font-weight:800;color:${T.deep};margin-bottom:8px;}
-.prod-card-desc{font-size:11px;color:${T.muted};line-height:1.6;margin-bottom:12px;flex:1;}
-.prod-card-cta{font-size:11px;font-weight:700;color:${T.blue};letter-spacing:0.04em;}
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.prod-card{position:relative;border-radius:16px;overflow:hidden;cursor:pointer;height:220px;border:none;padding:0;font-family:inherit;display:block;width:100%;box-shadow:0 4px 16px rgba(11,44,95,0.12),0 1px 3px rgba(11,44,95,0.08);transition:all 0.35s ease;}
+.prod-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(11,44,95,0.18),0 2px 8px rgba(11,44,95,0.1);}
+.prod-card-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.5s ease;}
+.prod-card:hover .prod-card-bg{transform:scale(1.06);}
+.prod-card-bg-fallback{position:absolute;inset:0;background:linear-gradient(135deg,#0B2C5F 0%,#0071CE 50%,#A855F7 100%);}
+.prod-card-shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(11,44,95,0.35) 100%);z-index:1;pointer-events:none;}
+.prod-card-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(11,44,95,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;transition:opacity 0.35s ease;z-index:2;}
+.prod-card:hover .prod-card-overlay{opacity:1;}
+.prod-card-hover-label{font-size:14px;font-weight:800;color:white;white-space:nowrap;text-align:center;letter-spacing:0.02em;}
+.prod-card-hover-btn{font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:white;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.4);border-radius:100px;padding:8px 22px;white-space:nowrap;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:all 0.2s;}
+.prod-card:hover .prod-card-hover-btn:hover{background:rgba(255,255,255,0.3);}
+.prod-card-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);z-index:1;pointer-events:none;transition:opacity 0.3s;}
+.prod-card:hover .prod-card-hint{opacity:0;}
 /* ── PRODUCT MODAL ── */
 .pm-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px 20px;border-bottom:1px solid ${T.border};}
 .pm-header-left{display:flex;align-items:center;gap:16px;}
@@ -654,6 +659,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 /* ── MOBILE ── */
 @media(max-width:900px){
   .rule-cards,.prod-grid{grid-template-columns:1fr 1fr;}
+  .prod-card{height:180px;}
   .help-cards{grid-template-columns:1fr;}
   .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
   .step-cols{grid-template-columns:1fr;}
@@ -681,6 +687,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
   .phase-section{padding:16px 16px 12px;}
   .hub-cards,.rule-cards,.prod-grid,.help-cards{grid-template-columns:1fr;}
+  .prod-card{height:200px;}
   .pm-resources-grid{grid-template-columns:1fr;}
   .judge-grid{grid-template-columns:1fr;}
   .reg-cols{grid-template-columns:1fr;}
@@ -2885,15 +2892,16 @@ function App() {
                                 : safeGetCellValueAsString(prod, 'Product Description');
                             return (
                                 <button key={prod.id} className="prod-card" onClick={() => setProductModal(prod)}>
-                                    <div className="prod-card-logo-wrap">
-                                        {logoUrl
-                                            ? <img src={logoUrl} alt={name} className="prod-card-logo" />
-                                            : <div className="prod-card-logo-placeholder">{name[0]}</div>
-                                        }
+                                    {logoUrl
+                                        ? <img src={logoUrl} alt={name} className="prod-card-bg" />
+                                        : <div className="prod-card-bg-fallback" />
+                                    }
+                                    <div className="prod-card-shade" />
+                                    <div className="prod-card-hint">Click for details</div>
+                                    <div className="prod-card-overlay">
+                                        <div className="prod-card-hover-label">View Product Details</div>
+                                        <div className="prod-card-hover-btn">Explore {name} →</div>
                                     </div>
-                                    <div className="prod-card-name">{name}</div>
-                                    <div className="prod-card-desc">{descText ? descText.slice(0, 120) + (descText.length > 120 ? '…' : '') : 'Details coming soon.'}</div>
-                                    <div className="prod-card-cta">View Details →</div>
                                 </button>
                             );
                         })}
