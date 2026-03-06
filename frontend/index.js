@@ -51,7 +51,7 @@ const MASHUP_IDEAS = [
 
 // ─── JUDGING ──────────────────────────────────────────────────────────────────
 const JUDGING = [
-    { label: 'Impact',       weight: '30%', desc: 'Does this solve a real GG problem? Would it save time, reduce risk, or close a compliance gap?' },
+    { label: 'Impact',       weight: '30%', desc: 'Does this solve a real Global Governance problem? Would it save time, reduce risk, or close a compliance gap?' },
     { label: 'Innovation',   weight: '25%', desc: 'Does it use AI meaningfully — not just a dashboard, but something that automates or augments a real decision?' },
     { label: 'Feasibility',  weight: '25%', desc: 'Could this be deployed at Walmart with reasonable effort? Is it built on available data and tools?' },
     { label: 'Demo Quality', weight: '20%', desc: 'Is the working prototype clear and compelling? Can you explain the problem it solves in 2 minutes?' },
@@ -130,33 +130,34 @@ section[id]{scroll-margin-top:70px;}
 /* ── HERO ── */
 .hero{background:${T.heroGrad};padding:64px 56px 72px;position:relative;overflow:hidden;}
 .hero::after{content:'';position:absolute;top:-40%;right:-8%;width:55%;height:180%;background:radial-gradient(ellipse,rgba(44,142,244,0.18),transparent 65%);pointer-events:none;}
-.hero-inner{max-width:100%;position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:40px;}
-.hero-left{flex:1;min-width:0;max-width:700px;}
-.hero-orbital{flex-shrink:0;position:relative;width:220px;height:220px;display:flex;align-items:center;justify-content:center;}
+.hero-inner{max-width:1160px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.hero-left{min-width:0;}
+.hero-orbital{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center;margin:0 auto;}
 .orb-ring{position:absolute;border-radius:50%;}
-.orb-r1{width:220px;height:220px;border:1px dashed rgba(255,255,255,0.15);animation:lpspin 32s linear infinite;}
-.orb-r2{width:160px;height:160px;border:1px solid rgba(255,255,255,0.12);animation:lpspin 22s linear infinite reverse;}
-.orb-r3{width:108px;height:108px;border:1px solid rgba(255,255,255,0.2);animation:lpspin 16s linear infinite;}
-.orb-core{position:relative;z-index:2;width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);}
+.orb-r1{width:300px;height:300px;border:1px dashed rgba(255,255,255,0.15);animation:lpspin 32s linear infinite;}
+.orb-r2{width:218px;height:218px;border:1px solid rgba(255,255,255,0.12);animation:lpspin 22s linear infinite reverse;}
+.orb-r3{width:148px;height:148px;border:1px solid rgba(255,255,255,0.2);animation:lpspin 16s linear infinite;}
+.orb-core{position:relative;z-index:2;width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);}
 .orb-track{position:absolute;border-radius:50%;}
-.orb-t1{width:194px;height:194px;animation:lpspin 14s linear infinite;}
-.orb-t2{width:136px;height:136px;animation:lpspin 9s linear infinite reverse;}
+.orb-t1{width:264px;height:264px;animation:lpspin 14s linear infinite;}
+.orb-t2{width:186px;height:186px;animation:lpspin 9s linear infinite reverse;}
 .orb-dot{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);border-radius:50%;}
-.orb-t1 .orb-dot{width:9px;height:9px;background:#FFC220;box-shadow:0 0 10px rgba(255,194,32,0.7),0 0 20px rgba(255,194,32,0.3);}
-.orb-t2 .orb-dot{width:6px;height:6px;background:white;box-shadow:0 0 8px rgba(255,255,255,0.7),0 0 16px rgba(255,255,255,0.3);}
+.orb-t1 .orb-dot{width:11px;height:11px;background:#FFC220;box-shadow:0 0 12px rgba(255,194,32,0.7),0 0 24px rgba(255,194,32,0.3);}
+.orb-t2 .orb-dot{width:8px;height:8px;background:white;box-shadow:0 0 9px rgba(255,255,255,0.7),0 0 18px rgba(255,255,255,0.3);}
 @keyframes lpspin{to{transform:rotate(360deg);}}
-.hero-phases{display:flex;align-items:flex-start;margin-bottom:20px;gap:0;}
+.hero-phases{display:flex;align-items:flex-start;margin-bottom:32px;gap:0;width:100%;}
 .hero-phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
 .hero-phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:rgba(255,255,255,0.2);}
-.hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.4;max-width:90px;margin-top:5px;}
-.hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;color:${T.yellow};margin-bottom:18px;}
+.hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.4;max-width:90px;margin-top:6px;}
+.hero-h1-pre{display:block;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.45);-webkit-text-fill-color:rgba(255,255,255,0.45);background:none;margin-bottom:10px;}
+.hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:20px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 50%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-byline{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:${T.white};letter-spacing:0.03em;margin-bottom:14px;}
-.hero-sub{font-size:15px;color:rgba(255,255,255,0.72);max-width:520px;line-height:1.65;margin-bottom:32px;}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
-.btn-primary{display:inline-flex;align-items:center;gap:8px;background:${T.yellow};color:${T.deep};padding:12px 24px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.35);transition:all 0.18s;text-decoration:none;white-space:nowrap;}
+.hero-byline{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:${T.white};letter-spacing:0.01em;margin-bottom:16px;}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.68);max-width:480px;line-height:1.7;margin-bottom:40px;}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:${T.yellow};color:${T.deep};padding:11px 22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(255,194,32,0.35);transition:all 0.18s;text-decoration:none;white-space:nowrap;}
 .btn-primary:hover{background:#FFD050;transform:translateY(-1px);}
-.btn-outline{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);color:${T.white};padding:12px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:5px;border:1px solid rgba(255,255,255,0.22);cursor:pointer;transition:all 0.18s;text-decoration:none;}
+.btn-outline{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);color:${T.white};padding:11px 22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:1px solid rgba(255,255,255,0.22);cursor:pointer;transition:all 0.18s;text-decoration:none;}
 .btn-outline:hover{background:rgba(255,255,255,0.2);}
 .btn-outline-dark{display:inline-flex;align-items:center;gap:7px;background:none;color:${T.deep};padding:12px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border-radius:5px;border:1px solid ${T.border2};cursor:pointer;transition:all 0.18s;text-decoration:none;}
 .btn-outline-dark:hover{background:${T.ice};border-color:${T.blue};color:${T.blue};}
@@ -391,6 +392,13 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .rule-cards,.tool-cards{grid-template-columns:1fr 1fr;}
   .help-cards{grid-template-columns:1fr;}
   .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .hero-orbital{width:220px;height:220px;}
+  .orb-r1{width:220px;height:220px;} .orb-r2{width:160px;height:160px;} .orb-r3{width:108px;height:108px;}
+  .orb-core{width:72px;height:72px;}
+  .orb-t1{width:194px;height:194px;} .orb-t2{width:136px;height:136px;}
 }
 @media(max-width:680px){
   .nav{padding:0 16px;}
@@ -635,7 +643,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                     <div className="modal-header">
                         <div>
                             <div className="modal-title">How do you want to participate?</div>
-                            <div className="modal-subtitle">2026 GG AI Hackathon</div>
+                            <div className="modal-subtitle">2026 Global Governance AI Hackathon</div>
                         </div>
                         <button className="modal-close" onClick={onClose}>✕</button>
                     </div>
@@ -675,7 +683,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                         <div>
                             <button className="modal-back" onClick={() => setScreen(0)}>← Back</button>
                             <div className="modal-title" style={{ marginTop: 6 }}>Join as Free Agent</div>
-                            <div className="modal-subtitle">2026 GG AI Hackathon</div>
+                            <div className="modal-subtitle">2026 Global Governance AI Hackathon</div>
                         </div>
                         <button className="modal-close" onClick={onClose}>✕</button>
                     </div>
@@ -767,7 +775,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                     <div>
                         <button className="modal-back" onClick={() => setScreen(0)}>← Back</button>
                         <div className="modal-title" style={{ marginTop: 6 }}>Register Your Team</div>
-                        <div className="modal-subtitle">2026 GG AI Hackathon · Spots limited to first {MAX_TEAMS} teams</div>
+                        <div className="modal-subtitle">2026 Global Governance AI Hackathon · Spots limited to first {MAX_TEAMS} teams</div>
                     </div>
                     <button className="modal-close" onClick={onClose}>✕</button>
                 </div>
@@ -894,7 +902,7 @@ const FAQS = [
     { q: "What if a teammate can't participate?",                       a: 'Submit a team change request via the #gg-hackathon Teams channel. Changes must be finalized before March 14.' },
     { q: 'Do we need to have a problem statement picked before registering?', a: 'No. You can refine your use case after registration. Use the Problem Statements section in the main portal for inspiration.' },
     { q: 'When does the build window start?',                           a: 'Monday March 16. No building before then — but you can plan, research tools, and attend training.' },
-    { q: 'Who judges the submissions?',                                 a: 'A panel of GG leadership and invited executives. Top 5 teams present at the Science Fair on March 20.' },
+    { q: 'Who judges the submissions?',                                 a: 'A panel of Global Governance leadership and invited executives. Top 5 teams present at the Science Fair on March 20.' },
 ];
 
 const NAV_SECTIONS = [
@@ -944,7 +952,7 @@ function RulesModal({ categorized, fallback, onClose }) {
                 <div className="modal-header">
                     <div style={{ flex: 1 }}>
                         <div className="modal-title">Official Rules & Guidelines</div>
-                        <div className="modal-subtitle">FY27 GG AI Hackathon · Read before registering</div>
+                        <div className="modal-subtitle">FY27 Global Governance AI Hackathon · Read before registering</div>
                     </div>
                     <button className="modal-close" onClick={onClose}>✕</button>
                 </div>
@@ -1058,7 +1066,7 @@ function App() {
             <nav className="nav">
                 <div className="nav-brand">
                     <div className="nav-spark"><SparkIcon size={16} /></div>
-                    FY27 GG AI Hackathon
+                    FY27 Global Governance AI Hackathon
                 </div>
                 <div className="nav-links">
                     {NAV_SECTIONS.map(([id, label]) => (
@@ -1083,7 +1091,7 @@ function App() {
                                 </div>
                             ))}
                         </div>
-                        <h1>FY27 GG<br /><span className="accent">AI Hackathon</span></h1>
+                        <h1><span className="hero-h1-pre">FY27</span>Global Governance<br /><span className="accent">AI Hackathon</span></h1>
                         <div className="hero-byline">Build something that matters. Win something that counts.</div>
                         <div className="hero-sub">
                             48 hours. Real data. Real problems. Use Airtable, Harvey, or CodePuppy to build an AI-powered solution for Walmart's Global Governance team — then pitch it.
@@ -1104,7 +1112,7 @@ function App() {
                         <div className="orb-ring orb-r3" />
                         <div className="orb-track orb-t1"><div className="orb-dot" /></div>
                         <div className="orb-track orb-t2"><div className="orb-dot" /></div>
-                        <div className="orb-core"><SparkIcon size={28} /></div>
+                        <div className="orb-core"><SparkIcon size={38} /></div>
                     </div>
                 </div>
             </section>
@@ -1202,7 +1210,7 @@ function App() {
                                 <div className="tool-tagline">Best for: Structured data, interfaces, automations</div>
                                 <div className="tool-desc">Build operational interfaces, automated workflows, and dashboards. The base, views, and interface builder are your canvas.</div>
                                 <div className="tool-access-block">
-                                    Already provisioned for GG associates. If you don't have access, your license will be provisioned automatically when you register.
+                                    Already provisioned for Global Governance associates. If you don't have access, your license will be provisioned automatically when you register.
                                 </div>
                                 <a className="tool-link" href="https://airtable.com/academy" target="_blank" rel="noreferrer">Get Training →</a>
                             </div>
