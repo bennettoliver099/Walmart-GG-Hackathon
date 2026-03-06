@@ -252,7 +252,7 @@ section[id]{scroll-margin-top:70px;}
 .hub-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 .hub-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:28px 24px;display:flex;flex-direction:column;transition:box-shadow 0.18s,border-color 0.18s;cursor:pointer;}
 .hub-card:hover{box-shadow:${T.shadowM};border-color:rgba(0,113,206,0.4);}
-.hub-modal-body{padding:24px 28px 20px;overflow-y:auto;flex:1;font-size:15px;line-height:1.75;color:#1a2233;white-space:pre-wrap;scrollbar-width:thin;scrollbar-color:${T.muted2} transparent;}
+.hub-modal-body{padding:24px 28px 20px;overflow-y:auto;flex:1;font-size:15px;color:#1a2233;scrollbar-width:thin;scrollbar-color:${T.muted2} transparent;}
 .hub-modal-footer{padding:14px 28px 20px;border-top:1px solid ${T.border};display:flex;justify-content:flex-end;flex-shrink:0;}
 .hub-modal-empty{font-size:14px;color:${T.muted};font-style:italic;}
 .hub-card-icon{margin-bottom:14px;display:flex;}
@@ -988,6 +988,41 @@ function parseRuleSections(text) {
     return sections;
 }
 
+function renderMarkdown(text) {
+    if (!text) return null;
+    let key = 0;
+    const inl = (s) => {
+        const out = []; let rem = s, i = 0;
+        while (rem) {
+            const bm = rem.match(/\*\*(.+?)\*\*/), lm = rem.match(/\[([^\]]+)\]\(([^)]+)\)/);
+            const bi = bm ? rem.indexOf(bm[0]) : Infinity, li = lm ? rem.indexOf(lm[0]) : Infinity;
+            if (bi === Infinity && li === Infinity) { out.push(rem); break; }
+            if (bi <= li) {
+                if (bi > 0) out.push(rem.slice(0, bi));
+                out.push(<strong key={i++}>{bm[1]}</strong>);
+                rem = rem.slice(bi + bm[0].length);
+            } else {
+                if (li > 0) out.push(rem.slice(0, li));
+                out.push(<a key={i++} href={lm[2]} target="_blank" rel="noreferrer" style={{color:'#0071CE'}}>{lm[1]}</a>);
+                rem = rem.slice(li + lm[0].length);
+            }
+        }
+        return out.length === 1 && typeof out[0] === 'string' ? out[0] : out;
+    };
+    const lines = text.split('\n'), els = [], list = [];
+    const flush = () => { if (list.length) { els.push(<ul key={key++} style={{margin:'4px 0 12px',paddingLeft:20}}>{[...list]}</ul>); list.length = 0; } };
+    lines.forEach(line => {
+        if (/^### /.test(line))     { flush(); els.push(<h3 key={key++} style={{fontSize:14,fontWeight:700,color:'#1a2233',margin:'18px 0 6px'}}>{inl(line.slice(4))}</h3>); }
+        else if (/^## /.test(line)) { flush(); els.push(<h2 key={key++} style={{fontSize:16,fontWeight:800,color:'#1a2233',margin:'22px 0 8px',paddingBottom:6,borderBottom:'1px solid #f0f0f0'}}>{inl(line.slice(3))}</h2>); }
+        else if (/^# /.test(line))  { flush(); els.push(<h1 key={key++} style={{fontSize:18,fontWeight:800,color:'#1a2233',margin:'0 0 12px'}}>{inl(line.slice(2))}</h1>); }
+        else if (/^[-*] /.test(line)) { list.push(<li key={key++} style={{lineHeight:1.65,marginBottom:3}}>{inl(line.slice(2))}</li>); }
+        else if (!line.trim())      { flush(); }
+        else { flush(); els.push(<p key={key++} style={{margin:'0 0 10px',lineHeight:1.7}}>{inl(line)}</p>); }
+    });
+    flush();
+    return els;
+}
+
 function HubDocModal({ title, content, onClose }) {
     useEffect(() => {
         const onKey = e => { if (e.key === 'Escape') onClose(); };
@@ -1010,7 +1045,7 @@ function HubDocModal({ title, content, onClose }) {
                 </div>
                 <div className="hub-modal-body">
                     {content
-                        ? content
+                        ? renderMarkdown(content)
                         : <span className="hub-modal-empty">Content coming soon.</span>
                     }
                 </div>
@@ -1100,10 +1135,11 @@ function App() {
     const sfStatus       = subTable.getFieldIfExists('Submission Status');
 
     // ── Field detection: hackathon docs ─────────────────────────────────────
-    const dfDocName        = docTable ? docTable.getFieldIfExists('Name')               : null;
-    const dfDocSummary     = docTable ? docTable.getFieldIfExists('Attachment Summary') : null;
-    const dfDocDetails     = docTable ? docTable.getFieldIfExists('Documented Details') : null;
-    const dfDocCategorized = docTable ? docTable.getFieldIfExists('Categorized Rules')  : null;
+    const dfDocName         = docTable ? docTable.getFieldIfExists('Name')                    : null;
+    const dfDocSummary      = docTable ? docTable.getFieldIfExists('Attachment Summary')       : null;
+    const dfDocDetails      = docTable ? docTable.getFieldIfExists('Documented Details')       : null;
+    const dfDocCategorized  = docTable ? docTable.getFieldIfExists('Categorized Rules')        : null;
+    const dfDocEligibility  = docTable ? docTable.getFieldIfExists('Eligibility and Team Rules') : null;
     const hackDocList      = docTable ? hackDocs : [];
 
     const { officialRulesText, officialRulesCategorized } = useMemo(() => {
@@ -1118,17 +1154,19 @@ function App() {
 
     const hubDocs = useMemo(() => {
         if (!dfDocName || !dfDocDetails) return {};
-        const find = name => {
+        const find = (name, field) => {
             const rec = hackDocList.find(r => r.getCellValueAsString(dfDocName).trim() === name);
-            return rec ? rec.getCellValueAsString(dfDocDetails) : '';
+            if (!rec) return '';
+            const f = field ?? dfDocDetails;
+            return f ? rec.getCellValueAsString(f) : '';
         };
         return {
             rules:   find('Official Rules'),
-            prizes:  find('Payouts and Prizes'),
-            reginfo: find('Registration Info'),
+            prizes:  find('Prizes and Payout'),
+            reginfo: find('Official Rules', dfDocEligibility),
             faqs:    find('FAQs'),
         };
-    }, [hackDocList, dfDocName, dfDocDetails]);
+    }, [hackDocList, dfDocName, dfDocDetails, dfDocEligibility]);
 
     // ── Field detection: directory ───────────────────────────────────────────
     const dfName  = dirTable.getFieldIfExists('Full Name');
