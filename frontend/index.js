@@ -451,12 +451,20 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .reg-tab{padding:12px 20px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;transition:all 0.15s;color:${T.muted2};}
 .reg-tab.active{color:${T.deep};border-bottom-color:${T.blue};}
 .reg-tab:hover:not(.active){color:${T.muted};}
-.reg-header-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:12px;padding-bottom:10px;border-bottom:1px solid ${T.border2};margin-bottom:0;}
+.reg-header-row{display:grid;grid-template-columns:2fr 1fr 1.5fr 1fr 0.8fr;gap:12px;padding-bottom:10px;border-bottom:1px solid ${T.border2};margin-bottom:0;}
 .reg-header-col{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted2};}
-.reg-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:12px;padding:13px 8px;border-bottom:1px solid ${T.border};align-items:center;transition:background 0.12s;border-radius:4px;}
+.reg-row{display:grid;grid-template-columns:2fr 1fr 1.5fr 1fr 0.8fr;gap:12px;padding:13px 8px;border-bottom:1px solid ${T.border};align-items:center;transition:background 0.12s;border-radius:4px;}
 .reg-row:hover{background:${T.cloud};}
 .reg-cell-name{font-size:14px;font-weight:700;color:${T.deep};}
 .reg-cell{font-size:12px;color:${T.muted};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.reg-team-link{font-size:14px;font-weight:700;color:${T.deep};cursor:pointer;background:none;border:none;text-align:left;padding:0;font-family:inherit;transition:color 0.12s;}
+.reg-team-link:hover{color:${T.blue};text-decoration:underline;}
+.roster-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid ${T.border};}
+.roster-row:last-child{border-bottom:none;}
+.roster-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:${T.muted2};min-width:64px;}
+.roster-name{font-size:14px;font-weight:600;color:${T.deep};}
+.roster-badge{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border-radius:100px;background:#FFF8E6;color:#78500E;margin-left:6px;}
+.roster-empty{font-size:13px;color:${T.muted};font-style:italic;}
 .reg-pill{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.03em;padding:3px 9px;border-radius:100px;display:inline-block;white-space:nowrap;}
 .reg-pill-blue{background:#EFF6FF;color:#1D4ED8;}
 .reg-pill-green{background:#ECFDF5;color:#065F46;}
@@ -682,15 +690,9 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
 
     const validateTeam = () => {
         const e = {};
-        if (!teamName.trim())  e.teamName    = 'Team name is required.';
-        if (!useCase.trim())   e.useCase     = 'Please describe your use case.';
-        if (!technology)       e.technology  = 'Select a technology.';
-        if (technology === 'Other' && !otherTech.trim()) e.otherTech = 'Please specify.';
-        if (!attendance)       e.attendance  = 'Select an attendance format.';
-        if (!captain)          e.captain     = 'Team Captain is required.';
-        const memberCount = [captain, member2, member3, member4, member5].filter(Boolean).length;
-        if (memberCount < 3)   e.members     = 'Teams require at least 3 members (captain + 2). You can add more later.';
-        if (!agreed)           e.agreed      = 'You must agree to the rules to register.';
+        if (!teamName.trim()) e.teamName = 'Team name is required.';
+        if (!captain)         e.captain  = 'Team Captain is required.';
+        if (!agreed)          e.agreed   = 'You must agree to the rules to register.';
         setErrors(e);
         return Object.keys(e).length === 0;
     };
@@ -717,11 +719,11 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
             try { const f = submissionsTable.getFieldIfExists('Other Technology');   if (f && technology === 'Other') fields[f.id] = otherTech.trim(); } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Attendance Format');  if (f) fields[f.id] = { name: attendance }; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Submission Status');  if (f) fields[f.id] = { name: 'Registered' }; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member #1 (Captain)'); if (f && captain) fields[f.id] = [{ id: captain.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member #2');    if (f && member2) fields[f.id] = [{ id: member2.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member #3');    if (f && member3) fields[f.id] = [{ id: member3.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member #4');    if (f && member4) fields[f.id] = [{ id: member4.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member #5');    if (f && member5) fields[f.id] = [{ id: member5.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 1 (Captain)'); if (f && captain) fields[f.id] = [{ id: captain.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 2');    if (f && member2) fields[f.id] = [{ id: member2.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 3');    if (f && member3) fields[f.id] = [{ id: member3.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 4');    if (f && member4) fields[f.id] = [{ id: member4.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 5');    if (f && member5) fields[f.id] = [{ id: member5.id }]; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Rules Agreement Checkbox'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Link To Hackathon Rules & Guidelines'); if (f) fields[f.id] = RULES_URL; } catch (e_) { /* skip */ }
 
@@ -746,7 +748,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
             try { const f = submissionsTable.getFieldIfExists('Submission Status');  if (f) fields[f.id] = { name: 'Registered' }; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Technology');         if (f && agentTool) fields[f.id] = { name: agentTool }; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Attendance Format');  if (f) fields[f.id] = { name: agentAttend }; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member #1 (Captain)'); if (f && agentSelf) fields[f.id] = [{ id: agentSelf.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member # 1 (Captain)'); if (f && agentSelf) fields[f.id] = [{ id: agentSelf.id }]; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Rules Agreement Checkbox'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Use Case');           if (f && agentInterest) fields[f.id] = agentInterest; } catch (e_) { /* skip */ }
 
@@ -929,74 +931,17 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                 </div>
                 <div className="modal-body">
                     <div className="fs">
-                        <div className="fs-title">Your Project</div>
+                        <div className="fs-title">Team Details</div>
                         <div className="fr">
                             <label className="form-label">Team Name<span className="req">*</span></label>
-                            <div className="fh">Spots are limited to the first {MAX_TEAMS} teams.</div>
                             <input className="fi" placeholder="e.g. The Compliance Crushers" value={teamName} onChange={e => setTeamName(e.target.value)} />
                             {errors.teamName && <div className="ferr">{errors.teamName}</div>}
-                            <button className="hint-toggle" style={{ marginTop: 10 }} onClick={() => setShowHint(h => !h)}>
-                                {showHint ? '▾' : '▸'} Recommended Team Structure
-                            </button>
-                            {showHint && <div className="hint-box">One person on business case · one on the tech build · one on UX/presentation.</div>}
-                        </div>
-                        <div className="fr">
-                            <label className="form-label">Use Case<span className="req">*</span></label>
-                            <div className="fh">Briefly describe the problem you plan to solve. You can refine this later.</div>
-                            <textarea className="fi" placeholder="We plan to build an AI agent that…" value={useCase} onChange={e => setUseCase(e.target.value)} />
-                            {errors.useCase && <div className="ferr">{errors.useCase}</div>}
-                        </div>
-                        <div className="fr-2">
-                            <div>
-                                <label className="form-label">Technology<span className="req">*</span></label>
-                                <div className="fh">Free training available for all three.</div>
-                                <div className="radio-group">
-                                    {TECH_OPTIONS.map(t => (
-                                        <div className="rp" key={t}>
-                                            <input type="radio" id={`tech-${t}`} name="technology" value={t} checked={technology === t} onChange={() => setTechnology(t)} />
-                                            <label htmlFor={`tech-${t}`}>{t}</label>
-                                        </div>
-                                    ))}
-                                </div>
-                                {errors.technology && <div className="ferr">{errors.technology}</div>}
-                                {technology === 'Other' && (
-                                    <div style={{ marginTop: 10 }}>
-                                        <input className="fi" placeholder="Specify technology…" value={otherTech} onChange={e => setOtherTech(e.target.value)} />
-                                        {errors.otherTech && <div className="ferr">{errors.otherTech}</div>}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <label className="form-label">Attendance<span className="req">*</span></label>
-                                <div className="fh">How will your team participate?</div>
-                                <div className="radio-group">
-                                    {ATTENDANCE_OPTIONS.map(a => (
-                                        <div className="rp" key={a}>
-                                            <input type="radio" id={`att-${a}`} name="attendance" value={a} checked={attendance === a} onChange={() => setAttendance(a)} />
-                                            <label htmlFor={`att-${a}`}>{a}</label>
-                                        </div>
-                                    ))}
-                                </div>
-                                {errors.attendance && <div className="ferr">{errors.attendance}</div>}
-                            </div>
-                        </div>
-                        <div className="fr">
-                            <label className="form-label">AI Skill Level</label>
-                            <div className="fh">1 = Never used it · 5 = Power user</div>
-                            <div className="radio-group">
-                                {['1','2','3','4','5'].map(n => (
-                                    <div className="rp" key={n}>
-                                        <input type="radio" id={`sk-${n}`} name="skillLevel" value={n} checked={skillLevel === n} onChange={() => setSkillLevel(n)} />
-                                        <label htmlFor={`sk-${n}`}>{n}</label>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
                     </div>
 
                     <div className="fs">
                         <div className="fs-title">Your Team</div>
-                        <div className="fh" style={{ marginBottom: 14 }}>Teams of 3–5. You can add members later.</div>
+                        <div className="fh" style={{ marginBottom: 14 }}>Up to 5 members. You can add more after registering.</div>
                         <MemberSearch label="Team Captain" dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={captain} onSelect={setCaptain} />
                         {errors.captain && <div className="ferr" style={{ marginTop: -8, marginBottom: 10 }}>{errors.captain}</div>}
                         <MemberSearch label="Member 2" optional dirRecords={dirRecords} nameField={dirNameField} emailField={dirEmailField} selected={member2} onSelect={setMember2} />
@@ -1440,6 +1385,59 @@ function AdminView({ onBack, liveTeams, subTable, sfTeamName, sfStatus, totalTea
     );
 }
 
+// ─── ROSTER MODAL ─────────────────────────────────────────────────────────────
+function RosterModal({ record: r, onClose }) {
+    const name       = safeGetCellValueAsString(r, 'Team Name');
+    const tech       = safeGetCellValueAsString(r, 'Technology');
+    const status     = safeGetCellValueAsString(r, 'Submission Status');
+    const useCase    = safeGetCellValueAsString(r, 'Use Case');
+    const attendance = safeGetCellValueAsString(r, 'Attendance Format');
+    const memberData = [
+        { label: 'Captain',   value: safeGetCellValue(r, 'Team Member # 1 (Captain)'), isCaptain: true  },
+        { label: 'Member 2',  value: safeGetCellValue(r, 'Team Member # 2'),           isCaptain: false },
+        { label: 'Member 3',  value: safeGetCellValue(r, 'Team Member # 3'),           isCaptain: false },
+        { label: 'Member 4',  value: safeGetCellValue(r, 'Team Member # 4'),           isCaptain: false },
+        { label: 'Member 5',  value: safeGetCellValue(r, 'Team Member # 5'),           isCaptain: false },
+    ];
+    const techPill   = tech === 'Airtable' ? 'reg-pill-blue' : tech === 'CodePuppy' ? 'reg-pill-green' : tech === 'Harvey' ? 'reg-pill-purple' : 'reg-pill-gray';
+    const statusPill = status === 'Submitted' ? 'reg-pill-blue' : status === 'Registered' ? 'reg-pill-green' : status === 'Pending' ? 'reg-pill-yellow' : 'reg-pill-gray';
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-box" style={{maxWidth:520}} onClick={e => e.stopPropagation()}>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:4}}>
+                    <h2 style={{fontSize:22,fontWeight:800,color:'var(--deep,#0B2C5F)',margin:0,lineHeight:1.2}}>{name || 'Team Roster'}</h2>
+                    <button className="modal-close" onClick={onClose}>✕</button>
+                </div>
+                <div style={{display:'flex',gap:8,alignItems:'center',marginBottom:16,flexWrap:'wrap'}}>
+                    {tech    && <span className={`reg-pill ${techPill}`}>{tech}</span>}
+                    {status  && <span className={`reg-pill ${statusPill}`}>{status}</span>}
+                    {attendance && <span className="reg-pill reg-pill-gray">{attendance}</span>}
+                </div>
+                {useCase && (
+                    <blockquote style={{margin:'0 0 20px',padding:'10px 14px',background:'#F8FAFC',borderLeft:'3px solid #3B82F6',borderRadius:'0 6px 6px 0',fontSize:13,color:'#334155',fontStyle:'italic',lineHeight:1.5}}>
+                        {useCase}
+                    </blockquote>
+                )}
+                <div style={{marginBottom:8}}>
+                    {memberData.map(({ label, value, isCaptain }) => {
+                        const memberName = Array.isArray(value) && value.length > 0 ? value[0].name : null;
+                        return (
+                            <div key={label} className="roster-row">
+                                <span className="roster-label">{label}</span>
+                                {memberName
+                                    ? <><span className="roster-name">{memberName}</span>{isCaptain && <span className="roster-badge">Captain</span>}</>
+                                    : <span className="roster-empty">Not assigned</span>
+                                }
+                            </div>
+                        );
+                    })}
+                </div>
+                <button className="submit-btn" style={{marginTop:16,width:'100%'}} onClick={onClose}>Close</button>
+            </div>
+        </div>
+    );
+}
+
 // ─── APP ──────────────────────────────────────────────────────────────────────
 function App() {
     const base = useBase();
@@ -1463,6 +1461,7 @@ function App() {
     // ── UI State ─────────────────────────────────────────────────────────────
     const [currentView,     setCurrentView]    = useState('portal');
     const [regTab,          setRegTab]         = useState('teams');
+    const [rosterTeam,      setRosterTeam]     = useState(null);
     const [showReg,         setShowReg]        = useState(false);
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
@@ -1863,32 +1862,33 @@ function App() {
                             <div className="reg-header-row">
                                 <div className="reg-header-col">Team</div>
                                 <div className="reg-header-col">Tool</div>
+                                <div className="reg-header-col">Captain</div>
                                 <div className="reg-header-col">Status</div>
-                                <div className="reg-header-col">Format</div>
                                 <div className="reg-header-col">Members</div>
                             </div>
                             {liveTeams.map(r => {
                                 const name       = safeGetCellValueAsString(r, 'Team Name');
                                 const tech       = safeGetCellValueAsString(r, 'Technology');
                                 const status     = safeGetCellValueAsString(r, 'Submission Status');
-                                const attendance = safeGetCellValueAsString(r, 'Attendance Format');
+                                const captainLink = safeGetCellValue(r, 'Team Member # 1 (Captain)');
+                                const captainName = Array.isArray(captainLink) && captainLink.length > 0 ? captainLink[0].name : '';
                                 const memberFields = [
-                                    safeGetCellValue(r, 'Team Member #1 (Captain)'),
-                                    safeGetCellValue(r, 'Team Member #2'),
-                                    safeGetCellValue(r, 'Team Member #3'),
-                                    safeGetCellValue(r, 'Team Member #4'),
-                                    safeGetCellValue(r, 'Team Member #5'),
+                                    captainLink,
+                                    safeGetCellValue(r, 'Team Member # 2'),
+                                    safeGetCellValue(r, 'Team Member # 3'),
+                                    safeGetCellValue(r, 'Team Member # 4'),
+                                    safeGetCellValue(r, 'Team Member # 5'),
                                 ];
                                 const memberCount = memberFields.filter(v => v && (Array.isArray(v) ? v.length > 0 : true)).length;
                                 const techPill   = tech === 'Airtable' ? 'reg-pill-blue' : tech === 'CodePuppy' ? 'reg-pill-green' : tech === 'Harvey' ? 'reg-pill-purple' : 'reg-pill-gray';
                                 const statusPill = status === 'Submitted' ? 'reg-pill-blue' : status === 'Registered' ? 'reg-pill-green' : status === 'Pending' ? 'reg-pill-yellow' : 'reg-pill-gray';
                                 return (
                                     <div key={r.id} className="reg-row">
-                                        <div className="reg-cell-name">{name || '—'}</div>
+                                        <button className="reg-team-link" onClick={() => setRosterTeam(r)}>{name || '—'}</button>
                                         <div><span className={`reg-pill ${techPill}`}>{tech || '—'}</span></div>
+                                        <div className="reg-cell">{captainName || '—'}</div>
                                         <div><span className={`reg-pill ${statusPill}`}>{status || '—'}</span></div>
-                                        <div className="reg-cell">{attendance || '—'}</div>
-                                        <div className="reg-cell">{memberCount > 0 ? `${memberCount} member${memberCount !== 1 ? 's' : ''}` : '—'}</div>
+                                        <div className="reg-cell">{memberCount > 0 ? `${memberCount}/5` : '—'}</div>
                                     </div>
                                 );
                             })}
@@ -2036,6 +2036,12 @@ function App() {
                     title={{ rules: 'Rules & Guidelines', prizes: 'Payouts & Prizes', reginfo: 'Registration Info', faqs: 'FAQs' }[hubDocModal]}
                     content={hubDocs[hubDocModal]}
                     onClose={() => setHubDocModal(null)}
+                />
+            )}
+            {rosterTeam && (
+                <RosterModal
+                    record={rosterTeam}
+                    onClose={() => setRosterTeam(null)}
                 />
             )}
         </div>
