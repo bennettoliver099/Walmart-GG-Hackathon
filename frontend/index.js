@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
     CalendarBlankIcon, FolderSimpleIcon, ChatCircleIcon, CheckSquareIcon,
     NotePencilIcon, UserCircleIcon, ClipboardTextIcon, TimerIcon, TrophyIcon,
@@ -1578,7 +1578,6 @@ function RegistrationSection({
     const [addLastName,     setAddLastName]    = useState('');
     const [addEmail,        setAddEmail]       = useState('');
     const [addAssocType,    setAddAssocType]   = useState('');
-    const [addPayType,      setAddPayType]     = useState('');
     const [addSubmitting,   setAddSubmitting]  = useState(false);
     const [addError,        setAddError]       = useState('');
     const [addEmailMatch,   setAddEmailMatch]  = useState(null);
@@ -1602,25 +1601,8 @@ function RegistrationSection({
 
     const userDirId = selfRegistered ? selfRegistered.id : null;
 
-    // ── Auto-verify localStorage user against live data on mount ─────────────
-    useEffect(() => {
-        if (selfRegistered && selfRegistered.id && !step1Done) {
-            const rec = dirRecords.find(r => r.id === selfRegistered.id);
-            if (rec) {
-                const confirmed   = safeGetCellValue(rec, 'Confirmed');
-                const isFreeAgent = safeGetCellValue(rec, 'Free Agent Registration');
-                const onTeam      = findUserOnTeam(liveTeams, selfRegistered.id);
-                if (confirmed || isFreeAgent || onTeam) {
-                    setStep1Done(true);
-                    setStep1Complete(true);
-                    if (onTeam) {
-                        setDuplicateStatus('on-team');
-                        setDuplicateTeamName(onTeam.teamName);
-                    }
-                }
-            }
-        }
-    }, [dirRecords.length]); // eslint-disable-line react-hooks/exhaustive-deps
+    const dirRecordsRef = useRef(dirRecords);
+    dirRecordsRef.current = dirRecords;
 
     // ── Check if selected person is already registered ────────────────────────
     function checkDuplicate(selected) {
@@ -1710,33 +1692,42 @@ function RegistrationSection({
             setAddEmailMatch(existing);
             return;
         }
+        // Capture values before async/reset clears state
+        const capturedFirstName = addFirstName.trim();
+        const capturedLastName  = addLastName.trim();
+        const capturedEmail     = addEmail.trim();
+        const capturedAssocType = addAssocType;
+
         setAddSubmitting(true);
         try {
             const f1 = dirTable.getFieldIfExists('First Name');
             const f2 = dirTable.getFieldIfExists('Last Name');
             const f3 = dirTable.getFieldIfExists('Work Email');
             const f4 = dirTable.getFieldIfExists('Associate Type');
-            const f5 = dirTable.getFieldIfExists('Pay Type');
             const fields = {};
-            if (f1) fields[f1.id] = addFirstName.trim();
-            if (f2) fields[f2.id] = addLastName.trim();
-            if (f3) fields[f3.id] = addEmail.trim();
-            if (f4) fields[f4.id] = { name: addAssocType };
-            if (f5) fields[f5.id] = { name: addPayType };
+            if (f1) fields[f1.id] = capturedFirstName;
+            if (f2) fields[f2.id] = capturedLastName;
+            if (f3) fields[f3.id] = capturedEmail;
+            if (f4) fields[f4.id] = { name: capturedAssocType };
             await dirTable.createRecordAsync(fields);
             setShowAddSelf(false);
             resetAddSelfForm();
-            // Wait for reactive update then auto-select
-            setTimeout(() => {
-                const newRec = dirRecords.find(r =>
+            // Poll for the new record using ref for fresh dirRecords
+            const pollForRecord = (attempts = 0) => {
+                if (attempts > 10) return;
+                const currentRecords = dirRecordsRef.current;
+                const newRec = currentRecords.find(r =>
                     safeGetCellValueAsString(r, 'Work Email').trim().toLowerCase() === emailLower
                 );
                 if (newRec) {
-                    const name  = dfName  ? newRec.getCellValueAsString(dfName)  : `${addFirstName} ${addLastName}`;
-                    const email = dfEmail ? newRec.getCellValueAsString(dfEmail) : addEmail;
+                    const name  = dfName  ? newRec.getCellValueAsString(dfName)  : `${capturedFirstName} ${capturedLastName}`;
+                    const email = dfEmail ? newRec.getCellValueAsString(dfEmail) : capturedEmail;
                     handleSelfSelect({ id: newRec.id, name, email });
+                } else {
+                    setTimeout(() => pollForRecord(attempts + 1), 500);
                 }
-            }, 800);
+            };
+            pollForRecord();
         } catch (err) {
             setAddError(err?.message || 'Failed to add. Please try again.');
         } finally {
@@ -2530,12 +2521,8 @@ function App() {
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
     const [hubDocModal,     setHubDocModal]    = useState(null); // null | 'rules'|'prizes'|'reginfo'|'faqs'
-    const [selfRegistered,  setSelfRegistered] = useState(() => {
-        try { const s = localStorage.getItem('gg_hackathon_user'); return s ? JSON.parse(s) : null; } catch { return null; }
-    });
-    const [step1Complete,   setStep1Complete]  = useState(() => {
-        try { return !!localStorage.getItem('gg_hackathon_user'); } catch { return false; }
-    });
+    const [selfRegistered,  setSelfRegistered] = useState(null);
+    const [step1Complete,   setStep1Complete]  = useState(false);
     const [showRubric,      setShowRubric]     = useState(false);
     const [productModal,    setProductModal]   = useState(null);
     const [countdown,       setCountdown]      = useState(getCountdown);
@@ -2564,12 +2551,10 @@ function App() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // One-time cleanup: remove any stale localStorage from previous version
     useEffect(() => {
-        try {
-            if (selfRegistered) localStorage.setItem('gg_hackathon_user', JSON.stringify(selfRegistered));
-            else localStorage.removeItem('gg_hackathon_user');
-        } catch {}
-    }, [selfRegistered]);
+        try { localStorage.removeItem('gg_hackathon_user'); } catch {}
+    }, []);
 
     // ── Field detection: submissions ─────────────────────────────────────────
     const sfTeamName     = subTable.getFieldIfExists('Team Name');
