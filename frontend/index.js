@@ -1540,9 +1540,15 @@ function RegistrationSection({
         if (onTeam) {
             setDuplicateStatus('on-team');
             setDuplicateTeamName(onTeam.teamName);
+            // Already on a team — still identify them so Step 2 is accessible
+            setSelfRegistered({ id: selected.id, name: selected.name, email: selected.email || '' });
+            setStep1Complete(true);
         } else if (confirmed || isFreeAgent) {
             setDuplicateStatus('free-agent');
             setDuplicateTeamName('');
+            // Already registered as free agent — unlock Step 2 immediately
+            setSelfRegistered({ id: selected.id, name: selected.name, email: selected.email || '' });
+            setStep1Complete(true);
         } else {
             setDuplicateStatus(null);
         }
