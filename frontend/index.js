@@ -145,10 +145,10 @@ section[id]{scroll-margin-top:70px;}
 .sec-sub-white{color:rgba(255,255,255,0.72);}
 
 /* ── HERO ── */
-.hero{background:${T.heroGrad};padding:88px 48px 88px;position:relative;overflow:hidden;min-height:420px;}
+.hero{background:${T.heroGrad};padding:72px 48px 72px;position:relative;overflow:hidden;min-height:420px;}
 .hero::after{content:'';position:absolute;top:-40%;right:-8%;width:55%;height:180%;background:radial-gradient(ellipse,rgba(44,142,244,0.18),transparent 65%);pointer-events:none;}
 .hero-inner{width:100%;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
-.hero-left{min-width:0;}
+.hero-left{min-width:0;padding-left:48px;}
 .hero-right{display:grid;place-items:center;min-width:0;}.hero-right>*{grid-area:1/1;}
 .hero-orbital{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center;}
 .orb-ring{position:absolute;border-radius:50%;}
@@ -168,7 +168,7 @@ section[id]{scroll-margin-top:70px;}
 .hero-phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
 .hero-phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:rgba(255,255,255,0.2);}
 .hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.4;max-width:90px;margin-top:6px;}
-.hero-h1-pre{display:block;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.45);-webkit-text-fill-color:rgba(255,255,255,0.45);background:none;margin-bottom:12px;}
+.hero-h1-pre{display:block;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);-webkit-text-fill-color:rgba(255,255,255,0.5);background:none;margin-bottom:12px;}
 .hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:16px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 50%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero-byline{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:${T.white};letter-spacing:0.01em;margin-bottom:20px;}
