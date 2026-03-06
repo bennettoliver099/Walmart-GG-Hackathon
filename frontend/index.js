@@ -1479,11 +1479,18 @@ function App() {
 
     useEffect(() => {
         const ids = ['hero', 'rules', 'tools', 'register', 'registrations', 'help'];
-        const obs = new IntersectionObserver(entries => {
-            entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id); });
-        }, { threshold: 0.25, rootMargin: '-70px 0px -40% 0px' });
-        ids.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
-        return () => obs.disconnect();
+        const handleScroll = () => {
+            const offset = 80; // nav height (60px) + small buffer
+            let active = ids[0];
+            for (const id of ids) {
+                const el = document.getElementById(id);
+                if (el && el.getBoundingClientRect().top <= offset) active = id;
+            }
+            setActiveSection(active);
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // set correct state on mount
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // ── Field detection: submissions ─────────────────────────────────────────
