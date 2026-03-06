@@ -248,6 +248,16 @@ section[id]{scroll-margin-top:70px;}
 .judge-weight{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;color:${T.blue};}
 .judge-desc{font-size:12px;color:${T.muted};line-height:1.6;}
 
+/* ── LEARNING HUB CARDS ── */
+.hub-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.hub-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:28px 24px;display:flex;flex-direction:column;transition:box-shadow 0.18s,border-color 0.18s;}
+.hub-card:hover{box-shadow:${T.shadowM};border-color:${T.border2};}
+.hub-card-icon{margin-bottom:14px;display:flex;}
+.hub-card-title{font-size:16px;font-weight:800;color:${T.deep};margin-bottom:10px;}
+.hub-card-body{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:18px;}
+.hub-card-link{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;padding:0;margin-top:auto;}
+.hub-card-link:hover{text-decoration:underline;}
+
 /* ── TOOL CARDS ── */
 .tool-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
 .tool-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.18s;}
@@ -442,7 +452,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .sec-wrap{padding:40px 20px;}
   .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
   .phase-section{padding:16px 16px 12px;}
-  .rule-cards,.tool-cards,.help-cards{grid-template-columns:1fr;}
+  .hub-cards,.rule-cards,.tool-cards,.help-cards{grid-template-columns:1fr;}
   .judge-grid{grid-template-columns:1fr;}
   .reg-cols{grid-template-columns:1fr;}
   .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
@@ -1202,49 +1212,41 @@ function App() {
             </div>
 
 
-            {/* ── SECTION 2: RULES & GUIDELINES ── */}
+            {/* ── SECTION 2: LEARNING HUB ── */}
             <section id="rules" className="sec-white">
                 <div className="sec-wrap">
-                    <span className="sec-label">Rules</span>
-                    <h2 className="sec-h2">Rules & Guidelines</h2>
-                    <p className="sec-sub">Everything you need to know before you build. Read this before registering.</p>
+                    <span className="sec-label">Learning Hub</span>
+                    <h2 className="sec-h2">Learning Hub</h2>
+                    <p className="sec-sub">Everything you need to know before you build.</p>
 
-                    <div className="official-rules-card">
-                        <div className="official-rules-card-left">
-                            <div className="official-rules-card-icon">
-                                <ClipboardTextIcon size={22} color={T.blue} weight="duotone" />
-                            </div>
-                            <div>
-                                <div className="official-rules-card-title">Official Rules</div>
-                                <div className="official-rules-card-sub">
-                                    {officialRulesCategorized || officialRulesText ? 'Full hackathon rules & eligibility requirements' : 'Rules document not yet available'}
-                                </div>
-                            </div>
+                    <div className="hub-cards">
+                        <div className="hub-card" style={{ borderTop: `3px solid ${T.blue}` }}>
+                            <div className="hub-card-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
+                            <div className="hub-card-title">Rules & Guidelines</div>
+                            <div className="hub-card-body">Official hackathon rules, eligibility requirements, and code of conduct. Read this before registering.</div>
+                            {(officialRulesCategorized || officialRulesText)
+                                ? <button className="hub-card-link" onClick={() => setShowRulesModal(true)}>Read the Rules →</button>
+                                : <a className="hub-card-link" href={RULES_URL} target="_blank" rel="noreferrer">Read the Rules →</a>
+                            }
                         </div>
-                        {(officialRulesCategorized || officialRulesText) && (
-                            <button className="rules-open-btn" onClick={() => setShowRulesModal(true)}>
-                                <ClipboardTextIcon size={13} /> Open Rules
-                            </button>
-                        )}
-                    </div>
-
-                    <div style={{ marginTop: 24 }}>
-                        <button className="rubric-toggle" onClick={() => setShowRubric(s => !s)}>
-                            {showRubric ? '▾' : '▸'} View Scoring Rubric
-                        </button>
-                        {showRubric && (
-                            <div className="judge-grid">
-                                {JUDGING.map(j => (
-                                    <div key={j.label} className="judge-card">
-                                        <div className="judge-top">
-                                            <div className="judge-label">{j.label}</div>
-                                            <div className="judge-weight">{j.weight}</div>
-                                        </div>
-                                        <div className="judge-desc">{j.desc}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        <div className="hub-card" style={{ borderTop: `3px solid ${T.yellow}` }}>
+                            <div className="hub-card-icon"><TrophyIcon size={28} color={T.yellow} weight="duotone" /></div>
+                            <div className="hub-card-title">Payouts & Prizes</div>
+                            <div className="hub-card-body">What's at stake. Prize tiers, judging criteria, and how winners are selected.</div>
+                            <button className="hub-card-link" onClick={() => setShowRulesModal(true)}>View Prize Details →</button>
+                        </div>
+                        <div className="hub-card" style={{ borderTop: `3px solid ${T.azure}` }}>
+                            <div className="hub-card-icon"><NotePencilIcon size={28} color={T.azure} weight="duotone" /></div>
+                            <div className="hub-card-title">Registration Info</div>
+                            <div className="hub-card-body">How to register your team, deadlines, team size requirements, and free agent sign-up.</div>
+                            <a className="hub-card-link" href="#register">Go to Registration →</a>
+                        </div>
+                        <div className="hub-card" style={{ borderTop: `3px solid ${T.muted}` }}>
+                            <div className="hub-card-icon"><QuestionIcon size={28} color={T.muted} weight="duotone" /></div>
+                            <div className="hub-card-title">FAQs</div>
+                            <div className="hub-card-body">Common questions about tools, submissions, team formation, and the 48-hour sprint format.</div>
+                            <a className="hub-card-link" href="#help">View FAQs →</a>
+                        </div>
                     </div>
                 </div>
             </section>
