@@ -1587,7 +1587,7 @@ function RegistrationSection({
     dirTable, subTable, dirRecords, liveTeams, freeAgents,
     dfName, dfEmail,
     selfRegistered, setSelfRegistered, step1Complete, setStep1Complete,
-    sessionEmail,
+    sessionEmail, sessionUserRec,
 }) {
     // ── Step 1 state ──────────────────────────────────────────────────────────
     const [selfSelected,    setSelfSelected]   = useState(null);
@@ -1632,22 +1632,37 @@ function RegistrationSection({
     const [teamSearch,         setTeamSearch]          = useState('');
     const [showCreateModal,    setShowCreateModal]     = useState(false);
 
-    const userDirId = selfRegistered ? selfRegistered.id : null;
+    // Session-verified record takes priority; localStorage identity is fallback only
+    const userDirId = sessionUserRec?.id ?? selfRegistered?.id ?? null;
 
     const dirRecordsRef = useRef(dirRecords);
     dirRecordsRef.current = dirRecords;
 
-    // ── Auto-identify: session email → WM Directory match ────────────────────
+    // ── Auto-identify: session email is the authority for Step 2 identity ─────
     useEffect(() => {
         if (step1Done || dirRecords.length === 0) return;
 
-        // Determine candidate record: prefer localStorage identity, fall back to session email
-        let rec = selfRegistered?.id ? dirRecords.find(r => r.id === selfRegistered.id) : null;
-        if (!rec && sessionEmail) {
+        // 1. Session email is always tried first — it's the Airtable-verified identity
+        let rec = null;
+        if (sessionEmail) {
             rec = dirRecords.find(r =>
                 safeGetCellValueAsString(r, 'Work Email').toLowerCase().trim() === sessionEmail
-            );
+            ) ?? null;
         }
+
+        // 2. Fall back to cached localStorage record ID only when session email yields nothing
+        if (!rec && selfRegistered?.id) {
+            const cached = dirRecords.find(r => r.id === selfRegistered.id) ?? null;
+            if (cached && sessionEmail) {
+                // Discard cache if its email doesn't match the active session
+                const cachedEmail = safeGetCellValueAsString(cached, 'Work Email').toLowerCase().trim();
+                if (cachedEmail !== sessionEmail) { setSelfRegistered(null); }
+                else { rec = cached; }
+            } else if (cached) {
+                rec = cached; // no session email available — trust the cache
+            }
+        }
+
         if (!rec) return;
 
         const confirmed   = safeGetCellValue(rec, 'Confirmed');
@@ -1662,7 +1677,6 @@ function RegistrationSection({
             setStep1Complete(true);
             if (onTeam) { setDuplicateStatus('on-team'); setDuplicateTeamName(onTeam.teamName); }
         } else if (selfRegistered?.id) {
-            // Had a stale localStorage identity that's no longer registered — clear it
             setSelfRegistered(null);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -2777,6 +2791,15 @@ function App() {
     const submissions   = useRecords(subTable);
     const probRecords   = useRecords(probTable);
     const dirRecords    = useRecords(dirTable);
+
+    // ── Session-verified WM Directory record — ground truth for team writes ───
+    const sessionUserRec = useMemo(() => {
+        if (!sessionEmail || dirRecords.length === 0) return null;
+        return dirRecords.find(r =>
+            safeGetCellValueAsString(r, 'Work Email').toLowerCase().trim() === sessionEmail
+        ) ?? null;
+    }, [sessionEmail, dirRecords]);
+
     const prmRecords    = useRecords(prmTable);
     const regDocs       = useRecords(regTable);
     const hackDocs      = useRecords(docTable ?? subTable);  // fallback avoids null crash
@@ -3138,6 +3161,7 @@ function App() {
                         step1Complete={step1Complete}
                         setStep1Complete={setStep1Complete}
                         sessionEmail={sessionEmail}
+                        sessionUserRec={sessionUserRec}
                     />
                 </div>
             </section>
