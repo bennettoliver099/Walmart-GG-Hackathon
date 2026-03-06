@@ -9,6 +9,7 @@ import {
     initializeBlock,
     useBase,
     useRecords,
+    useSession,
 } from '@airtable/blocks/interface/ui';
 
 // ─── SAFE FIELD HELPERS ──────────────────────────────────────────────────────
@@ -1579,6 +1580,7 @@ function RegistrationSection({
     dirTable, subTable, dirRecords, liveTeams, freeAgents,
     dfName, dfEmail,
     selfRegistered, setSelfRegistered, step1Complete, setStep1Complete,
+    sessionEmail,
 }) {
     // ── Step 1 state ──────────────────────────────────────────────────────────
     const [selfSelected,    setSelfSelected]   = useState(null);
@@ -1628,24 +1630,36 @@ function RegistrationSection({
     const dirRecordsRef = useRef(dirRecords);
     dirRecordsRef.current = dirRecords;
 
-    // ── Auto-verify localStorage identity against live data on mount ──────────
+    // ── Auto-identify: session email → WM Directory match ────────────────────
     useEffect(() => {
-        if (!selfRegistered?.id || step1Done) return;
-        const rec = dirRecords.find(r => r.id === selfRegistered.id);
+        if (step1Done || dirRecords.length === 0) return;
+
+        // Determine candidate record: prefer localStorage identity, fall back to session email
+        let rec = selfRegistered?.id ? dirRecords.find(r => r.id === selfRegistered.id) : null;
+        if (!rec && sessionEmail) {
+            rec = dirRecords.find(r =>
+                safeGetCellValueAsString(r, 'Work Email').toLowerCase().trim() === sessionEmail
+            );
+        }
         if (!rec) return;
+
         const confirmed   = safeGetCellValue(rec, 'Confirmed');
         const isFreeAgent = safeGetCellValue(rec, 'Free Agent Registration');
-        const onTeam      = findUserOnTeam(liveTeams, selfRegistered.id);
+        const onTeam      = findUserOnTeam(liveTeams, rec.id);
+
         if (confirmed || isFreeAgent || onTeam) {
+            const name  = safeGetCellValueAsString(rec, 'Full Name') || safeGetCellValueAsString(rec, 'First Name');
+            const email = safeGetCellValueAsString(rec, 'Work Email');
+            setSelfRegistered({ id: rec.id, name, email });
             setStep1Done(true);
             setStep1Complete(true);
             if (onTeam) { setDuplicateStatus('on-team'); setDuplicateTeamName(onTeam.teamName); }
-        } else {
-            // Record exists but isn't registered — clear stale localStorage
+        } else if (selfRegistered?.id) {
+            // Had a stale localStorage identity that's no longer registered — clear it
             setSelfRegistered(null);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dirRecords.length, liveTeams.length]);
+    }, [dirRecords.length, liveTeams.length, sessionEmail]);
 
     // ── Check if selected person is already registered ────────────────────────
     function checkDuplicate(selected) {
@@ -2739,7 +2753,9 @@ function ProductModal({ record, prodResRecords, onClose }) {
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
 function App() {
-    const base = useBase();
+    const base    = useBase();
+    const session = useSession();
+    const sessionEmail = session?.currentUser?.email?.toLowerCase().trim() ?? '';
 
     // ── Tables ──────────────────────────────────────────────────────────────
     const subTable  = base.getTableByNameIfExists('Hackathon Submissions') ?? base.tables[0];
@@ -3115,6 +3131,7 @@ function App() {
                         setSelfRegistered={setSelfRegistered}
                         step1Complete={step1Complete}
                         setStep1Complete={setStep1Complete}
+                        sessionEmail={sessionEmail}
                     />
                 </div>
             </section>
