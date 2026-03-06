@@ -179,6 +179,8 @@ section[id]{scroll-margin-top:70px;}
 .phase-pill-inactive{background:${T.cloud};border:1px solid ${T.border};color:${T.muted2};}
 .phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};text-align:center;line-height:1.4;max-width:90px;}
 
+/* ── RULES DOC BODY ── */
+.rules-doc-body{font-size:14px;color:${T.body};line-height:1.8;white-space:pre-wrap;background:${T.cloud};border:1px solid ${T.border};border-radius:8px;padding:28px 32px;margin-bottom:24px;max-height:520px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:${T.muted2} transparent;}
 /* ── RULE CARDS ── */
 .rule-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
 .rule-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:24px 20px;transition:box-shadow 0.18s;}
@@ -941,6 +943,12 @@ function App() {
     const dfDocDetails = docTable ? docTable.getFieldIfExists('Documented Details') : null;
     const hackDocList  = docTable ? hackDocs : [];
 
+    const officialRulesText = useMemo(() => {
+        if (!dfDocName || !dfDocDetails) return '';
+        const rec = hackDocList.find(r => r.getCellValueAsString(dfDocName).trim() === 'Official Rules');
+        return rec ? rec.getCellValueAsString(dfDocDetails) : '';
+    }, [hackDocList, dfDocName, dfDocDetails]);
+
     // ── Field detection: directory ───────────────────────────────────────────
     const dfName  = dirTable.getFieldIfExists('Full Name');
     const dfEmail = dirTable.getFieldIfExists('Work Email');
@@ -1065,29 +1073,29 @@ function App() {
                     <h2 className="sec-h2">Rules & Guidelines</h2>
                     <p className="sec-sub">Everything you need to know before you build. Read this before registering.</p>
 
-                    <div className="rule-cards">
-                        <div className="rule-card">
-                            <div className="rule-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="rule-title">Eligibility</div>
-                            <div className="rule-desc">Open to all Walmart Home Office associates. Teams of 3–5; solo sign-ups will be matched to a team.</div>
+                    {officialRulesText ? (
+                        <div className="rules-doc-body">{officialRulesText}</div>
+                    ) : (
+                        <div className="rule-cards">
+                            <div className="rule-card">
+                                <div className="rule-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
+                                <div className="rule-title">Eligibility</div>
+                                <div className="rule-desc">Open to all Walmart Home Office associates. Teams of 3–5; solo sign-ups will be matched to a team.</div>
+                            </div>
+                            <div className="rule-card">
+                                <div className="rule-icon"><TimerIcon size={28} color={T.blue} weight="duotone" /></div>
+                                <div className="rule-title">Build Window</div>
+                                <div className="rule-desc">No building before March 16. All prototypes must be started and completed during the official 48-hour window.</div>
+                            </div>
+                            <div className="rule-card">
+                                <div className="rule-icon"><TrophyIcon size={28} color={T.blue} weight="duotone" /></div>
+                                <div className="rule-title">Judging</div>
+                                <div className="rule-desc">Projects scored on Impact (30%), Innovation (25%), Feasibility (25%), and Demo Quality (20%). Top 5 teams pitch to executive judges.</div>
+                            </div>
                         </div>
-                        <div className="rule-card">
-                            <div className="rule-icon"><TimerIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="rule-title">Build Window</div>
-                            <div className="rule-desc">No building before March 16. All prototypes must be started and completed during the official 48-hour window.</div>
-                        </div>
-                        <div className="rule-card">
-                            <div className="rule-icon"><TrophyIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="rule-title">Judging</div>
-                            <div className="rule-desc">Projects scored on Impact (30%), Innovation (25%), Feasibility (25%), and Demo Quality (20%). Top 5 teams pitch to executive judges.</div>
-                        </div>
-                    </div>
+                    )}
 
-                    <a className="rules-link" href={RULES_URL} target="_blank" rel="noreferrer">
-                        Read Full Rules & Guidelines →
-                    </a>
-
-                    <div>
+                    <div style={{ marginTop: 24 }}>
                         <button className="rubric-toggle" onClick={() => setShowRubric(s => !s)}>
                             {showRubric ? '▾' : '▸'} View Scoring Rubric
                         </button>
