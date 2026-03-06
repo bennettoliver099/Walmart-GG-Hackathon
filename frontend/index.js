@@ -273,19 +273,36 @@ section[id]{scroll-margin-top:70px;}
 .hub-md a{color:#0071CE;text-decoration:none;}
 .hub-md a:hover{text-decoration:underline;}
 
-/* ── TOOL CARDS ── */
-.tool-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
-.tool-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.18s;}
-.tool-card:hover{box-shadow:${T.shadowM};}
-.tool-bar{height:3px;flex-shrink:0;}
-.tool-inner{padding:20px 18px;display:flex;flex-direction:column;flex:1;}
-.tool-name{font-size:18px;font-weight:800;color:${T.deep};margin-bottom:4px;}
-.tool-tagline{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:${T.muted2};margin-bottom:12px;}
-.tool-desc{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:14px;}
-.tool-contact-block{background:${T.cloud};border:1px solid ${T.border};border-radius:6px;padding:12px 14px;margin-top:auto;}
-.tool-contact-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted2};margin-bottom:4px;}
-.tool-contact-name{font-size:14px;font-weight:700;color:${T.deep};margin-bottom:2px;}
-.tool-contact-role{font-size:12px;color:${T.muted};}
+/* ── PRODUCT CARDS ── */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+.prod-card{background:${T.white};border:1px solid ${T.border};border-radius:12px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;transition:all 0.2s;box-shadow:${T.shadow};border-top:3px solid ${T.blue};font-family:inherit;}
+.prod-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(11,44,95,0.12);border-color:${T.blue};}
+.prod-card-logo-wrap{width:72px;height:72px;border-radius:16px;overflow:hidden;margin-bottom:16px;display:flex;align-items:center;justify-content:center;background:${T.cloud};border:1px solid ${T.border};}
+.prod-card-logo{width:100%;height:100%;object-fit:cover;}
+.prod-card-logo-placeholder{font-size:28px;font-weight:800;color:${T.blue};}
+.prod-card-name{font-size:16px;font-weight:800;color:${T.deep};margin-bottom:8px;}
+.prod-card-desc{font-size:11px;color:${T.muted};line-height:1.6;margin-bottom:12px;flex:1;}
+.prod-card-cta{font-size:11px;font-weight:700;color:${T.blue};letter-spacing:0.04em;}
+/* ── PRODUCT MODAL ── */
+.pm-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px 20px;border-bottom:1px solid ${T.border};}
+.pm-header-left{display:flex;align-items:center;gap:16px;}
+.pm-logo{width:56px;height:56px;border-radius:14px;object-fit:cover;border:1px solid ${T.border};}
+.pm-name{font-size:20px;font-weight:800;color:${T.deep};}
+.pm-website{font-size:12px;color:${T.blue};text-decoration:none;font-weight:600;}
+.pm-website:hover{text-decoration:underline;}
+.pm-body{flex:1;overflow-y:auto;padding:24px 28px;scrollbar-width:thin;}
+.pm-desc{font-size:14px;color:${T.body};line-height:1.7;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid ${T.border};}
+.pm-resources-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted2};margin-bottom:14px;}
+.pm-resources-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.pm-res-card{display:flex;flex-direction:column;background:${T.cloud};border:1px solid ${T.border};border-radius:10px;overflow:hidden;text-decoration:none;transition:all 0.18s;cursor:pointer;}
+.pm-res-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(11,44,95,0.1);border-color:${T.blue};}
+.pm-res-cover-wrap{height:100px;overflow:hidden;background:${T.white};}
+.pm-res-cover{width:100%;height:100%;object-fit:cover;}
+.pm-res-info{padding:12px 14px 8px;flex:1;}
+.pm-res-name{font-size:13px;font-weight:700;color:${T.deep};margin-bottom:4px;}
+.pm-res-notes{font-size:10px;color:${T.muted};line-height:1.5;}
+.pm-res-link{padding:4px 14px 12px;font-size:10px;font-weight:700;color:${T.blue};}
+.pm-empty{text-align:center;padding:32px 20px;font-size:13px;color:${T.muted2};font-style:italic;}
 .callout-box{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:16px 20px;font-size:13px;color:${T.muted};line-height:1.7;}
 .callout-box strong{color:${T.deep};}
 /* ── HACKATHON DOCS ── */
@@ -628,7 +645,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 
 /* ── MOBILE ── */
 @media(max-width:900px){
-  .rule-cards,.tool-cards{grid-template-columns:1fr 1fr;}
+  .rule-cards,.prod-grid{grid-template-columns:1fr 1fr;}
   .help-cards{grid-template-columns:1fr;}
   .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
   .step-cols{grid-template-columns:1fr;}
@@ -655,7 +672,8 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .sec-wrap-wide{padding:40px 20px;} .step-indicator{display:none;}
   .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
   .phase-section{padding:16px 16px 12px;}
-  .hub-cards,.rule-cards,.tool-cards,.help-cards{grid-template-columns:1fr;}
+  .hub-cards,.rule-cards,.prod-grid,.help-cards{grid-template-columns:1fr;}
+  .pm-resources-grid{grid-template-columns:1fr;}
   .judge-grid{grid-template-columns:1fr;}
   .reg-cols{grid-template-columns:1fr;}
   .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
@@ -2365,6 +2383,100 @@ function RosterModal({ record: r, onClose }) {
     );
 }
 
+// ─── PRODUCT MODAL ────────────────────────────────────────────────────────────
+function ProductModal({ record, prodResRecords, onClose }) {
+    useEffect(() => {
+        const onKey = e => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        document.body.style.overflow = 'hidden';
+        return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+    }, [onClose]);
+
+    const name    = safeGetCellValueAsString(record, 'Name');
+    const website = safeGetCellValueAsString(record, 'website');
+    const logo    = safeGetCellValue(record, 'Logo');
+    const logoUrl = Array.isArray(logo) && logo.length > 0
+        ? (logo[0].thumbnails?.large?.url || logo[0].url)
+        : null;
+    const desc     = safeGetCellValue(record, 'Product Description');
+    const descText = desc && typeof desc === 'object' && desc.value
+        ? desc.value
+        : safeGetCellValueAsString(record, 'Product Description');
+
+    const linkedResIds = safeGetCellValue(record, 'Product Resources');
+    const resourceIds  = Array.isArray(linkedResIds) ? linkedResIds.map(r => r.id) : [];
+    const resources    = prodResRecords.filter(r => resourceIds.includes(r.id));
+
+    return (
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+            <div className="modal" style={{maxWidth:800,maxHeight:'90vh',overflow:'hidden',display:'flex',flexDirection:'column'}}>
+                <div className="pm-header">
+                    <div className="pm-header-left">
+                        {logoUrl && <img src={logoUrl} alt={name} className="pm-logo" />}
+                        <div>
+                            <div className="pm-name">{name}</div>
+                            {website && (
+                                <a href={website} target="_blank" rel="noreferrer" className="pm-website">
+                                    {website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')} ↗
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                    <button className="modal-close" onClick={onClose}>✕</button>
+                </div>
+
+                <div className="pm-body">
+                    {descText && <div className="pm-desc">{descText}</div>}
+
+                    {resources.length > 0 && (
+                        <>
+                            <div className="pm-resources-label">Resources &amp; Training</div>
+                            <div className="pm-resources-grid">
+                                {resources.map(res => {
+                                    const resName  = safeGetCellValueAsString(res, '\uFEFFName') || safeGetCellValueAsString(res, 'Name') || 'Resource';
+                                    const resNotes = safeGetCellValueAsString(res, 'Notes');
+                                    const resLink  = safeGetCellValueAsString(res, 'Open Resource') || safeGetCellValueAsString(res, 'Resource Link');
+                                    const resCover = safeGetCellValue(res, 'Cover Image');
+                                    const coverUrl = Array.isArray(resCover) && resCover.length > 0
+                                        ? (resCover[0].thumbnails?.large?.url || resCover[0].url)
+                                        : null;
+                                    return (
+                                        <a key={res.id} href={resLink || '#'} target="_blank" rel="noreferrer" className="pm-res-card">
+                                            {coverUrl && (
+                                                <div className="pm-res-cover-wrap">
+                                                    <img src={coverUrl} alt={resName} className="pm-res-cover" />
+                                                </div>
+                                            )}
+                                            <div className="pm-res-info">
+                                                <div className="pm-res-name">{resName}</div>
+                                                {resNotes && <div className="pm-res-notes">{resNotes.length > 100 ? resNotes.slice(0, 100) + '…' : resNotes}</div>}
+                                            </div>
+                                            <div className="pm-res-link">Open ↗</div>
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                        </>
+                    )}
+
+                    {resources.length === 0 && (
+                        <div className="pm-empty">Resources coming soon. Check back before kickoff.</div>
+                    )}
+                </div>
+
+                <div className="modal-footer" style={{justifyContent:'flex-end'}}>
+                    {website && (
+                        <a href={website} target="_blank" rel="noreferrer" className="btn-outline-dark" style={{marginRight:'auto',textDecoration:'none'}}>
+                            Visit {name} ↗
+                        </a>
+                    )}
+                    <button className="submit-btn" onClick={onClose}>Close</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ─── APP ──────────────────────────────────────────────────────────────────────
 function App() {
     const base = useBase();
@@ -2374,16 +2486,20 @@ function App() {
     const probTable = base.getTableByNameIfExists('Problem Statements')    ?? base.tables[0];
     const dirTable  = base.getTableByNameIfExists('WM Directory')          ?? base.tables[0];
     const prmTable  = base.getTableByNameIfExists('Sample Prompts')        ?? base.tables[0];
-    const regTable  = base.getTableByNameIfExists('Regulatory Documents')  ?? base.tables[0];
-    const docTable  = base.getTableByNameIfExists('Hackathon Documents')   ?? null;
+    const regTable      = base.getTableByNameIfExists('Regulatory Documents')  ?? base.tables[0];
+    const docTable      = base.getTableByNameIfExists('Hackathon Documents')   ?? null;
+    const prodTable     = base.getTableByNameIfExists('Products')              ?? base.tables[0];
+    const prodResTable  = base.getTableByNameIfExists('Product Resources')     ?? base.tables[0];
 
     // ── Records ─────────────────────────────────────────────────────────────
-    const submissions = useRecords(subTable);
-    const probRecords = useRecords(probTable);
-    const dirRecords  = useRecords(dirTable);
-    const prmRecords  = useRecords(prmTable);
-    const regDocs     = useRecords(regTable);
-    const hackDocs    = useRecords(docTable ?? subTable);  // fallback avoids null crash
+    const submissions   = useRecords(subTable);
+    const probRecords   = useRecords(probTable);
+    const dirRecords    = useRecords(dirTable);
+    const prmRecords    = useRecords(prmTable);
+    const regDocs       = useRecords(regTable);
+    const hackDocs      = useRecords(docTable ?? subTable);  // fallback avoids null crash
+    const prodRecords   = useRecords(prodTable);
+    const prodResRecords = useRecords(prodResTable);
 
     // ── UI State ─────────────────────────────────────────────────────────────
     const [currentView,     setCurrentView]    = useState('portal');
@@ -2400,6 +2516,7 @@ function App() {
         try { return !!localStorage.getItem('gg_hackathon_user'); } catch { return false; }
     });
     const [showRubric,      setShowRubric]     = useState(false);
+    const [productModal,    setProductModal]   = useState(null);
     const [countdown,       setCountdown]      = useState(getCountdown);
     const cd = useCountdown(HERO_COUNTDOWN_TARGET);
 
@@ -2680,48 +2797,33 @@ function App() {
                 <div className="sec-wrap">
                     <span className="sec-label">Tools</span>
                     <h2 className="sec-h2">Tool Selection</h2>
-                    <p className="sec-sub" style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}>Free training is available for all three tools. Pick one — or combine them if your use case calls for it.</p>
+                    <p className="sec-sub">Free training is available for all tools. Pick one — or combine them if your use case calls for it.</p>
 
-                    <div className="tool-cards">
-                        <div className="tool-card">
-                            <div className="tool-bar" style={{ background: T.blue }} />
-                            <div className="tool-inner">
-                                <div className="tool-name">Airtable</div>
-                                <div className="tool-tagline">Best for: Structured data, interfaces, automations</div>
-                                <div className="tool-desc">Build operational interfaces, automated workflows, and dashboards. The base, views, and interface builder are your canvas.</div>
-                                <div className="tool-contact-block">
-                                    <div className="tool-contact-label">Point of Contact</div>
-                                    <div className="tool-contact-name">Nick Hammons</div>
-                                    <div className="tool-contact-role">Airtable · Embedded Delivery Team</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="tool-card">
-                            <div className="tool-bar" style={{ background: '#7C3AED' }} />
-                            <div className="tool-inner">
-                                <div className="tool-name">Harvey</div>
-                                <div className="tool-tagline">Best for: Document AI, natural language Q&A</div>
-                                <div className="tool-desc">Point Harvey at any PDF, policy doc, or regulation — ask questions, extract structured data, and draft content.</div>
-                                <div className="tool-contact-block">
-                                    <div className="tool-contact-label">Point of Contact</div>
-                                    <div className="tool-contact-name">Abby Worley</div>
-                                    <div className="tool-contact-role">Harvey · GG Digital Acceleration</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="tool-card">
-                            <div className="tool-bar" style={{ background: '#059669' }} />
-                            <div className="tool-inner">
-                                <div className="tool-name">CodePuppy</div>
-                                <div className="tool-tagline">Best for: Custom code, integrations, APIs</div>
-                                <div className="tool-desc">Writes and runs JavaScript/Python. Connect external APIs, transform data, or build automations.</div>
-                                <div className="tool-contact-block">
-                                    <div className="tool-contact-label">Point of Contact</div>
-                                    <div className="tool-contact-name">Michael Chapman</div>
-                                    <div className="tool-contact-role">CodePuppy · GG Digital Acceleration</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="prod-grid">
+                        {prodRecords.map(prod => {
+                            const name    = safeGetCellValueAsString(prod, 'Name');
+                            const logo    = safeGetCellValue(prod, 'Logo');
+                            const logoUrl = Array.isArray(logo) && logo.length > 0
+                                ? (logo[0].thumbnails?.large?.url || logo[0].url)
+                                : null;
+                            const desc     = safeGetCellValue(prod, 'Product Description');
+                            const descText = desc && typeof desc === 'object' && desc.value
+                                ? desc.value
+                                : safeGetCellValueAsString(prod, 'Product Description');
+                            return (
+                                <button key={prod.id} className="prod-card" onClick={() => setProductModal(prod)}>
+                                    <div className="prod-card-logo-wrap">
+                                        {logoUrl
+                                            ? <img src={logoUrl} alt={name} className="prod-card-logo" />
+                                            : <div className="prod-card-logo-placeholder">{name[0]}</div>
+                                        }
+                                    </div>
+                                    <div className="prod-card-name">{name}</div>
+                                    <div className="prod-card-desc">{descText ? descText.slice(0, 120) + (descText.length > 120 ? '…' : '') : 'Details coming soon.'}</div>
+                                    <div className="prod-card-cta">View Details →</div>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -2876,6 +2978,13 @@ function App() {
                 <RosterModal
                     record={rosterTeam}
                     onClose={() => setRosterTeam(null)}
+                />
+            )}
+            {productModal && (
+                <ProductModal
+                    record={productModal}
+                    prodResRecords={prodResRecords}
+                    onClose={() => setProductModal(null)}
                 />
             )}
         </div>
