@@ -114,7 +114,7 @@ function useCountdown(target) {
 // ─── CSS ──────────────────────────────────────────────────────────────────────
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-html,body{scroll-behavior:smooth;}
+html,body{scroll-behavior:auto;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 .portal{background:${T.white};color:${T.body};font-family:'Bogle','Brandon Text','Inter',sans-serif;min-height:100vh;font-size:14px;line-height:1.5;}
 
@@ -123,7 +123,7 @@ html,body{scroll-behavior:smooth;}
 .nav-brand{display:flex;align-items:center;gap:10px;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted};font-weight:600;flex-shrink:0;}
 .nav-spark{width:30px;height:30px;background:${T.heroGrad};border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .nav-links{display:flex;align-items:center;gap:5px;}
-.nav-link{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${T.muted};text-decoration:none;padding:5px 12px;border-radius:100px;border:1px solid transparent;transition:all 0.15s;white-space:nowrap;}
+.nav-link{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${T.muted};text-decoration:none;padding:5px 12px;border-radius:100px;border:1px solid transparent;transition:background 0.12s,border-color 0.12s;white-space:nowrap;cursor:pointer;background:none;}
 .nav-link:hover{color:${T.blue};border-color:${T.border2};}
 .nav-link.active{color:${T.white};background:${T.blue};border-color:${T.blue};}
 .nav-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
@@ -1466,7 +1466,6 @@ function App() {
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
     const [hubDocModal,     setHubDocModal]    = useState(null); // null | 'rules'|'prizes'|'reginfo'|'faqs'
-    const [activeSection,   setActiveSection]  = useState('hero');
     const [openFaq,         setOpenFaq]        = useState(null);
     const [showRubric,      setShowRubric]     = useState(false);
     const [countdown,       setCountdown]      = useState(getCountdown);
@@ -1480,16 +1479,18 @@ function App() {
     useEffect(() => {
         const ids = ['hero', 'rules', 'tools', 'register', 'registrations', 'help'];
         const handleScroll = () => {
-            const offset = 80; // nav height (60px) + small buffer
             let active = ids[0];
             for (const id of ids) {
                 const el = document.getElementById(id);
-                if (el && el.getBoundingClientRect().top <= offset) active = id;
+                if (el && el.getBoundingClientRect().top <= 80) active = id;
             }
-            setActiveSection(active);
+            ids.forEach(id => {
+                const link = document.querySelector(`.nav-link[data-navid="${id}"]`);
+                if (link) link.classList.toggle('active', id === active);
+            });
         };
         window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll(); // set correct state on mount
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -1594,7 +1595,14 @@ function App() {
                 </div>
                 <div className="nav-links">
                     {NAV_SECTIONS.map(([id, label]) => (
-                        <a key={id} href={`#${id}`} className={`nav-link${activeSection === id ? ' active' : ''}`}>{label}</a>
+                        <button key={id} data-navid={id} className={`nav-link${id === 'hero' ? ' active' : ''}`}
+                            onClick={() => {
+                                document.querySelectorAll('.nav-link[data-navid]').forEach(el => el.classList.remove('active'));
+                                document.querySelector(`.nav-link[data-navid="${id}"]`)?.classList.add('active');
+                                document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
+                            }}>
+                            {label}
+                        </button>
                     ))}
                 </div>
                 <div className="nav-right">
