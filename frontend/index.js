@@ -165,7 +165,7 @@ section[id]{scroll-margin-top:70px;}
 @keyframes lpspin{to{transform:rotate(360deg);}}
 .hero-stepper{position:absolute;bottom:0;left:0;right:0;padding:16px 48px 24px;display:flex;align-items:flex-start;z-index:2;}
 .hero-phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
-.hero-phase-node:not(:last-child)::after{content:'';position:absolute;top:6px;left:50%;width:100%;height:1px;background:rgba(255,255,255,0.18);}
+.hero-phase-node:not(:last-child)::after{display:none;}
 .hero-step-dot{width:12px;height:12px;border-radius:50%;position:relative;z-index:1;margin-bottom:8px;}
 .hero-step-dot-active{background:#FFC220;box-shadow:0 0 0 3px rgba(255,194,32,0.2);}
 .hero-step-dot-inactive{background:transparent;border:1.5px solid rgba(255,255,255,0.7);}
@@ -260,6 +260,18 @@ section[id]{scroll-margin-top:70px;}
 .hub-card-body{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:18px;}
 .hub-card-link{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;padding:0;margin-top:auto;}
 .hub-card-link:hover{text-decoration:underline;}
+
+/* ── HUB MARKDOWN ── */
+.hub-md{font-family:'Inter',sans-serif;}
+.hub-md h2{font-size:17px;font-weight:800;color:#0B2C5F;margin:24px 0 8px;padding-bottom:8px;border-bottom:1px solid #edf2f8;}
+.hub-md h3{font-size:15px;font-weight:700;color:#0B2C5F;margin:18px 0 6px;}
+.hub-md h4{font-size:13px;font-weight:700;color:#334155;margin:14px 0 4px;}
+.hub-md p{font-size:14px;color:#334155;line-height:1.75;margin:0 0 12px;}
+.hub-md ul,.hub-md ol{padding-left:22px;margin:4px 0 14px;}
+.hub-md li{font-size:14px;color:#334155;line-height:1.7;margin-bottom:4px;}
+.hub-md strong{color:#0B2C5F;font-weight:700;}
+.hub-md a{color:#0071CE;text-decoration:none;}
+.hub-md a:hover{text-decoration:underline;}
 
 /* ── TOOL CARDS ── */
 .tool-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
@@ -465,6 +477,77 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .site-footer-top{flex-direction:column;gap:14px;align-items:flex-start;}
   .site-footer-links{flex-wrap:wrap;gap:12px;}
 }
+
+/* ── ADMIN ── */
+.adm-wrap{background:#f8fafc;min-height:100vh;font-family:'Inter',sans-serif;}
+.adm-nav{position:sticky;top:0;z-index:100;height:60px;background:#0B2C5F;display:flex;align-items:center;padding:0 40px;gap:16px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.adm-nav-back{background:none;border:none;color:rgba(255,255,255,0.65);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:5px;transition:all 0.15s;white-space:nowrap;}
+.adm-nav-back:hover{color:#fff;background:rgba(255,255,255,0.1);}
+.adm-nav-brand{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#fff;flex:1;display:flex;align-items:center;gap:8px;}
+.adm-nav-sep{width:1px;height:28px;background:rgba(255,255,255,0.15);flex-shrink:0;}
+.adm-nav-tabs{display:flex;gap:4px;}
+.adm-nav-tab{background:none;border:none;color:rgba(255,255,255,0.55);font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;padding:7px 14px;border-radius:5px;transition:all 0.15s;}
+.adm-nav-tab.active{background:rgba(255,255,255,0.15);color:#fff;}
+.adm-nav-tab:hover:not(.active){background:rgba(255,255,255,0.08);color:#fff;}
+.adm-badge{background:#FFC220;color:#0B2C5F;font-family:'Inter',sans-serif;font-size:9px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;padding:3px 8px;border-radius:3px;flex-shrink:0;}
+.adm-hero{background:linear-gradient(135deg,#0B2C5F 0%,#0071CE 100%);padding:40px 56px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;}
+.adm-hero-pre{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:8px;}
+.adm-hero-h1{font-size:36px;font-weight:800;color:#FFC220;line-height:1.1;margin-bottom:10px;letter-spacing:-0.02em;}
+.adm-hero-sub{font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.6);max-width:420px;line-height:1.6;}
+.adm-kickoff{text-align:center;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:12px;padding:22px 36px;backdrop-filter:blur(10px);}
+.adm-kickoff-num{font-family:'Inter',sans-serif;font-size:56px;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.04em;}
+.adm-kickoff-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#FFC220;margin-top:6px;}
+.adm-stat-bar{background:#fff;border-bottom:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(5,1fr);}
+.adm-stat-item{padding:18px 0;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;}
+.adm-stat-item:last-child{border-right:none;}
+.adm-stat-num{font-family:'Inter',sans-serif;font-size:24px;font-weight:800;color:#0071CE;line-height:1;}
+.adm-stat-num-red{color:#B91C1C;}
+.adm-stat-label{font-family:'Inter',sans-serif;font-size:9px;color:#5A7A9A;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;}
+.adm-warn{background:#FFF8E6;border-left:4px solid #F4D04A;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.adm-warn-text{font-family:'Inter',sans-serif;font-size:13px;color:#78500E;font-weight:500;}
+.adm-warn-btn{background:none;border:1px solid #D4A017;border-radius:5px;color:#78500E;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:6px 14px;transition:all 0.15s;}
+.adm-warn-btn:hover{background:#D4A017;color:#fff;}
+.adm-main{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 220px);border-top:1px solid #e2e8f0;}
+.adm-sidebar{background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;overflow:hidden;}
+.adm-sidebar-tabs{display:flex;border-bottom:1px solid #e2e8f0;flex-shrink:0;}
+.adm-sidebar-tab{flex:1;padding:12px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#5A7A9A;background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+.adm-sidebar-tab.active{color:#0071CE;border-bottom-color:#0071CE;background:#f8fafc;}
+.adm-search{padding:12px 14px;border-bottom:1px solid #e2e8f0;flex-shrink:0;}
+.adm-search-input{width:100%;background:#f4f7fb;border:1px solid #e2e8f0;border-radius:5px;padding:8px 12px;font-family:'Inter',sans-serif;font-size:12px;color:#0B2C5F;outline:none;transition:border-color 0.15s;}
+.adm-search-input:focus{border-color:#0071CE;}
+.adm-filters{padding:10px 14px;display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;flex-shrink:0;}
+.adm-filter-pill{background:none;border:1px solid #e2e8f0;border-radius:100px;padding:4px 10px;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;color:#5A7A9A;cursor:pointer;transition:all 0.15s;letter-spacing:0.06em;text-transform:uppercase;}
+.adm-filter-pill.active{background:#0071CE;border-color:#0071CE;color:#fff;}
+.adm-filter-pill:hover:not(.active){border-color:#0071CE;color:#0071CE;}
+.adm-team-list{overflow-y:auto;flex:1;scrollbar-width:thin;scrollbar-color:#cbd5e0 transparent;}
+.adm-team-row{padding:12px 14px;border-bottom:1px solid #f0f4f8;transition:background 0.12s;}
+.adm-team-row:hover{background:#f8fafc;}
+.adm-team-name{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#0B2C5F;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.adm-team-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;}
+.adm-status-badge{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap;}
+.adm-badge-registered{background:#EFF6FF;color:#1E40AF;}
+.adm-badge-submitted{background:#ECFDF5;color:#065F46;}
+.adm-badge-issue{background:#FEF2F2;color:#B91C1C;}
+.adm-sidebar-footer{padding:10px 14px;border-top:1px solid #e2e8f0;font-family:'Inter',sans-serif;font-size:11px;color:#5A7A9A;flex-shrink:0;}
+.adm-content{padding:28px 32px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;}
+.adm-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;}
+.adm-card-header{padding:16px 20px;border-bottom:1px solid #f0f4f8;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.adm-card-title{font-family:'Inter',sans-serif;font-size:13px;font-weight:800;color:#0B2C5F;letter-spacing:-0.01em;}
+.adm-donut-wrap{display:flex;align-items:center;gap:32px;padding:24px 20px;}
+.adm-donut-legend{display:flex;flex-direction:column;gap:12px;flex:1;}
+.adm-donut-legend-item{display:flex;align-items:center;gap:8px;}
+.adm-donut-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.adm-donut-legend-label{font-family:'Inter',sans-serif;font-size:12px;color:#5A7A9A;flex:1;}
+.adm-donut-legend-val{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#0B2C5F;}
+.adm-metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#f0f4f8;}
+.adm-metric{background:#fff;padding:22px 16px;text-align:center;}
+.adm-metric-num{font-family:'Inter',sans-serif;font-size:30px;font-weight:800;color:#0071CE;line-height:1;}
+.adm-metric-label{font-family:'Inter',sans-serif;font-size:9px;color:#5A7A9A;letter-spacing:0.1em;text-transform:uppercase;margin-top:6px;font-weight:600;}
+.adm-snapshot-body{padding:20px;font-family:'Inter',sans-serif;font-size:13px;color:#334155;line-height:2;background:#f8fafc;}
+.adm-copy-btn{background:none;border:1px solid #e2e8f0;border-radius:5px;padding:5px 12px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:#5A7A9A;cursor:pointer;transition:all 0.15s;}
+.adm-copy-btn:hover{border-color:#0071CE;color:#0071CE;}
+.adm-copy-btn.copied{border-color:#22C55E;color:#22C55E;}
+.adm-placeholder{padding:80px;text-align:center;color:#5A7A9A;font-family:'Inter',sans-serif;font-size:15px;}
 `;
 
 // ─── MEMBER SEARCH ────────────────────────────────────────────────────────────
@@ -1009,15 +1092,40 @@ function renderMarkdown(text) {
         }
         return out.length === 1 && typeof out[0] === 'string' ? out[0] : out;
     };
-    const lines = text.split('\n'), els = [], list = [];
-    const flush = () => { if (list.length) { els.push(<ul key={key++} style={{margin:'4px 0 12px',paddingLeft:20}}>{[...list]}</ul>); list.length = 0; } };
+    // Strip leading # title line
+    const rawLines = text.split('\n');
+    let start = 0;
+    for (let i = 0; i < rawLines.length; i++) {
+        if (!rawLines[i].trim()) { start = i + 1; continue; }
+        if (/^# /.test(rawLines[i])) { start = i + 1; }
+        break;
+    }
+    const lines = rawLines.slice(start);
+    const els = [];
+    let listKind = null, listItems = [];
+    const flush = () => {
+        if (!listItems.length) return;
+        const Tag = listKind === 'ol' ? 'ol' : 'ul';
+        els.push(<Tag key={key++}>{[...listItems]}</Tag>);
+        listItems = []; listKind = null;
+    };
     lines.forEach(line => {
-        if (/^### /.test(line))     { flush(); els.push(<h3 key={key++} style={{fontSize:14,fontWeight:700,color:'#1a2233',margin:'18px 0 6px'}}>{inl(line.slice(4))}</h3>); }
-        else if (/^## /.test(line)) { flush(); els.push(<h2 key={key++} style={{fontSize:16,fontWeight:800,color:'#1a2233',margin:'22px 0 8px',paddingBottom:6,borderBottom:'1px solid #f0f0f0'}}>{inl(line.slice(3))}</h2>); }
-        else if (/^# /.test(line))  { flush(); els.push(<h1 key={key++} style={{fontSize:18,fontWeight:800,color:'#1a2233',margin:'0 0 12px'}}>{inl(line.slice(2))}</h1>); }
-        else if (/^[-*] /.test(line)) { list.push(<li key={key++} style={{lineHeight:1.65,marginBottom:3}}>{inl(line.slice(2))}</li>); }
-        else if (!line.trim())      { flush(); }
-        else { flush(); els.push(<p key={key++} style={{margin:'0 0 10px',lineHeight:1.7}}>{inl(line)}</p>); }
+        const h3m = line.match(/^### (.+)/);
+        const h2m = line.match(/^## (.+)/);
+        const h1m = line.match(/^# (.+)/);
+        const ulm = line.match(/^[-*] (.+)/);
+        const olm = line.match(/^\d+\. (.+)/);
+        if (h3m)      { flush(); els.push(<h4 key={key++}>{inl(h3m[1])}</h4>); }
+        else if (h2m) { flush(); els.push(<h3 key={key++}>{inl(h2m[1])}</h3>); }
+        else if (h1m) { flush(); els.push(<h2 key={key++}>{inl(h1m[1])}</h2>); }
+        else if (ulm) { if (listKind !== 'ul') { flush(); listKind = 'ul'; } listItems.push(<li key={key++}>{inl(ulm[1])}</li>); }
+        else if (olm) { if (listKind !== 'ol') { flush(); listKind = 'ol'; } listItems.push(<li key={key++}>{inl(olm[1])}</li>); }
+        else if (!line.trim()) { flush(); }
+        else {
+            const lbl = line.match(/^([A-Z][^:\n]{1,30}): (.+)/);
+            if (lbl) { flush(); els.push(<p key={key++}><strong>{lbl[1]}: </strong>{inl(lbl[2])}</p>); }
+            else { flush(); els.push(<p key={key++}>{inl(line)}</p>); }
+        }
     });
     flush();
     return els;
@@ -1045,7 +1153,7 @@ function HubDocModal({ title, content, onClose }) {
                 </div>
                 <div className="hub-modal-body">
                     {content
-                        ? renderMarkdown(content)
+                        ? <div className="hub-md">{renderMarkdown(content)}</div>
                         : <span className="hub-modal-empty">Content coming soon.</span>
                     }
                 </div>
@@ -1085,6 +1193,234 @@ function RulesModal({ categorized, fallback, onClose }) {
     );
 }
 
+// ─── ADMIN VIEW ───────────────────────────────────────────────────────────────
+function AdminView({ onBack, liveTeams, subTable, sfTeamName, sfStatus, totalTeams, submittedTeams, registeredTeams, spotsLeft, probRecords }) {
+    const [adminTab,   setAdminTab]   = useState('registration');
+    const [sidebarTab, setSidebarTab] = useState('teams');
+    const [search,     setSearch]     = useState('');
+    const [filter,     setFilter]     = useState('all');
+    const [copied,     setCopied]     = useState(false);
+
+    const sfAttendance    = subTable.getFieldIfExists('Attendance Format');
+    const sfProbStatement = subTable.getFieldIfExists('Problem Statement');
+
+    const inPersonCount  = sfAttendance
+        ? liveTeams.filter(r => { const a = r.getCellValueAsString(sfAttendance); return a === 'In Person' || a === 'Hybrid'; }).length
+        : 0;
+    const psClaimedCount = sfProbStatement
+        ? liveTeams.filter(r => r.getCellValueAsString(sfProbStatement)).length
+        : 0;
+    const issueTeams  = liveTeams.filter(r => { const s = sfStatus ? r.getCellValueAsString(sfStatus) : ''; return s !== 'Registered' && s !== 'Submitted'; });
+    const issueCount  = issueTeams.length;
+    const readyPct    = totalTeams > 0 ? Math.round((submittedTeams / totalTeams) * 100) : 0;
+    const kickoffDate = new Date('2026-05-04T05:00:00Z');
+    const daysToKickoff = Math.max(0, Math.ceil((kickoffDate - new Date()) / 86400000));
+
+    const displayTeams = useMemo(() => {
+        if (sidebarTab !== 'teams') return [];
+        let teams = liveTeams;
+        if (search.trim()) {
+            const q = search.toLowerCase();
+            teams = teams.filter(r => (sfTeamName ? r.getCellValueAsString(sfTeamName) : '').toLowerCase().includes(q));
+        }
+        if (filter === 'issues')    teams = teams.filter(r => { const s = sfStatus ? r.getCellValueAsString(sfStatus) : ''; return s !== 'Registered' && s !== 'Submitted'; });
+        else if (filter === 'ready' || filter === 'submitted') teams = teams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Submitted');
+        return teams;
+    }, [liveTeams, search, filter, sidebarTab, sfTeamName, sfStatus]);
+
+    const snapshotText = `Hackathon Status — ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}\n\nTeams Registered: ${totalTeams} of ${MAX_TEAMS} (${spotsLeft} spots left)\nSubmitted: ${submittedTeams} teams ready\nRegistered: ${registeredTeams} teams confirmed\nIssues: ${issueCount} teams need attention\nProblem Tracks: ${probRecords.length || 12}\nDays to Kickoff: ${daysToKickoff}`;
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(snapshotText).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        });
+    };
+
+    const R = 42, C = 2 * Math.PI * R;
+    const dashOffset = C - (readyPct / 100) * C;
+
+    return (
+        <div className="adm-wrap">
+            {/* Admin Nav */}
+            <nav className="adm-nav">
+                <button className="adm-nav-back" onClick={onBack}>← Portal</button>
+                <div className="adm-nav-sep" />
+                <div className="adm-nav-brand">
+                    <div className="nav-spark"><SparkIcon size={14} /></div>
+                    Admin Dashboard
+                </div>
+                <div className="adm-nav-tabs">
+                    {[['registration','Registration'],['judging','Judging'],['export','Export']].map(([id, label]) => (
+                        <button key={id} className={`adm-nav-tab${adminTab === id ? ' active' : ''}`} onClick={() => setAdminTab(id)}>{label}</button>
+                    ))}
+                </div>
+                <span className="adm-badge">ADMIN</span>
+            </nav>
+
+            {/* Admin Hero */}
+            <div className="adm-hero">
+                <div>
+                    <div className="adm-hero-pre">Global Governance AI Hackathon · FY27</div>
+                    <div className="adm-hero-h1">Admin Dashboard</div>
+                    <div className="adm-hero-sub">Team registration, status tracking, and event readiness for the GG AI Hackathon.</div>
+                </div>
+                <div className="adm-kickoff">
+                    <div className="adm-kickoff-num">{daysToKickoff}</div>
+                    <div className="adm-kickoff-label">Days to Kickoff</div>
+                </div>
+            </div>
+
+            {/* Stat Bar */}
+            <div className="adm-stat-bar">
+                <div className="adm-stat-item"><div className="adm-stat-num">{totalTeams}</div><div className="adm-stat-label">Total Teams</div></div>
+                <div className="adm-stat-item"><div className="adm-stat-num">{submittedTeams}</div><div className="adm-stat-label">Ready</div></div>
+                <div className="adm-stat-item"><div className={`adm-stat-num${issueCount > 0 ? ' adm-stat-num-red' : ''}`}>{issueCount}</div><div className="adm-stat-label">Issues</div></div>
+                <div className="adm-stat-item"><div className="adm-stat-num">{psClaimedCount}</div><div className="adm-stat-label">PS Claimed</div></div>
+                <div className="adm-stat-item"><div className="adm-stat-num">{inPersonCount}</div><div className="adm-stat-label">In Person</div></div>
+            </div>
+
+            {/* Warning Banner */}
+            {issueCount > 0 && (
+                <div className="adm-warn">
+                    <span className="adm-warn-text">⚠️ {issueCount} team{issueCount > 1 ? 's have' : ' has'} a status issue and may need attention.</span>
+                    <button className="adm-warn-btn" onClick={() => { setSidebarTab('teams'); setFilter('issues'); setAdminTab('registration'); }}>Show issues →</button>
+                </div>
+            )}
+
+            {/* Main Content */}
+            {adminTab === 'registration' ? (
+                <div className="adm-main">
+                    {/* Sidebar */}
+                    <div className="adm-sidebar">
+                        <div className="adm-sidebar-tabs">
+                            <button className={`adm-sidebar-tab${sidebarTab === 'teams' ? ' active' : ''}`} onClick={() => setSidebarTab('teams')}>Teams ({totalTeams})</button>
+                            <button className={`adm-sidebar-tab${sidebarTab === 'problems' ? ' active' : ''}`} onClick={() => setSidebarTab('problems')}>Problems ({probRecords.length || 12})</button>
+                        </div>
+                        {sidebarTab === 'teams' ? (
+                            <>
+                                <div className="adm-search">
+                                    <input className="adm-search-input" placeholder="Search teams…" value={search} onChange={e => setSearch(e.target.value)} />
+                                </div>
+                                <div className="adm-filters">
+                                    {[['all','All'],['issues','Issues'],['ready','Ready'],['submitted','Submitted']].map(([val, lbl]) => (
+                                        <button key={val} className={`adm-filter-pill${filter === val ? ' active' : ''}`} onClick={() => setFilter(val)}>{lbl}</button>
+                                    ))}
+                                </div>
+                                <div className="adm-team-list">
+                                    {displayTeams.length === 0 ? (
+                                        <div style={{padding:'32px 16px',textAlign:'center',color:'#5A7A9A',fontSize:13}}>No teams match this filter.</div>
+                                    ) : displayTeams.map(r => {
+                                        const name   = sfTeamName ? r.getCellValueAsString(sfTeamName) : r.name;
+                                        const status = sfStatus   ? r.getCellValueAsString(sfStatus)   : '';
+                                        const badgeCls = status === 'Submitted' ? 'adm-badge-submitted' : status === 'Registered' ? 'adm-badge-registered' : 'adm-badge-issue';
+                                        return (
+                                            <div key={r.id} className="adm-team-row">
+                                                <div className="adm-team-name">{name}</div>
+                                                <div className="adm-team-meta">
+                                                    <span className={`adm-status-badge ${badgeCls}`}>{status || 'Unknown'}</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <div className="adm-sidebar-footer">{totalTeams} of {MAX_TEAMS} slots filled · {spotsLeft} remaining</div>
+                            </>
+                        ) : (
+                            <div style={{padding:'40px 16px',textAlign:'center',color:'#5A7A9A',fontSize:13,lineHeight:1.7}}>
+                                Problem statement tracking coming soon.
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Right Content — Export & Analytics */}
+                    <div className="adm-content">
+                        {/* Readiness Donut */}
+                        <div className="adm-card">
+                            <div className="adm-card-header">
+                                <div className="adm-card-title">Registration Readiness</div>
+                                <span style={{fontSize:11,color:'#5A7A9A',fontFamily:'Inter,sans-serif'}}>{readyPct}% ready to present</span>
+                            </div>
+                            <div className="adm-donut-wrap">
+                                <svg width={110} height={110} viewBox="0 0 110 110">
+                                    <circle cx={55} cy={55} r={R} fill="none" stroke="#f0f4f8" strokeWidth={13} />
+                                    <circle cx={55} cy={55} r={R} fill="none" stroke="#0071CE" strokeWidth={13}
+                                        strokeLinecap="round"
+                                        strokeDasharray={C}
+                                        strokeDashoffset={dashOffset}
+                                        transform="rotate(-90 55 55)"
+                                        style={{transition:'stroke-dashoffset 0.5s ease'}} />
+                                    <text x={55} y={55} textAnchor="middle" dominantBaseline="middle" fontSize={15} fontWeight={800} fill="#0B2C5F" fontFamily="Inter,sans-serif">{readyPct}%</text>
+                                </svg>
+                                <div className="adm-donut-legend">
+                                    <div className="adm-donut-legend-item">
+                                        <div className="adm-donut-legend-dot" style={{background:'#0071CE'}} />
+                                        <span className="adm-donut-legend-label">Submitted</span>
+                                        <span className="adm-donut-legend-val">{submittedTeams}</span>
+                                    </div>
+                                    <div className="adm-donut-legend-item">
+                                        <div className="adm-donut-legend-dot" style={{background:'#CFE8FF'}} />
+                                        <span className="adm-donut-legend-label">Registered</span>
+                                        <span className="adm-donut-legend-val">{registeredTeams}</span>
+                                    </div>
+                                    {issueCount > 0 && (
+                                        <div className="adm-donut-legend-item">
+                                            <div className="adm-donut-legend-dot" style={{background:'#FCA5A5'}} />
+                                            <span className="adm-donut-legend-label">Issues</span>
+                                            <span className="adm-donut-legend-val">{issueCount}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Key Metrics */}
+                        <div className="adm-card">
+                            <div className="adm-card-header">
+                                <div className="adm-card-title">Key Metrics</div>
+                            </div>
+                            <div className="adm-metrics-grid">
+                                <div className="adm-metric">
+                                    <div className="adm-metric-num">{daysToKickoff}</div>
+                                    <div className="adm-metric-label">Days to Kickoff</div>
+                                </div>
+                                <div className="adm-metric">
+                                    <div className="adm-metric-num">{probRecords.length || 12}</div>
+                                    <div className="adm-metric-label">Problem Tracks</div>
+                                </div>
+                                <div className="adm-metric">
+                                    <div className="adm-metric-num">{spotsLeft}</div>
+                                    <div className="adm-metric-label">Spots Left</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Status Snapshot */}
+                        <div className="adm-card">
+                            <div className="adm-card-header">
+                                <div className="adm-card-title">Status Snapshot</div>
+                                <button className={`adm-copy-btn${copied ? ' copied' : ''}`} onClick={handleCopy}>{copied ? '✓ Copied' : 'Copy'}</button>
+                            </div>
+                            <div className="adm-snapshot-body">
+                                <div><strong>Teams Registered:</strong> {totalTeams} of {MAX_TEAMS} ({spotsLeft} spots left)</div>
+                                <div><strong>Submitted:</strong> {submittedTeams} teams ready to present</div>
+                                <div><strong>Registered:</strong> {registeredTeams} teams confirmed</div>
+                                <div><strong>Issues:</strong> {issueCount} teams need attention</div>
+                                <div><strong>Problem Tracks:</strong> {probRecords.length || 12}</div>
+                                <div><strong>Days to Kickoff:</strong> {daysToKickoff}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className="adm-placeholder">
+                    {adminTab === 'judging' ? '🏆 Judging tools — coming soon.' : '📤 Export tools — coming soon.'}
+                </div>
+            )}
+        </div>
+    );
+}
+
 // ─── APP ──────────────────────────────────────────────────────────────────────
 function App() {
     const base = useBase();
@@ -1106,6 +1442,7 @@ function App() {
     const hackDocs    = useRecords(docTable ?? subTable);  // fallback avoids null crash
 
     // ── UI State ─────────────────────────────────────────────────────────────
+    const [currentView,     setCurrentView]    = useState('portal');
     const [showReg,         setShowReg]        = useState(false);
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
@@ -1192,8 +1529,23 @@ function App() {
     const openModal = (screen = 0) => { setModalInitScreen(screen); setShowReg(true); };
 
     return (
+        <>
+        <style>{css}</style>
+        {currentView === 'admin' ? (
+            <AdminView
+                onBack={() => setCurrentView('portal')}
+                liveTeams={liveTeams}
+                subTable={subTable}
+                sfTeamName={sfTeamName}
+                sfStatus={sfStatus}
+                totalTeams={totalTeams}
+                submittedTeams={submittedTeams}
+                registeredTeams={registeredTeams}
+                spotsLeft={spotsLeft}
+                probRecords={probRecords}
+            />
+        ) : (
         <div className="portal">
-            <style>{css}</style>
 
             {/* ── STICKY NAV ── */}
             <nav className="nav">
@@ -1209,6 +1561,7 @@ function App() {
                 <div className="nav-right">
                     <span className="nav-countdown">Closes {countdown}</span>
                     <button className="nav-cta" onClick={() => openModal(0)}>Register Now →</button>
+                    <button className="nav-cta" style={{background:T.deep,color:'#fff',boxShadow:'none'}} onClick={() => setCurrentView('admin')}>Admin</button>
                 </div>
             </nav>
 
@@ -1612,6 +1965,8 @@ function App() {
                 />
             )}
         </div>
+        )}
+        </>
     );
 }
 
