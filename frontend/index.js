@@ -595,6 +595,9 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .tb-card-join-btn:hover:not(:disabled){background:#0B2C5F;transform:translateY(-1px);}
 .tb-card-join-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
 .tb-card-full{font-size:10px;color:#8BA5BF;font-weight:600;}
+.tb-leave-btn{background:none;color:#B91C1C;border:1px solid rgba(185,28,28,0.35);border-radius:5px;padding:3px 9px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.tb-leave-btn:hover:not(:disabled){background:#FEF2F2;border-color:#B91C1C;}
+.tb-leave-btn:disabled{opacity:0.4;cursor:not-allowed;}
 .tb-step1-gate{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:40px;text-align:center;font-size:14px;color:#5A7A9A;}
 .tb-page-nav{display:flex;align-items:center;justify-content:space-between;padding:4px 0;}
 .tb-page-arrow{background:none;border:1px solid rgba(0,113,206,0.22);border-radius:7px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#0071CE;transition:all 0.15s;flex-shrink:0;}
@@ -1606,6 +1609,9 @@ function RegistrationSection({
     const [teamPage,          setTeamPage]         = useState(0);
     const [captainLeaveChoice, setCaptainLeaveChoice] = useState(null); // null | 'reassign' | 'disband'
     const [reassignTo,         setReassignTo]          = useState('');
+    const [leaveConfirm,       setLeaveConfirm]        = useState(null); // null | teamRec
+    const [leaveSubmitting,    setLeaveSubmitting]      = useState(false);
+    const [leaveSuccess,       setLeaveSuccess]         = useState('');
     const [agentSearch,        setAgentSearch]         = useState('');
     const [teamSearch,         setTeamSearch]          = useState('');
     const [showCreateModal,    setShowCreateModal]     = useState(false);
@@ -1797,6 +1803,28 @@ function RegistrationSection({
             setJoinError(err?.message || 'Failed to join team. Please try again.');
         } finally {
             setJoinSubmitting(false);
+        }
+    }
+
+    // ── Step 2: Leave Team → back to free agent pool ─────────────────────────
+    async function handleLeaveTeam(teamRecord) {
+        if (!userDirId) return;
+        const membership = findUserOnTeam([teamRecord], userDirId);
+        if (!membership) return;
+        if (membership.isCaptain) { setLeaveConfirm(null); return; } // shouldn't reach here
+        setLeaveSubmitting(true);
+        try {
+            const slotField = subTable.getFieldIfExists(membership.slot);
+            if (slotField) await subTable.updateRecordAsync(teamRecord.id, { [slotField.id]: [] });
+            const faField = dirTable.getFieldIfExists('Free Agent Registration');
+            if (faField) await dirTable.updateRecordAsync(userDirId, { [faField.id]: true });
+            setLeaveConfirm(null);
+            setLeaveSuccess('✓ You\'ve left the team and returned to the free agent pool.');
+            setJoinSuccess('');
+        } catch (err) {
+            setLeaveConfirm(null);
+        } finally {
+            setLeaveSubmitting(false);
         }
     }
 
@@ -2139,7 +2167,18 @@ function RegistrationSection({
                                                     <div className="tb-card-footer">
                                                         <div className="tb-card-count">{filledCount}/5 · {openCount} open</div>
                                                         {isOnThisTeam ? (
-                                                            <span style={{fontSize:12,fontWeight:700,color:'#15803D'}}>You're here ✓</span>
+                                                            <div style={{display:'flex',alignItems:'center',gap:8}}>
+                                                                <span style={{fontSize:11,fontWeight:700,color:'#15803D'}}>You're here ✓</span>
+                                                                {!isCurrentCaptain && (
+                                                                    <button
+                                                                        className="tb-leave-btn"
+                                                                        disabled={leaveSubmitting}
+                                                                        onClick={() => setLeaveConfirm(leaveConfirm?.id === teamRec.id ? null : teamRec)}
+                                                                    >
+                                                                        Leave
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                         ) : openCount > 0 ? (
                                                             <button
                                                                 className="tb-card-join-btn"
@@ -2163,6 +2202,21 @@ function RegistrationSection({
                                                             <span className="tb-card-full">Full</span>
                                                         )}
                                                     </div>
+
+                                                    {/* Leave confirm — inline on this card */}
+                                                    {leaveConfirm?.id === teamRec.id && (
+                                                        <div className="tb-card-confirm" style={{background:'#FFF8E6',borderColor:'rgba(161,98,7,0.3)'}}>
+                                                            <div className="tb-card-confirm-text" style={{color:'#78500E'}}>
+                                                                Leave <strong>{tName}</strong> and return to the free agent pool?
+                                                            </div>
+                                                            <div className="confirm-btns">
+                                                                <button className="confirm-btn-yes" style={{background:'#B91C1C'}} disabled={leaveSubmitting} onClick={() => handleLeaveTeam(teamRec)}>
+                                                                    {leaveSubmitting ? <><span className="spinner"/> Leaving…</> : 'Leave Team'}
+                                                                </button>
+                                                                <button className="confirm-btn-no" onClick={() => setLeaveConfirm(null)}>Cancel</button>
+                                                            </div>
+                                                        </div>
+                                                    )}
 
                                                     {/* Inline confirm — appears on this card */}
                                                     {isConfirming && (
@@ -2200,6 +2254,7 @@ function RegistrationSection({
                         })()}
                         {joinError && !joinConfirmTeam && <div className="ferr" style={{marginTop:8}}>{joinError}</div>}
                         {joinSuccess && <div className="step-success" style={{marginTop:12}}><span>✓</span><div className="step-success-text">{joinSuccess}</div></div>}
+                        {leaveSuccess && <div className="step-success" style={{marginTop:12}}><span>✓</span><div className="step-success-text">{leaveSuccess}</div></div>}
                     </div>
                 </div>
 
