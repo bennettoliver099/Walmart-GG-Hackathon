@@ -642,6 +642,19 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .step-info{display:flex;align-items:flex-start;gap:10px;background:#EFF6FF;border:1px solid rgba(0,113,206,0.26);border-radius:8px;padding:14px 18px;margin-top:12px;}
 .step-info-text{font-size:13px;color:#1D4ED8;line-height:1.5;}
 
+/* ── SESSION PREFILL CARD ── */
+.session-prefill-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:rgba(0,113,206,0.06);border:1.5px solid rgba(0,113,206,0.2);border-radius:10px;margin-bottom:4px;}
+.session-prefill-info{display:flex;flex-direction:column;gap:2px;}
+.session-prefill-label{font-size:11px;font-weight:600;color:#0071CE;text-transform:uppercase;letter-spacing:0.05em;}
+.session-prefill-name{font-size:15px;font-weight:700;color:#0B2C5F;}
+.session-prefill-email{font-size:12px;color:#5A7A9A;}
+.not-you-btn{flex-shrink:0;font-size:12px;font-weight:600;color:#5A7A9A;background:transparent;border:1.5px solid rgba(90,122,154,0.3);border-radius:6px;padding:6px 12px;cursor:pointer;transition:border-color 0.15s,color 0.15s;}
+.not-you-btn:hover{color:#0071CE;border-color:#0071CE;}
+
+/* ── SIGN UP PROMPT (not in directory) ── */
+.signup-prompt{display:flex;align-items:center;gap:16px;padding:14px 16px;background:rgba(255,194,32,0.08);border:1.5px solid rgba(255,194,32,0.3);border-radius:10px;margin-bottom:4px;}
+.signup-prompt-text{flex:1;font-size:14px;color:#5A7A9A;}
+
 /* ── FREE AGENT NOTE ── */
 .free-agent-note{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:8px;padding:12px 16px;font-size:12px;color:#5A7A9A;line-height:1.65;margin-top:16px;margin-bottom:24px;}
 .free-agent-note strong{color:#0B2C5F;}
@@ -1591,6 +1604,7 @@ function RegistrationSection({
 }) {
     // ── Step 1 state ──────────────────────────────────────────────────────────
     const [selfSelected,    setSelfSelected]   = useState(null);
+    const [sessionPrefilled, setSessionPrefilled] = useState(false);
     const [agreed,          setAgreed]         = useState(false);
     const [tshirtSize,      setTshirtSize]     = useState('');
     const [step1Submitting, setStep1Submitting]= useState(false);
@@ -1673,6 +1687,20 @@ function RegistrationSection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dirRecords.length, liveTeams.length, sessionEmail]);
 
+    // ── Prefill Step 1 from session-matched directory record ──────────────────
+    useEffect(() => {
+        if (step1Done || !sessionUserRec) return;
+        if (selfSelected?.id === sessionUserRec.id) return;
+        const name  = safeGetCellValueAsString(sessionUserRec, 'Full Name')
+                   || safeGetCellValueAsString(sessionUserRec, 'First Name');
+        const email = safeGetCellValueAsString(sessionUserRec, 'Work Email');
+        const prefill = { id: sessionUserRec.id, name, email };
+        setSelfSelected(prefill);
+        checkDuplicate(prefill);
+        setSessionPrefilled(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sessionUserRec, step1Done]);
+
     // ── Check if selected person is already registered ────────────────────────
     function checkDuplicate(selected) {
         if (!selected) { setDuplicateStatus(null); return; }
@@ -1700,6 +1728,12 @@ function RegistrationSection({
     function handleSelfSelect(val) {
         setSelfSelected(val);
         checkDuplicate(val);
+    }
+
+    function handleNotYou() {
+        setSelfSelected(null);
+        setDuplicateStatus(null);
+        setSessionPrefilled(false);
     }
 
     // ── Step 1 submit ─────────────────────────────────────────────────────────
@@ -2023,15 +2057,38 @@ function RegistrationSection({
                     </div>
                 ) : (
                     <>
-                        <MemberSearch
-                            label="Associate Directory"
-                            dirRecords={dirRecords}
-                            nameField={dfName}
-                            emailField={dfEmail}
-                            selected={selfSelected}
-                            onSelect={handleSelfSelect}
-                            onNoResults={setNoDirectoryMatch}
-                        />
+                        {sessionPrefilled ? (
+                            <div className="session-prefill-card">
+                                <div className="session-prefill-info">
+                                    <div className="session-prefill-label">We found you in the directory</div>
+                                    <div className="session-prefill-name">{selfSelected?.name}</div>
+                                    <div className="session-prefill-email">{selfSelected?.email}</div>
+                                </div>
+                                <button className="not-you-btn" onClick={handleNotYou}>Not You?</button>
+                            </div>
+                        ) : sessionEmail && dirRecords.length > 0 && !sessionUserRec ? (
+                            <div className="signup-prompt">
+                                <div className="signup-prompt-text">You're not in the Walmart Associate Directory yet.</div>
+                                <button className="btn-primary" onClick={() => setShowAddSelf(true)}>Sign Up →</button>
+                            </div>
+                        ) : (
+                            <>
+                                <MemberSearch
+                                    label="Associate Directory"
+                                    dirRecords={dirRecords}
+                                    nameField={dfName}
+                                    emailField={dfEmail}
+                                    selected={selfSelected}
+                                    onSelect={handleSelfSelect}
+                                    onNoResults={setNoDirectoryMatch}
+                                />
+                                <div style={{marginTop:12}} className={noDirectoryMatch ? 'add-self-highlight' : ''}>
+                                    <button className={`hub-card-link${noDirectoryMatch ? ' add-self-link-alert' : ''}`} onClick={() => setShowAddSelf(true)}>
+                                        {noDirectoryMatch ? '⚠ Not found — ' : ''}Can't find your name? Add yourself to the directory →
+                                    </button>
+                                </div>
+                            </>
+                        )}
 
                         {duplicateStatus === 'on-team' && (
                             <div className="step-warn">
@@ -2045,12 +2102,6 @@ function RegistrationSection({
                                 <div className="step-info-text">You're already registered and in the free agent pool. Scroll down to Step 2 to join or create a team.</div>
                             </div>
                         )}
-
-                        <div style={{marginTop:12}} className={noDirectoryMatch ? 'add-self-highlight' : ''}>
-                            <button className={`hub-card-link${noDirectoryMatch ? ' add-self-link-alert' : ''}`} onClick={() => setShowAddSelf(true)}>
-                                {noDirectoryMatch ? '⚠ Not found — ' : ''}Can't find your name? Add yourself to the directory →
-                            </button>
-                        </div>
 
                         <div className="fr" style={{marginTop:16}}>
                             <label className="form-label">T-Shirt Size<span className="req">*</span></label>
