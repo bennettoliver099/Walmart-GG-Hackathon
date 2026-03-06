@@ -1852,38 +1852,37 @@ function RegistrationSection({
         setJoinSubmitting(true);
         setJoinError('');
         try {
-            // Check if already on a team → need to leave first
-            const existing = findUserOnTeam(liveTeams, userDirId);
-            if (existing) {
-                if (!existing.isCaptain) {
-                    // Simple removal
-                    const oldField = subTable.getFieldIfExists(existing.slot);
-                    if (oldField) {
-                        await subTable.updateRecordAsync(existing.team.id, { [oldField.id]: [] });
-                    }
-                }
-                // If captain, the UI should have prevented this path — skip for safety
-            }
-            // Find first empty slot
             const slots = ['Team Member # 2', 'Team Member # 3', 'Team Member # 4', 'Team Member # 5'];
-            let placed = false;
+
+            // Find an open slot in the target team FIRST — before touching old team
+            let targetSlotName = null;
+            let targetField = null;
             for (const slotName of slots) {
                 const val = safeGetCellValue(teamRecord, slotName);
                 if (!val || (Array.isArray(val) && val.length === 0)) {
                     const f = subTable.getFieldIfExists(slotName);
-                    if (f) {
-                        await subTable.updateRecordAsync(teamRecord.id, { [f.id]: [{ id: userDirId }] });
-                        placed = true;
-                        break;
-                    }
+                    if (f) { targetSlotName = slotName; targetField = f; break; }
                 }
             }
-            if (!placed) { setJoinError('This team is full.'); return; }
-            // Remove from free agent pool
+            if (!targetField) { setJoinError('This team is full.'); return; }
+
+            // Remove from current team if switching (non-captain only)
+            const existing = findUserOnTeam(liveTeams, userDirId);
+            if (existing && !existing.isCaptain) {
+                const oldField = subTable.getFieldIfExists(existing.slot);
+                if (oldField) await subTable.updateRecordAsync(existing.team.id, { [oldField.id]: [] });
+            }
+
+            // Place on new team
+            await subTable.updateRecordAsync(teamRecord.id, { [targetField.id]: [{ id: userDirId }] });
+
+            // Ensure not in free agent pool
             const faField = dirTable.getFieldIfExists('Free Agent Registration');
             if (faField) await dirTable.updateRecordAsync(userDirId, { [faField.id]: false });
+
             const tName = safeGetCellValueAsString(teamRecord, 'Team Name');
             setJoinSuccess(`✓ You've joined ${tName}! You can see your team in the Active Participants list below.`);
+            setLeaveSuccess('');
             setJoinConfirmTeam(null);
         } catch (err) {
             setJoinError(err?.message || 'Failed to join team. Please try again.');
