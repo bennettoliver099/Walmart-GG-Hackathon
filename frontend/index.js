@@ -145,11 +145,11 @@ section[id]{scroll-margin-top:70px;}
 .sec-sub-white{color:rgba(255,255,255,0.72);}
 
 /* ── HERO ── */
-.hero{background:${T.heroGrad};padding:88px 56px 88px;position:relative;overflow:hidden;}
+.hero{background:${T.heroGrad};padding:88px 48px 88px;position:relative;overflow:hidden;min-height:420px;}
 .hero::after{content:'';position:absolute;top:-40%;right:-8%;width:55%;height:180%;background:radial-gradient(ellipse,rgba(44,142,244,0.18),transparent 65%);pointer-events:none;}
-.hero-inner{max-width:1160px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.hero-inner{width:100%;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
 .hero-left{min-width:0;}
-.hero-right{display:grid;place-items:center;margin:0 auto;}.hero-right>*{grid-area:1/1;}
+.hero-right{display:grid;place-items:center;min-width:0;}.hero-right>*{grid-area:1/1;}
 .hero-orbital{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center;}
 .orb-ring{position:absolute;border-radius:50%;}
 .orb-r1{width:300px;height:300px;border:1px dashed rgba(255,255,255,0.15);animation:lpspin 32s linear infinite;}
