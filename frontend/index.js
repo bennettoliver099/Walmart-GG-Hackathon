@@ -512,22 +512,29 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 /* ── STEP CONTENT BLOCKS ── */
 .step-block{margin-bottom:28px;}
 .step-block-header{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5A7A9A;margin-bottom:10px;}
-.step-card{background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:20px 22px 18px;box-shadow:0 1px 3px rgba(11,44,95,0.08);}
+.step-card{background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:28px 32px 24px;box-shadow:0 1px 3px rgba(11,44,95,0.08);}
 .step-card-title{font-size:15px;font-weight:800;color:#0B2C5F;margin-bottom:6px;}
 .step-card-sub{font-size:12px;color:#5A7A9A;line-height:1.6;margin-bottom:14px;}
 /* ── STEP 1 HERO CARD ── */
-.step-card-hero{background:${T.heroGrad};border:none;color:white;}
-.step-card-hero .step-card-title{color:white;font-size:14px;}
-.step-card-hero .step-card-sub{color:rgba(255,255,255,0.7);font-size:11px;}
-.step-card-hero .form-label{color:rgba(255,255,255,0.85);font-size:11px;}
+.step-card-hero{background:${T.heroGrad};border:none;color:white;padding:28px 32px 24px;}
+.step-card-hero .step-card-title{color:white;font-size:16px;font-weight:800;margin-bottom:4px;}
+.step-card-hero .step-card-sub{color:rgba(255,255,255,0.75);font-size:12px;line-height:1.7;margin-bottom:20px;}
+.step-card-hero .form-label{color:white;font-size:13px;font-weight:700;margin-bottom:6px;}
 .step-card-hero .req{color:${T.yellow};}
-.step-card-hero .fi{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);color:white;}
-.step-card-hero .fi::placeholder{color:rgba(255,255,255,0.4);}
-.step-card-hero .fi:focus{border-color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.18);}
-.step-card-hero .ck-label{color:rgba(255,255,255,0.85);font-size:11px;}
-.step-card-hero .ck-label a{color:${T.yellow};}
-.step-card-hero .btn-primary{background:${T.yellow};color:${T.deep};}
-.step-card-hero .hub-card-link{color:${T.yellow};font-size:11px;}
+.step-card-hero .fi{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2);color:white;border-radius:8px;padding:12px 14px;font-size:13px;}
+.step-card-hero .fi::placeholder{color:rgba(255,255,255,0.45);}
+.step-card-hero .fi:focus{border-color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.2);box-shadow:0 0 0 3px rgba(255,255,255,0.08);}
+.step-card-hero select.fi{appearance:auto;-webkit-appearance:auto;cursor:pointer;}
+.step-card-hero select.fi option{background:${T.deep};color:white;}
+.step-card-hero .ck-row input[type="checkbox"]{width:18px;height:18px;accent-color:${T.yellow};border-radius:4px;}
+.step-card-hero .ck-label{color:rgba(255,255,255,0.9);font-size:12px;}
+.step-card-hero .ck-label a{color:${T.yellow};font-weight:600;}
+.step-card-hero .btn-primary{background:${T.yellow};color:${T.deep};padding:12px 28px;font-size:14px;font-weight:700;border-radius:24px;box-shadow:0 4px 12px rgba(255,194,32,0.35);}
+.step-card-hero .btn-primary:hover{background:#FFD050;transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,194,32,0.4);}
+.step-card-hero .hub-card-link{color:${T.yellow};font-size:12px;font-weight:600;opacity:0.85;transition:opacity 0.2s;}
+.step-card-hero .hub-card-link:hover{opacity:1;}
+.step-card-hero .fr{margin-bottom:16px;}
+.step-card-hero .fr:last-child{margin-bottom:0;}
 .step-card-hero .step-success{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);}
 .step-card-hero .step-success-text{color:white;}
 .step-card-hero .step-warn{background:rgba(255,194,32,0.15);border-color:rgba(255,194,32,0.3);}
@@ -2012,7 +2019,7 @@ function RegistrationSection({
                 ) : (
                     <>
                         <MemberSearch
-                            label="Find Yourself in the Directory"
+                            label="Associate Directory"
                             dirRecords={dirRecords}
                             nameField={dfName}
                             emailField={dfEmail}
@@ -2040,16 +2047,14 @@ function RegistrationSection({
                             </button>
                         </div>
 
-                        <div className="fr" style={{marginTop:12}}>
+                        <div className="fr" style={{marginTop:16}}>
                             <label className="form-label">T-Shirt Size<span className="req">*</span></label>
-                            <div className="radio-group" style={{marginTop:6,flexWrap:'wrap'}}>
+                            <select className="fi hero-select" value={tshirtSize} onChange={e => setTshirtSize(e.target.value)}>
+                                <option value="">Select Size...</option>
                                 {['XXS','XS','S','M','L','XL','XXL','XXXL','XXXXL'].map(size => (
-                                    <div className="rp" key={size}>
-                                        <input type="radio" id={`ts-${size}`} name="tshirtSize" value={size} checked={tshirtSize === size} onChange={() => setTshirtSize(size)} autoComplete="off" />
-                                        <label htmlFor={`ts-${size}`}>{size}</label>
-                                    </div>
+                                    <option key={size} value={size}>{size}</option>
                                 ))}
-                            </div>
+                            </select>
                         </div>
 
                         <div className="fr" style={{marginTop:16}}>
@@ -2063,14 +2068,15 @@ function RegistrationSection({
 
                         {step1Error && <div className="submit-err" style={{marginTop:8}}>{step1Error}</div>}
 
-                        <button
-                            className="btn-primary"
-                            style={{marginTop:16}}
-                            disabled={step1Submitting || duplicateStatus !== null}
-                            onClick={handleStep1Submit}
-                        >
-                            {step1Submitting ? <><span className="spinner"/> Registering…</> : 'Register as Participant →'}
-                        </button>
+                        <div style={{display:'flex',justifyContent:'flex-end',marginTop:20}}>
+                            <button
+                                className="btn-primary"
+                                disabled={step1Submitting || duplicateStatus !== null}
+                                onClick={handleStep1Submit}
+                            >
+                                {step1Submitting ? <><span className="spinner"/> Registering…</> : 'Register as Participant →'}
+                            </button>
+                        </div>
                     </>
                 )}
             </div>
