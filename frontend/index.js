@@ -1612,8 +1612,10 @@ function RegistrationSection({
     const [createSuccess,     setCreateSuccess]    = useState('');
     const [hideFullTeams,     setHideFullTeams]    = useState(false);
     const [teamPage,          setTeamPage]         = useState(0);
-    const [captainLeaveChoice, setCaptainLeaveChoice] = useState(null); // null | 'reassign' | 'disband'
-    const [reassignTo,         setReassignTo]          = useState('');
+    const [captainPanel,           setCaptainPanel]           = useState(null); // null | teamRec
+    const [captainReassignSlot,    setCaptainReassignSlot]    = useState('');   // slot field name
+    const [captainActionSubmitting, setCaptainActionSubmitting] = useState(false);
+    const [captainActionError,     setCaptainActionError]     = useState('');
     const [leaveConfirm,       setLeaveConfirm]        = useState(null); // null | teamRec
     const [leaveSubmitting,    setLeaveSubmitting]      = useState(false);
     const [leaveSuccess,       setLeaveSuccess]         = useState('');
@@ -1848,6 +1850,76 @@ function RegistrationSection({
             setLeaveConfirm(null);
         } finally {
             setLeaveSubmitting(false);
+        }
+    }
+
+    // ── Step 2: Captain Reassigns Captainship + Leaves ───────────────────────
+    async function handleCaptainReassignAndLeave(teamRecord, newCaptainSlot) {
+        if (!userDirId || !newCaptainSlot) return;
+        setCaptainActionSubmitting(true);
+        setCaptainActionError('');
+        try {
+            // Race-condition guard: verify selected slot is still filled
+            const freshTeam = liveTeams.find(t => t.id === teamRecord.id);
+            if (!freshTeam) { setCaptainActionError('Team no longer exists.'); return; }
+            const slotVal = safeGetCellValue(freshTeam, newCaptainSlot);
+            if (!Array.isArray(slotVal) || slotVal.length === 0) {
+                setCaptainActionError('That teammate has already left. Please select another.');
+                return;
+            }
+            const newCaptainId = slotVal[0].id;
+            // Overwrite slot 1 with new captain, clear their old slot — one update
+            const f1   = subTable.getFieldIfExists('Team Member # 1 (Captain)');
+            const fOld = subTable.getFieldIfExists(newCaptainSlot);
+            if (f1 && fOld) {
+                await subTable.updateRecordAsync(teamRecord.id, {
+                    [f1.id]:   [{ id: newCaptainId }],
+                    [fOld.id]: [],
+                });
+            }
+            // Return departing captain to free agent pool
+            const faField = dirTable.getFieldIfExists('Free Agent Registration');
+            if (faField) await dirTable.updateRecordAsync(userDirId, { [faField.id]: true });
+            setCaptainPanel(null);
+            setCaptainReassignSlot('');
+            setLeaveSuccess('✓ Captainship transferred. You\'ve returned to the free agent pool.');
+            setJoinSuccess('');
+        } catch (err) {
+            setCaptainActionError(err?.message || 'Something went wrong. Please try again.');
+        } finally {
+            setCaptainActionSubmitting(false);
+        }
+    }
+
+    // ── Step 2: Captain Deletes Solo Team + Leaves ───────────────────────────
+    async function handleDeleteTeam(teamRecord) {
+        if (!userDirId) return;
+        setCaptainActionSubmitting(true);
+        setCaptainActionError('');
+        try {
+            if (typeof subTable.deleteRecordAsync === 'function') {
+                await subTable.deleteRecordAsync(teamRecord.id);
+            } else {
+                // Fallback: clear all slots + mark Disbanded
+                const updates = {};
+                const slotNames = ['Team Member # 1 (Captain)', 'Team Member # 2', 'Team Member # 3', 'Team Member # 4', 'Team Member # 5'];
+                for (const s of slotNames) {
+                    const f = subTable.getFieldIfExists(s);
+                    if (f) updates[f.id] = [];
+                }
+                const statusF = subTable.getFieldIfExists('Submission Status');
+                if (statusF) updates[statusF.id] = { name: 'Disbanded' };
+                await subTable.updateRecordAsync(teamRecord.id, updates);
+            }
+            const faField = dirTable.getFieldIfExists('Free Agent Registration');
+            if (faField) await dirTable.updateRecordAsync(userDirId, { [faField.id]: true });
+            setCaptainPanel(null);
+            setLeaveSuccess('✓ Team deleted. You\'ve returned to the free agent pool.');
+            setJoinSuccess('');
+        } catch (err) {
+            setCaptainActionError(err?.message || 'Failed to delete team. Please try again.');
+        } finally {
+            setCaptainActionSubmitting(false);
         }
     }
 
@@ -2152,7 +2224,9 @@ function RegistrationSection({
                                                 return { label, field, isCaptain, filled, memberName: filled ? link[0].name : null };
                                             });
                                             const openCount = 5 - filledCount;
-                                            const isOnThisTeam = userDirId ? findUserOnTeam([teamRec], userDirId) !== null : false;
+                                            const membershipOnThisTeam = userDirId ? findUserOnTeam([teamRec], userDirId) : null;
+                                            const isOnThisTeam = membershipOnThisTeam !== null;
+                                            const isCaptainOfThisTeam = membershipOnThisTeam?.isCaptain ?? false;
                                             const isCurrentCaptain = currentMembership && currentMembership.isCaptain;
                                             const isConfirming = joinConfirmTeam?.id === teamRec.id;
                                             const statusColor = status === 'Registered' ? '#15803D' : status === 'Pending' ? '#A16207' : '#1D4ED8';
@@ -2194,8 +2268,19 @@ function RegistrationSection({
                                                                 <span style={{fontSize:11,fontWeight:700,color:'#15803D'}}>You're here ✓</span>
                                                                 <button
                                                                     className="tb-leave-btn"
-                                                                    disabled={leaveSubmitting}
-                                                                    onClick={() => setLeaveConfirm(leaveConfirm?.id === teamRec.id ? null : teamRec)}
+                                                                    disabled={leaveSubmitting || captainActionSubmitting}
+                                                                    onClick={() => {
+                                                                        if (isCaptainOfThisTeam) {
+                                                                            const isOpen = captainPanel?.id === teamRec.id;
+                                                                            setCaptainPanel(isOpen ? null : teamRec);
+                                                                            setCaptainReassignSlot('');
+                                                                            setCaptainActionError('');
+                                                                            setLeaveConfirm(null);
+                                                                        } else {
+                                                                            setLeaveConfirm(leaveConfirm?.id === teamRec.id ? null : teamRec);
+                                                                            setCaptainPanel(null);
+                                                                        }
+                                                                    }}
                                                                 >
                                                                     Leave
                                                                 </button>
@@ -2203,10 +2288,9 @@ function RegistrationSection({
                                                         ) : openCount > 0 ? (
                                                             <button
                                                                 className="tb-card-join-btn"
-                                                                disabled={joinSubmitting || !!isCurrentCaptain}
+                                                                disabled={joinSubmitting}
                                                                 style={isConfirming ? {background:'#0B2C5F'} : {}}
                                                                 onClick={() => {
-                                                                    if (isCurrentCaptain) { setJoinError('Assign a new captain before joining another team.'); return; }
                                                                     setJoinConfirmTeam(isConfirming ? null : teamRec);
                                                                     setJoinError('');
                                                                     if (!isConfirming) {
@@ -2224,7 +2308,70 @@ function RegistrationSection({
                                                         )}
                                                     </div>
 
-                                                    {/* Leave confirm — inline on this card */}
+                                                    {/* Captain management panel */}
+                                                    {captainPanel?.id === teamRec.id && (() => {
+                                                        const teammates = slots
+                                                            .filter(s => !s.isCaptain && s.filled)
+                                                            .map(s => ({ slot: s.field, name: s.memberName }));
+                                                        const hasTeammates = teammates.length > 0;
+                                                        return (
+                                                            <div className="tb-card-confirm" style={{background:'#FFF8E6',borderColor:'rgba(161,98,7,0.3)'}}>
+                                                                {hasTeammates ? (
+                                                                    <>
+                                                                        <div className="tb-card-confirm-text" style={{color:'#78500E',marginBottom:10}}>
+                                                                            <strong>You're the team captain.</strong> Transfer captainship to a teammate before leaving.
+                                                                        </div>
+                                                                        <div style={{display:'flex',flexDirection:'column',gap:6,marginBottom:10}}>
+                                                                            {teammates.map(({ slot, name }) => (
+                                                                                <label key={slot} style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',fontSize:12,color:'#78500E'}}>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name={`reassign-${teamRec.id}`}
+                                                                                        value={slot}
+                                                                                        checked={captainReassignSlot === slot}
+                                                                                        onChange={() => setCaptainReassignSlot(slot)}
+                                                                                    />
+                                                                                    {name}
+                                                                                </label>
+                                                                            ))}
+                                                                        </div>
+                                                                        {captainActionError && <div className="ferr" style={{marginBottom:8}}>{captainActionError}</div>}
+                                                                        <div className="confirm-btns">
+                                                                            <button
+                                                                                className="confirm-btn-yes"
+                                                                                style={{background: captainReassignSlot ? '#B91C1C' : '#9CA3AF'}}
+                                                                                disabled={!captainReassignSlot || captainActionSubmitting}
+                                                                                onClick={() => handleCaptainReassignAndLeave(teamRec, captainReassignSlot)}
+                                                                            >
+                                                                                {captainActionSubmitting ? <><span className="spinner"/> Transferring…</> : 'Transfer & Leave'}
+                                                                            </button>
+                                                                            <button className="confirm-btn-no" onClick={() => { setCaptainPanel(null); setCaptainReassignSlot(''); setCaptainActionError(''); }}>Cancel</button>
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className="tb-card-confirm-text" style={{color:'#78500E',marginBottom:8}}>
+                                                                            <strong>You're the only member.</strong> Leaving will permanently delete this team.
+                                                                        </div>
+                                                                        {captainActionError && <div className="ferr" style={{marginBottom:8}}>{captainActionError}</div>}
+                                                                        <div className="confirm-btns">
+                                                                            <button
+                                                                                className="confirm-btn-yes"
+                                                                                style={{background:'#B91C1C'}}
+                                                                                disabled={captainActionSubmitting}
+                                                                                onClick={() => handleDeleteTeam(teamRec)}
+                                                                            >
+                                                                                {captainActionSubmitting ? <><span className="spinner"/> Deleting…</> : 'Delete Team & Leave'}
+                                                                            </button>
+                                                                            <button className="confirm-btn-no" onClick={() => { setCaptainPanel(null); setCaptainActionError(''); }}>Cancel</button>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })()}
+
+                                                    {/* Non-captain leave confirm */}
                                                     {leaveConfirm?.id === teamRec.id && (
                                                         <div className="tb-card-confirm" style={{background:'#FFF8E6',borderColor:'rgba(161,98,7,0.3)'}}>
                                                             <div className="tb-card-confirm-text" style={{color:'#78500E'}}>
@@ -2239,22 +2386,35 @@ function RegistrationSection({
                                                         </div>
                                                     )}
 
-                                                    {/* Inline confirm — appears on this card */}
+                                                    {/* Join / Switch confirm */}
                                                     {isConfirming && (
                                                         <div className="tb-card-confirm">
-                                                            <div className="tb-card-confirm-text">
-                                                                {currentMembership
-                                                                    ? <>Leave <strong>{currentMembership.teamName}</strong> and join <strong>{tName}</strong>?</>
-                                                                    : <>Join <strong>{tName}</strong>? You'll be added as a member.</>
-                                                                }
-                                                            </div>
-                                                            {joinError && <div className="ferr" style={{marginBottom:8}}>{joinError}</div>}
-                                                            <div className="confirm-btns">
-                                                                <button className="confirm-btn-yes" disabled={joinSubmitting} onClick={() => handleJoinTeam(teamRec)}>
-                                                                    {joinSubmitting ? <><span className="spinner"/> Joining…</> : 'Confirm'}
-                                                                </button>
-                                                                <button className="confirm-btn-no" onClick={() => { setJoinConfirmTeam(null); setJoinError(''); }}>Cancel</button>
-                                                            </div>
+                                                            {isCurrentCaptain ? (
+                                                                <>
+                                                                    <div className="tb-card-confirm-text">
+                                                                        To join another team, first use the <strong>Leave</strong> button on your current team to transfer captainship or delete the team.
+                                                                    </div>
+                                                                    <div className="confirm-btns">
+                                                                        <button className="confirm-btn-no" onClick={() => { setJoinConfirmTeam(null); setJoinError(''); }}>Got it</button>
+                                                                    </div>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <div className="tb-card-confirm-text">
+                                                                        {currentMembership
+                                                                            ? <>Leave <strong>{currentMembership.teamName}</strong> and join <strong>{tName}</strong>?</>
+                                                                            : <>Join <strong>{tName}</strong>? You'll be added as a member.</>
+                                                                        }
+                                                                    </div>
+                                                                    {joinError && <div className="ferr" style={{marginBottom:8}}>{joinError}</div>}
+                                                                    <div className="confirm-btns">
+                                                                        <button className="confirm-btn-yes" disabled={joinSubmitting} onClick={() => handleJoinTeam(teamRec)}>
+                                                                            {joinSubmitting ? <><span className="spinner"/> Joining…</> : 'Confirm'}
+                                                                        </button>
+                                                                        <button className="confirm-btn-no" onClick={() => { setJoinConfirmTeam(null); setJoinError(''); }}>Cancel</button>
+                                                                    </div>
+                                                                </>
+                                                            )}
                                                         </div>
                                                     )}
                                                 </div>
