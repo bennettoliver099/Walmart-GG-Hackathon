@@ -771,6 +771,8 @@ function MemberSearch({ label, optional, dirRecords, nameField, emailField, sele
             {optional && <div className="fh">Optional — teams can have 3–5 members total.</div>}
             <div className="ms-wrap">
                 <input className="fi" placeholder="Search by name or email…"
+                    autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                    spellCheck={false} data-lpignore="true" data-form-type="other"
                     value={query}
                     onChange={e => { setQuery(e.target.value); setOpen(true); }}
                     onFocus={() => setOpen(true)}
@@ -1879,16 +1881,16 @@ function RegistrationSection({
                                         <div className="fr-2">
                                             <div className="fr">
                                                 <label className="form-label">First Name<span className="req">*</span></label>
-                                                <input className="fi" placeholder="First" value={addFirstName} onChange={e => setAddFirstName(e.target.value)} />
+                                                <input className="fi" placeholder="First" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" value={addFirstName} onChange={e => setAddFirstName(e.target.value)} />
                                             </div>
                                             <div className="fr">
                                                 <label className="form-label">Last Name<span className="req">*</span></label>
-                                                <input className="fi" placeholder="Last" value={addLastName} onChange={e => setAddLastName(e.target.value)} />
+                                                <input className="fi" placeholder="Last" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" value={addLastName} onChange={e => setAddLastName(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="fr">
                                             <label className="form-label">Work Email<span className="req">*</span></label>
-                                            <input className="fi" type="email" placeholder="you@walmart.com" value={addEmail} onChange={e => setAddEmail(e.target.value)} />
+                                            <input className="fi" type="email" placeholder="you@walmart.com" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" value={addEmail} onChange={e => setAddEmail(e.target.value)} />
                                         </div>
                                         <div className="fr">
                                             <label className="form-label">Associate Type<span className="req">*</span></label>
@@ -1962,6 +1964,8 @@ function RegistrationSection({
                             <input
                                 className="tb-search-input"
                                 placeholder="Search free agents..."
+                                autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                spellCheck={false} data-lpignore="true" data-form-type="other"
                                 value={agentSearch}
                                 onChange={e => setAgentSearch(e.target.value)}
                             />
@@ -2016,6 +2020,8 @@ function RegistrationSection({
                                     <input
                                         className="tb-search-input"
                                         placeholder="Search teams or members..."
+                                        autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                        spellCheck={false} data-lpignore="true" data-form-type="other"
                                         value={teamSearch}
                                         onChange={e => { setTeamSearch(e.target.value); setTeamPage(0); }}
                                     />
@@ -2228,6 +2234,8 @@ function RegistrationSection({
                             <input
                                 className="fi"
                                 placeholder="e.g. The Compliance Crushers"
+                                autoComplete="off" autoCorrect="off" autoCapitalize="off"
+                                spellCheck={false} data-lpignore="true" data-form-type="other"
                                 value={createName}
                                 onChange={e => setCreateName(e.target.value)}
                                 onKeyDown={e => { if (e.key === 'Enter' && createName.trim() && !createSubmitting) handleCreateTeam().then(() => { if (!createError) setShowCreateModal(false); }); }}
