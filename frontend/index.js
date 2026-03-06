@@ -1650,20 +1650,11 @@ function RegistrationSection({
             ) ?? null;
         }
 
-        // 2. Fall back to cached localStorage record ID only when session email yields nothing
-        if (!rec && selfRegistered?.id) {
-            const cached = dirRecords.find(r => r.id === selfRegistered.id) ?? null;
-            if (cached && sessionEmail) {
-                // Discard cache if its email doesn't match the active session
-                const cachedEmail = safeGetCellValueAsString(cached, 'Work Email').toLowerCase().trim();
-                if (cachedEmail !== sessionEmail) { setSelfRegistered(null); }
-                else { rec = cached; }
-            } else if (cached) {
-                rec = cached; // no session email available — trust the cache
-            }
+        if (!rec) {
+            // No session match — clear any in-session identity and show Step 1 form
+            if (selfRegistered?.id) setSelfRegistered(null);
+            return;
         }
-
-        if (!rec) return;
 
         const confirmed   = safeGetCellValue(rec, 'Confirmed');
         const isFreeAgent = safeGetCellValue(rec, 'Free Agent Registration');
@@ -2814,9 +2805,7 @@ function App() {
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
     const [hubDocModal,     setHubDocModal]    = useState(null); // null | 'rules'|'prizes'|'reginfo'|'faqs'
-    const [selfRegistered,  setSelfRegistered] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('gg_reg_user')) || null; } catch { return null; }
-    });
+    const [selfRegistered,  setSelfRegistered] = useState(null);
     const [step1Complete,   setStep1Complete]  = useState(false);
     const [showRubric,      setShowRubric]     = useState(false);
     const [productModal,    setProductModal]   = useState(null);
@@ -2846,17 +2835,12 @@ function App() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Persist selfRegistered across sessions
+    // One-time cleanup: remove all stale localStorage identity keys
     useEffect(() => {
         try {
-            if (selfRegistered) localStorage.setItem('gg_reg_user', JSON.stringify(selfRegistered));
-            else localStorage.removeItem('gg_reg_user');
+            localStorage.removeItem('gg_hackathon_user');
+            localStorage.removeItem('gg_reg_user');
         } catch {}
-    }, [selfRegistered]);
-
-    // One-time cleanup: remove any stale localStorage from previous version
-    useEffect(() => {
-        try { localStorage.removeItem('gg_hackathon_user'); } catch {}
     }, []);
 
     // ── Field detection: submissions ─────────────────────────────────────────
