@@ -1854,29 +1854,30 @@ function RegistrationSection({
         try {
             const slots = ['Team Member # 2', 'Team Member # 3', 'Team Member # 4', 'Team Member # 5'];
 
-            // Find an open slot in the target team FIRST — before touching old team
-            let targetSlotName = null;
+            // Snapshot current membership BEFORE any writes — used for old-team removal
+            const existing = findUserOnTeam(liveTeams, userDirId);
+
+            // Confirm target team has an open slot
             let targetField = null;
             for (const slotName of slots) {
                 const val = safeGetCellValue(teamRecord, slotName);
                 if (!val || (Array.isArray(val) && val.length === 0)) {
                     const f = subTable.getFieldIfExists(slotName);
-                    if (f) { targetSlotName = slotName; targetField = f; break; }
+                    if (f) { targetField = f; break; }
                 }
             }
             if (!targetField) { setJoinError('This team is full.'); return; }
 
-            // Remove from current team if switching (non-captain only)
-            const existing = findUserOnTeam(liveTeams, userDirId);
+            // 1. JOIN new team first — user is never momentarily on zero teams
+            await subTable.updateRecordAsync(teamRecord.id, { [targetField.id]: [{ id: userDirId }] });
+
+            // 2. Clear old slot (non-captain switch only), using pre-write snapshot
             if (existing && !existing.isCaptain) {
                 const oldField = subTable.getFieldIfExists(existing.slot);
                 if (oldField) await subTable.updateRecordAsync(existing.team.id, { [oldField.id]: [] });
             }
 
-            // Place on new team
-            await subTable.updateRecordAsync(teamRecord.id, { [targetField.id]: [{ id: userDirId }] });
-
-            // Ensure not in free agent pool
+            // 3. Ensure FA = false
             const faField = dirTable.getFieldIfExists('Free Agent Registration');
             if (faField) await dirTable.updateRecordAsync(userDirId, { [faField.id]: false });
 
