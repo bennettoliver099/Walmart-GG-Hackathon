@@ -250,8 +250,11 @@ section[id]{scroll-margin-top:70px;}
 
 /* ── LEARNING HUB CARDS ── */
 .hub-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.hub-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:28px 24px;display:flex;flex-direction:column;transition:box-shadow 0.18s,border-color 0.18s;}
-.hub-card:hover{box-shadow:${T.shadowM};border-color:${T.border2};}
+.hub-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:28px 24px;display:flex;flex-direction:column;transition:box-shadow 0.18s,border-color 0.18s;cursor:pointer;}
+.hub-card:hover{box-shadow:${T.shadowM};border-color:rgba(0,113,206,0.4);}
+.hub-modal-body{padding:24px 28px 20px;overflow-y:auto;flex:1;font-size:15px;line-height:1.75;color:#1a2233;white-space:pre-wrap;scrollbar-width:thin;scrollbar-color:${T.muted2} transparent;}
+.hub-modal-footer{padding:14px 28px 20px;border-top:1px solid ${T.border};display:flex;justify-content:flex-end;flex-shrink:0;}
+.hub-modal-empty{font-size:14px;color:${T.muted};font-style:italic;}
 .hub-card-icon{margin-bottom:14px;display:flex;}
 .hub-card-title{font-size:16px;font-weight:800;color:${T.deep};margin-bottom:10px;}
 .hub-card-body{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:18px;}
@@ -985,6 +988,40 @@ function parseRuleSections(text) {
     return sections;
 }
 
+function HubDocModal({ title, content, onClose }) {
+    useEffect(() => {
+        const onKey = e => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.removeEventListener('keydown', onKey);
+            document.body.style.overflow = '';
+        };
+    }, [onClose]);
+    return (
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+            <div className="modal" style={{ maxWidth: 720, maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className="modal-header">
+                    <div style={{ flex: 1 }}>
+                        <div className="modal-title">{title}</div>
+                        <div className="modal-subtitle">FY27 Global Governance AI Hackathon</div>
+                    </div>
+                    <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
+                </div>
+                <div className="hub-modal-body">
+                    {content
+                        ? content
+                        : <span className="hub-modal-empty">Content coming soon.</span>
+                    }
+                </div>
+                <div className="hub-modal-footer">
+                    <button className="submit-btn" onClick={onClose}>Close</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function RulesModal({ categorized, fallback, onClose }) {
     const sections = parseRuleSections(categorized);
     const useSections = sections.length > 1;
@@ -1037,6 +1074,7 @@ function App() {
     const [showReg,         setShowReg]        = useState(false);
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
+    const [hubDocModal,     setHubDocModal]    = useState(null); // null | 'rules'|'prizes'|'reginfo'|'faqs'
     const [activeSection,   setActiveSection]  = useState('hero');
     const [openFaq,         setOpenFaq]        = useState(null);
     const [showRubric,      setShowRubric]     = useState(false);
@@ -1077,6 +1115,20 @@ function App() {
             officialRulesCategorized: dfDocCategorized ? rec.getCellValueAsString(dfDocCategorized) : '',
         };
     }, [hackDocList, dfDocName, dfDocDetails, dfDocCategorized]);
+
+    const hubDocs = useMemo(() => {
+        if (!dfDocName || !dfDocDetails) return {};
+        const find = name => {
+            const rec = hackDocList.find(r => r.getCellValueAsString(dfDocName).trim() === name);
+            return rec ? rec.getCellValueAsString(dfDocDetails) : '';
+        };
+        return {
+            rules:   find('Official Rules'),
+            prizes:  find('Payouts and Prizes'),
+            reginfo: find('Registration Info'),
+            faqs:    find('FAQs'),
+        };
+    }, [hackDocList, dfDocName, dfDocDetails]);
 
     // ── Field detection: directory ───────────────────────────────────────────
     const dfName  = dirTable.getFieldIfExists('Full Name');
@@ -1220,32 +1272,29 @@ function App() {
                     <p className="sec-sub">Everything you need to know before you build.</p>
 
                     <div className="hub-cards">
-                        <div className="hub-card" style={{ borderTop: `3px solid ${T.blue}` }}>
+                        <div className="hub-card" style={{ borderTop: `3px solid ${T.blue}` }} onClick={() => setHubDocModal('rules')}>
                             <div className="hub-card-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="hub-card-title">Rules & Guidelines</div>
                             <div className="hub-card-body">Official hackathon rules, eligibility requirements, and code of conduct. Read this before registering.</div>
-                            {(officialRulesCategorized || officialRulesText)
-                                ? <button className="hub-card-link" onClick={() => setShowRulesModal(true)}>Read the Rules →</button>
-                                : <a className="hub-card-link" href={RULES_URL} target="_blank" rel="noreferrer">Read the Rules →</a>
-                            }
+                            <span className="hub-card-link">Read the Rules →</span>
                         </div>
-                        <div className="hub-card" style={{ borderTop: `3px solid ${T.yellow}` }}>
+                        <div className="hub-card" style={{ borderTop: `3px solid ${T.yellow}` }} onClick={() => setHubDocModal('prizes')}>
                             <div className="hub-card-icon"><TrophyIcon size={28} color={T.yellow} weight="duotone" /></div>
                             <div className="hub-card-title">Payouts & Prizes</div>
                             <div className="hub-card-body">What's at stake. Prize tiers, judging criteria, and how winners are selected.</div>
-                            <button className="hub-card-link" onClick={() => setShowRulesModal(true)}>View Prize Details →</button>
+                            <span className="hub-card-link">View Prize Details →</span>
                         </div>
-                        <div className="hub-card" style={{ borderTop: `3px solid ${T.azure}` }}>
+                        <div className="hub-card" style={{ borderTop: `3px solid ${T.azure}` }} onClick={() => setHubDocModal('reginfo')}>
                             <div className="hub-card-icon"><NotePencilIcon size={28} color={T.azure} weight="duotone" /></div>
                             <div className="hub-card-title">Registration Info</div>
                             <div className="hub-card-body">How to register your team, deadlines, team size requirements, and free agent sign-up.</div>
-                            <a className="hub-card-link" href="#register">Go to Registration →</a>
+                            <span className="hub-card-link">Go to Registration →</span>
                         </div>
-                        <div className="hub-card" style={{ borderTop: `3px solid ${T.muted}` }}>
+                        <div className="hub-card" style={{ borderTop: `3px solid ${T.muted}` }} onClick={() => setHubDocModal('faqs')}>
                             <div className="hub-card-icon"><QuestionIcon size={28} color={T.muted} weight="duotone" /></div>
                             <div className="hub-card-title">FAQs</div>
                             <div className="hub-card-body">Common questions about tools, submissions, team formation, and the 48-hour sprint format.</div>
-                            <a className="hub-card-link" href="#help">View FAQs →</a>
+                            <span className="hub-card-link">View FAQs →</span>
                         </div>
                     </div>
                 </div>
@@ -1515,6 +1564,13 @@ function App() {
                     categorized={officialRulesCategorized}
                     fallback={officialRulesText}
                     onClose={() => setShowRulesModal(false)}
+                />
+            )}
+            {hubDocModal && (
+                <HubDocModal
+                    title={{ rules: 'Rules & Guidelines', prizes: 'Payouts & Prizes', reginfo: 'Registration Info', faqs: 'FAQs' }[hubDocModal]}
+                    content={hubDocs[hubDocModal]}
+                    onClose={() => setHubDocModal(null)}
                 />
             )}
         </div>
