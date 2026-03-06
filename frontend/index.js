@@ -642,14 +642,10 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .step-info{display:flex;align-items:flex-start;gap:10px;background:#EFF6FF;border:1px solid rgba(0,113,206,0.26);border-radius:8px;padding:14px 18px;margin-top:12px;}
 .step-info-text{font-size:13px;color:#1D4ED8;line-height:1.5;}
 
-/* ── SESSION PREFILL CARD ── */
-.session-prefill-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:rgba(0,113,206,0.06);border:1.5px solid rgba(0,113,206,0.2);border-radius:10px;margin-bottom:4px;}
-.session-prefill-info{display:flex;flex-direction:column;gap:2px;}
-.session-prefill-label{font-size:11px;font-weight:600;color:#0071CE;text-transform:uppercase;letter-spacing:0.05em;}
-.session-prefill-name{font-size:15px;font-weight:700;color:#0B2C5F;}
-.session-prefill-email{font-size:12px;color:#5A7A9A;}
-.not-you-btn{flex-shrink:0;font-size:12px;font-weight:600;color:#5A7A9A;background:transparent;border:1.5px solid rgba(90,122,154,0.3);border-radius:6px;padding:6px 12px;cursor:pointer;transition:border-color 0.15s,color 0.15s;}
-.not-you-btn:hover{color:#0071CE;border-color:#0071CE;}
+/* ── SESSION PREFILL ── */
+.session-prefill-badge{font-size:10px;font-weight:700;color:${T.blue};text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;}
+.not-you-btn{flex-shrink:0;font-size:12px;font-weight:600;color:${T.muted};background:transparent;border:1px solid ${T.border2};border-radius:5px;padding:5px 11px;cursor:pointer;transition:border-color 0.15s,color 0.15s;}
+.not-you-btn:hover{color:${T.blue};border-color:${T.blue};}
 
 /* ── SIGN UP PROMPT (not in directory) ── */
 .signup-prompt{display:flex;align-items:center;gap:16px;padding:14px 16px;background:rgba(255,194,32,0.08);border:1.5px solid rgba(255,194,32,0.3);border-radius:10px;margin-bottom:4px;}
@@ -2058,13 +2054,16 @@ function RegistrationSection({
                 ) : (
                     <>
                         {sessionPrefilled ? (
-                            <div className="session-prefill-card">
-                                <div className="session-prefill-info">
-                                    <div className="session-prefill-label">We found you in the directory</div>
-                                    <div className="session-prefill-name">{selfSelected?.name}</div>
-                                    <div className="session-prefill-email">{selfSelected?.email}</div>
+                            <div className="fr">
+                                <label className="form-label">Associate Directory<span className="req">*</span></label>
+                                <div className="ms-sel">
+                                    <div>
+                                        <div className="session-prefill-badge">Matched to your login</div>
+                                        <div className="ms-sel-name">{selfSelected?.name}</div>
+                                        <div className="ms-sel-email">{selfSelected?.email}</div>
+                                    </div>
+                                    <button className="not-you-btn" onClick={handleNotYou}>Not You?</button>
                                 </div>
-                                <button className="not-you-btn" onClick={handleNotYou}>Not You?</button>
                             </div>
                         ) : sessionEmail && dirRecords.length > 0 && !sessionUserRec ? (
                             <div className="signup-prompt">
