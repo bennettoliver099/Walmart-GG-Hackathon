@@ -60,10 +60,10 @@ const JUDGING = [
 
 // ─── PHASE TIMELINE ───────────────────────────────────────────────────────────
 const PHASES = [
-    { label: 'Register', sub: 'Now Open',                active: true  },
-    { label: 'Train',    sub: 'Week of March 9',          active: false },
-    { label: 'Build',    sub: 'March 16–19',              active: false },
-    { label: 'Present',  sub: 'March 20 · Science Fair',  active: false },
+    { label: 'Register', sub: 'Now Open',         active: true  },
+    { label: 'Train',    sub: 'March 10 – May 1', active: false },
+    { label: 'Build',    sub: 'Starts May 4',     active: false },
+    { label: 'Present',  sub: 'Starts May 7',     active: false },
 ];
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
@@ -163,18 +163,18 @@ section[id]{scroll-margin-top:70px;}
 .orb-t1 .orb-dot{width:11px;height:11px;background:#FFC220;box-shadow:0 0 12px rgba(255,194,32,0.7),0 0 24px rgba(255,194,32,0.3);}
 .orb-t2 .orb-dot{width:8px;height:8px;background:white;box-shadow:0 0 9px rgba(255,255,255,0.7),0 0 18px rgba(255,255,255,0.3);}
 @keyframes lpspin{to{transform:rotate(360deg);}}
-.hero-stepper{position:absolute;bottom:0;left:0;right:0;padding:16px 48px 24px;display:flex;align-items:flex-start;border-top:1px solid rgba(255,255,255,0.1);z-index:2;}
+.hero-stepper{position:absolute;bottom:0;left:0;right:0;padding:16px 48px 24px;display:flex;align-items:flex-start;z-index:2;}
 .hero-phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
 .hero-phase-node:not(:last-child)::after{content:'';position:absolute;top:6px;left:50%;width:100%;height:1px;background:rgba(255,255,255,0.18);}
 .hero-step-dot{width:12px;height:12px;border-radius:50%;position:relative;z-index:1;margin-bottom:8px;}
 .hero-step-dot-active{background:#FFC220;box-shadow:0 0 0 3px rgba(255,194,32,0.2);}
-.hero-step-dot-inactive{background:transparent;border:1.5px solid rgba(255,255,255,0.3);}
-.hero-step-label{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-align:center;margin-bottom:3px;}
+.hero-step-dot-inactive{background:transparent;border:1.5px solid rgba(255,255,255,0.7);}
+.hero-step-label{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-align:center;margin-bottom:3px;color:#fff;}
 .hero-step-label-active{color:#fff;}
-.hero-step-label-inactive{color:rgba(255,255,255,0.5);}
-.hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;font-weight:400;text-align:center;line-height:1.4;}
-.hero-step-sub-active{color:rgba(255,255,255,0.7);}
-.hero-step-sub-inactive{color:rgba(255,255,255,0.38);}
+.hero-step-label-inactive{color:#fff;}
+.hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;font-weight:400;text-align:center;line-height:1.4;color:#fff;}
+.hero-step-sub-active{color:#fff;}
+.hero-step-sub-inactive{color:#fff;}
 .hero-h1-pre{display:block;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);-webkit-text-fill-color:rgba(255,255,255,0.5);background:none;margin-bottom:12px;}
 .hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:16px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 50%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -1120,15 +1120,6 @@ function App() {
                         <div className="hero-byline">Build something that matters. Win something that counts.</div>
                         <div className="hero-sub">
                             48 hours. Real data. Real problems. Use Airtable, Harvey, or CodePuppy to build an AI-powered solution for Walmart's Global Governance team — then pitch it.
-                        </div>
-                        <div className="hero-actions">
-                            <button className="btn-primary" onClick={() => openModal(0)}>
-                                <SparkIcon size={15} color="#0B2C5F" />
-                                Register Your Team →
-                            </button>
-                            <a className="btn-outline" href={RULES_URL} target="_blank" rel="noreferrer">
-                                Read the Rules ↗
-                            </a>
                         </div>
                     </div>
                     <div className="hero-right">
