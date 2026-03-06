@@ -445,6 +445,25 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(11,44,95,0.25);border-top-color:${T.deep};border-radius:50%;animation:spin .7s linear infinite;}
 
+/* ── ACTIVE REGISTRATIONS ── */
+.reg-tabs{display:flex;border-bottom:1px solid ${T.border};margin-bottom:24px;}
+.reg-tab{padding:12px 20px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:none;border:none;border-bottom:2px solid transparent;transition:all 0.15s;color:${T.muted2};}
+.reg-tab.active{color:${T.deep};border-bottom-color:${T.blue};}
+.reg-tab:hover:not(.active){color:${T.muted};}
+.reg-header-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:12px;padding-bottom:10px;border-bottom:1px solid ${T.border2};margin-bottom:0;}
+.reg-header-col{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:${T.muted2};}
+.reg-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:12px;padding:13px 8px;border-bottom:1px solid ${T.border};align-items:center;transition:background 0.12s;border-radius:4px;}
+.reg-row:hover{background:${T.cloud};}
+.reg-cell-name{font-size:14px;font-weight:700;color:${T.deep};}
+.reg-cell{font-size:12px;color:${T.muted};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.reg-pill{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.03em;padding:3px 9px;border-radius:100px;display:inline-block;white-space:nowrap;}
+.reg-pill-blue{background:#EFF6FF;color:#1D4ED8;}
+.reg-pill-green{background:#ECFDF5;color:#065F46;}
+.reg-pill-purple{background:#F5F3FF;color:#5B21B6;}
+.reg-pill-gray{background:${T.cloud};color:${T.muted};}
+.reg-pill-yellow{background:#FFF8E6;color:#78500E;}
+.reg-empty{padding:52px;text-align:center;color:${T.muted};font-size:14px;font-style:italic;}
+
 /* ── MOBILE ── */
 @media(max-width:900px){
   .rule-cards,.tool-cards{grid-template-columns:1fr 1fr;}
@@ -1034,12 +1053,11 @@ const FAQS = [
 ];
 
 const NAV_SECTIONS = [
-    ['rules',     'Rules'    ],
-    ['tools',     'Tools'    ],
-    ['resources', 'Resources'],
-    ['register',  'Register' ],
-    ['workspace', 'Workspace'],
-    ['help',      'Help'     ],
+    ['rules',         'Rules'               ],
+    ['tools',         'Tools'               ],
+    ['register',      'Register'            ],
+    ['registrations', 'Active Registrations'],
+    ['help',          'Help'                ],
 ];
 
 // ─── RULES MODAL ──────────────────────────────────────────────────────────────
@@ -1443,6 +1461,7 @@ function App() {
 
     // ── UI State ─────────────────────────────────────────────────────────────
     const [currentView,     setCurrentView]    = useState('portal');
+    const [regTab,          setRegTab]         = useState('teams');
     const [showReg,         setShowReg]        = useState(false);
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
@@ -1459,7 +1478,7 @@ function App() {
     }, []);
 
     useEffect(() => {
-        const ids = ['hero', 'rules', 'tools', 'resources', 'register', 'workspace', 'help'];
+        const ids = ['hero', 'rules', 'tools', 'register', 'registrations', 'help'];
         const obs = new IntersectionObserver(entries => {
             entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id); });
         }, { threshold: 0.25, rootMargin: '-70px 0px -40% 0px' });
@@ -1537,6 +1556,7 @@ function App() {
     const submittedTeams  = liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Submitted').length;
     const registeredTeams = liveTeams.filter(r => sfStatus && r.getCellValueAsString(sfStatus) === 'Registered').length;
     const spotsLeft       = Math.max(0, MAX_TEAMS - totalTeams);
+    const freeAgents      = dirRecords.filter(r => safeGetCellValue(r, 'Free Agent Registration'));
 
     const openModal = (screen = 0) => { setModalInitScreen(screen); setShowReg(true); };
 
@@ -1755,34 +1775,7 @@ function App() {
                 </div>
             </section>
 
-            {/* ── SECTION 4: HACKATHON RESOURCES ── */}
-            <section id="resources" className="sec-white">
-                <div className="sec-wrap">
-                    <span className="sec-label">Resources</span>
-                    <h2 className="sec-h2">Hackathon Documents</h2>
-                    <p className="sec-sub">Reference materials, guides, and supporting documents for the event — AI-summarized for quick review.</p>
-                    {hackDocList.length === 0 ? (
-                        <div className="doc-card-empty">Documents will appear here once uploaded to the Hackathon Documents table.</div>
-                    ) : (
-                        <div className="doc-grid">
-                            {hackDocList.map(r => {
-                                const name    = dfDocName    ? r.getCellValueAsString(dfDocName)    : r.name;
-                                const summary = dfDocSummary ? r.getCellValueAsString(dfDocSummary) : '';
-                                const details = dfDocDetails ? r.getCellValueAsString(dfDocDetails) : '';
-                                return (
-                                    <div key={r.id} className="doc-card">
-                                        <div className="doc-card-name">{name}</div>
-                                        {summary && <div className="doc-card-summary">{summary}</div>}
-                                        {!summary && details && <div className="doc-card-summary">{details}</div>}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-            </section>
-
-            {/* ── SECTION 5: HOW TO REGISTER ── */}
+            {/* ── SECTION 4: HOW TO REGISTER ── */}
             <section id="register" className="sec-white">
                 <div className="sec-wrap">
                     <span className="sec-label">Registration</span>
@@ -1832,33 +1825,87 @@ function App() {
                 </div>
             </section>
 
-            {/* ── SECTION 6: TEAM WORKSPACE PREVIEW ── */}
-            <section id="workspace" className="sec-dark">
+            {/* ── SECTION 6: ACTIVE REGISTRATIONS ── */}
+            <section id="registrations" className="sec-white">
                 <div className="sec-wrap">
-                    <span className="sec-label sec-label-dark">Workspace</span>
-                    <h2 className="sec-h2 sec-h2-white">Your Team Workspace</h2>
-                    <p className="sec-sub sec-sub-white">
-                        Every registered team gets a private Airtable workspace — unlocked once your registration is confirmed.
-                    </p>
+                    <span className="sec-label">Active Registrations</span>
+                    <h2 className="sec-h2">Registered Teams & Free Agents</h2>
+                    <p className="sec-sub">All confirmed hackathon participants.</p>
 
-                    <div className="ws-preview-card">
-                        <div className="ws-lock-row">
-                            <div className="ws-lock-icon"><LockSimpleIcon size={32} color={T.muted} weight="duotone" /></div>
-                            <div className="ws-lock-label">Unlocks after registration is confirmed</div>
-                        </div>
-                        <div className="ws-feature-grid">
-                            {WORKSPACE_TILES.map(tile => (
-                                <div key={tile.label} className="ws-tile">
-                                    <div className="ws-tile-icon"><tile.Icon size={22} color={T.blue} weight="duotone" /></div>
-                                    <div className="ws-tile-label">{tile.label}</div>
-                                    <div className="ws-tile-desc">{tile.desc}</div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="ws-note">
-                            This page will be a separate interface in the same Airtable app — you'll receive the link once your team is confirmed.
-                        </div>
+                    <div className="reg-tabs">
+                        <button className={`reg-tab${regTab === 'teams' ? ' active' : ''}`} onClick={() => setRegTab('teams')}>
+                            Teams ({liveTeams.length})
+                        </button>
+                        <button className={`reg-tab${regTab === 'agents' ? ' active' : ''}`} onClick={() => setRegTab('agents')}>
+                            Free Agents ({freeAgents.length})
+                        </button>
                     </div>
+
+                    {regTab === 'teams' ? (
+                        liveTeams.length === 0 ? (
+                            <div className="reg-empty">No teams registered yet.</div>
+                        ) : (<>
+                            <div className="reg-header-row">
+                                <div className="reg-header-col">Team</div>
+                                <div className="reg-header-col">Tool</div>
+                                <div className="reg-header-col">Status</div>
+                                <div className="reg-header-col">Format</div>
+                                <div className="reg-header-col">Members</div>
+                            </div>
+                            {liveTeams.map(r => {
+                                const name       = safeGetCellValueAsString(r, 'Team Name');
+                                const tech       = safeGetCellValueAsString(r, 'Technology');
+                                const status     = safeGetCellValueAsString(r, 'Submission Status');
+                                const attendance = safeGetCellValueAsString(r, 'Attendance Format');
+                                const memberFields = [
+                                    safeGetCellValue(r, 'Team Member #1 (Captain)'),
+                                    safeGetCellValue(r, 'Team Member #2'),
+                                    safeGetCellValue(r, 'Team Member #3'),
+                                    safeGetCellValue(r, 'Team Member #4'),
+                                    safeGetCellValue(r, 'Team Member #5'),
+                                ];
+                                const memberCount = memberFields.filter(v => v && (Array.isArray(v) ? v.length > 0 : true)).length;
+                                const techPill   = tech === 'Airtable' ? 'reg-pill-blue' : tech === 'CodePuppy' ? 'reg-pill-green' : tech === 'Harvey' ? 'reg-pill-purple' : 'reg-pill-gray';
+                                const statusPill = status === 'Submitted' ? 'reg-pill-blue' : status === 'Registered' ? 'reg-pill-green' : status === 'Pending' ? 'reg-pill-yellow' : 'reg-pill-gray';
+                                return (
+                                    <div key={r.id} className="reg-row">
+                                        <div className="reg-cell-name">{name || '—'}</div>
+                                        <div><span className={`reg-pill ${techPill}`}>{tech || '—'}</span></div>
+                                        <div><span className={`reg-pill ${statusPill}`}>{status || '—'}</span></div>
+                                        <div className="reg-cell">{attendance || '—'}</div>
+                                        <div className="reg-cell">{memberCount > 0 ? `${memberCount} member${memberCount !== 1 ? 's' : ''}` : '—'}</div>
+                                    </div>
+                                );
+                            })}
+                        </>)
+                    ) : (
+                        freeAgents.length === 0 ? (
+                            <div className="reg-empty">No free agents have signed up yet.</div>
+                        ) : (<>
+                            <div className="reg-header-row" style={{gridTemplateColumns:'2fr 2fr 1fr 1fr'}}>
+                                <div className="reg-header-col">Name</div>
+                                <div className="reg-header-col">Email</div>
+                                <div className="reg-header-col">Function</div>
+                                <div className="reg-header-col">Location</div>
+                            </div>
+                            {freeAgents.map(r => {
+                                const name     = safeGetCellValueAsString(r, 'Full Name');
+                                const email    = safeGetCellValueAsString(r, 'Work Email');
+                                const fn       = safeGetCellValueAsString(r, 'Function');
+                                const city     = safeGetCellValueAsString(r, 'Work City');
+                                const state    = safeGetCellValueAsString(r, 'Work State');
+                                const location = [city, state].filter(Boolean).join(', ').toUpperCase();
+                                return (
+                                    <div key={r.id} className="reg-row" style={{gridTemplateColumns:'2fr 2fr 1fr 1fr'}}>
+                                        <div className="reg-cell-name">{name || '—'}</div>
+                                        <div className="reg-cell">{email || '—'}</div>
+                                        <div className="reg-cell">{fn || '—'}</div>
+                                        <div className="reg-cell">{location || '—'}</div>
+                                    </div>
+                                );
+                            })}
+                        </>)
+                    )}
                 </div>
             </section>
 
