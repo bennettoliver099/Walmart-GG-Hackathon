@@ -145,8 +145,10 @@ section[id]{scroll-margin-top:70px;}
 .orb-t1 .orb-dot{width:9px;height:9px;background:#FFC220;box-shadow:0 0 10px rgba(255,194,32,0.7),0 0 20px rgba(255,194,32,0.3);}
 .orb-t2 .orb-dot{width:6px;height:6px;background:white;box-shadow:0 0 8px rgba(255,255,255,0.7),0 0 16px rgba(255,255,255,0.3);}
 @keyframes lpspin{to{transform:rotate(360deg);}}
-.hero-eyebrow{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
-.hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:rgba(255,255,255,0.4);}
+.hero-phases{display:flex;align-items:flex-start;margin-bottom:20px;gap:0;}
+.hero-phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+.hero-phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:rgba(255,255,255,0.2);}
+.hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.4;max-width:90px;margin-top:5px;}
 .hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.02em;color:${T.yellow};margin-bottom:18px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 50%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero-byline{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:${T.white};letter-spacing:0.03em;margin-bottom:14px;}
@@ -1073,7 +1075,14 @@ function App() {
             <section id="hero" className="hero">
                 <div className="hero-inner">
                     <div className="hero-left">
-                        <div className="hero-eyebrow">GG Digital Acceleration · FY27</div>
+                        <div className="hero-phases">
+                            {PHASES.map(p => (
+                                <div key={p.label} className="hero-phase-node">
+                                    <div className={`phase-pill ${p.active ? 'phase-pill-active' : 'phase-pill-inactive'}`}>{p.label}</div>
+                                    <div className="hero-phase-sub">{p.sub}</div>
+                                </div>
+                            ))}
+                        </div>
                         <h1>FY27 GG<br /><span className="accent">AI Hackathon</span></h1>
                         <div className="hero-byline">Build something that matters. Win something that counts.</div>
                         <div className="hero-sub">
@@ -1130,17 +1139,6 @@ function App() {
                 </div>
             </div>
 
-            {/* ── PHASE TIMELINE ── */}
-            <div className="phase-section">
-                <div className="phase-timeline">
-                    {PHASES.map(p => (
-                        <div key={p.label} className="phase-node">
-                            <div className={`phase-pill ${p.active ? 'phase-pill-active' : 'phase-pill-inactive'}`}>{p.label}</div>
-                            <div className="phase-sub">{p.sub}</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
 
             {/* ── SECTION 2: RULES & GUIDELINES ── */}
             <section id="rules" className="sec-white">
