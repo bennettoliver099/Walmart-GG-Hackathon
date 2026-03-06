@@ -179,8 +179,21 @@ section[id]{scroll-margin-top:70px;}
 .phase-pill-inactive{background:${T.cloud};border:1px solid ${T.border};color:${T.muted2};}
 .phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:${T.muted};text-align:center;line-height:1.4;max-width:90px;}
 
-/* ── RULES DOC BODY ── */
-.rules-doc-body{font-size:14px;color:${T.body};line-height:1.8;white-space:pre-wrap;background:${T.cloud};border:1px solid ${T.border};border-radius:8px;padding:28px 32px;margin-bottom:24px;max-height:520px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:${T.muted2} transparent;}
+/* ── OFFICIAL RULES CARD ── */
+.official-rules-card{background:${T.white};border:1px solid ${T.border};border-radius:10px;padding:24px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;box-shadow:${T.shadow};}
+.official-rules-card-left{display:flex;align-items:center;gap:14px;}
+.official-rules-card-icon{width:42px;height:42px;border-radius:8px;background:${T.ice};border:1px solid ${T.border2};display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.official-rules-card-title{font-size:15px;font-weight:700;color:${T.deep};margin-bottom:2px;}
+.official-rules-card-sub{font-size:12px;color:${T.muted};}
+.rules-open-btn{display:inline-flex;align-items:center;gap:6px;background:${T.blue};color:${T.white};border:none;border-radius:6px;padding:9px 16px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;flex-shrink:0;}
+.rules-open-btn:hover{background:${T.deep};transform:translateY(-1px);}
+/* ── RULES MODAL ── */
+.modal-xl{max-width:820px;}
+.rules-section{margin-bottom:28px;}
+.rules-section:last-child{margin-bottom:0;}
+.rules-section-header{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:${T.blue};padding-bottom:8px;border-bottom:2px solid ${T.ice};margin-bottom:14px;}
+.rules-section-body{font-size:13px;color:${T.body};line-height:1.8;white-space:pre-wrap;}
+.rules-raw-body{font-size:13px;color:${T.body};line-height:1.8;white-space:pre-wrap;}
 /* ── RULE CARDS ── */
 .rule-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
 .rule-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:24px 20px;transition:box-shadow 0.18s;}
@@ -891,6 +904,63 @@ const NAV_SECTIONS = [
     ['help',      'Help'     ],
 ];
 
+// ─── RULES MODAL ──────────────────────────────────────────────────────────────
+function parseRuleSections(text) {
+    if (!text) return [];
+    // Split on double newlines; treat short lines (≤60 chars, no trailing period) as headers
+    const blocks = text.split(/\n{2,}/).map(b => b.trim()).filter(Boolean);
+    const sections = [];
+    let current = null;
+    blocks.forEach(block => {
+        const firstLine = block.split('\n')[0].trim();
+        const isHeader = firstLine.length <= 70 && !firstLine.endsWith('.') && !firstLine.endsWith(',');
+        const rest = block.split('\n').slice(1).join('\n').trim();
+        if (isHeader && rest) {
+            // Header line + body below it in same block
+            if (current) sections.push(current);
+            current = { header: firstLine.replace(/^[*#\s]+|[*#\s]+$/g, ''), body: rest };
+        } else if (isHeader && !rest) {
+            // Standalone header line — next block will be its body
+            if (current) sections.push(current);
+            current = { header: firstLine.replace(/^[*#\s]+|[*#\s]+$/g, ''), body: '' };
+        } else {
+            // Body block
+            if (current) { current.body += (current.body ? '\n\n' : '') + block; }
+            else { sections.push({ header: '', body: block }); }
+        }
+    });
+    if (current) sections.push(current);
+    return sections;
+}
+
+function RulesModal({ categorized, fallback, onClose }) {
+    const sections = parseRuleSections(categorized);
+    const useSections = sections.length > 1;
+    return (
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+            <div className="modal modal-xl">
+                <div className="modal-header">
+                    <div style={{ flex: 1 }}>
+                        <div className="modal-title">Official Rules & Guidelines</div>
+                        <div className="modal-subtitle">FY27 GG AI Hackathon · Read before registering</div>
+                    </div>
+                    <button className="modal-close" onClick={onClose}>✕</button>
+                </div>
+                <div className="modal-body">
+                    {useSections ? sections.map((s, i) => (
+                        <div key={i} className="rules-section">
+                            {s.header && <div className="rules-section-header">{s.header}</div>}
+                            {s.body && <div className="rules-section-body">{s.body}</div>}
+                        </div>
+                    )) : (
+                        <div className="rules-raw-body">{categorized || fallback}</div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ─── APP ──────────────────────────────────────────────────────────────────────
 function App() {
     const base = useBase();
@@ -914,6 +984,7 @@ function App() {
     // ── UI State ─────────────────────────────────────────────────────────────
     const [showReg,         setShowReg]        = useState(false);
     const [modalInitScreen, setModalInitScreen]= useState(0);
+    const [showRulesModal,  setShowRulesModal] = useState(false);
     const [activeSection,   setActiveSection]  = useState('hero');
     const [openFaq,         setOpenFaq]        = useState(null);
     const [showRubric,      setShowRubric]     = useState(false);
@@ -938,16 +1009,21 @@ function App() {
     const sfStatus       = subTable.getFieldIfExists('Submission Status');
 
     // ── Field detection: hackathon docs ─────────────────────────────────────
-    const dfDocName    = docTable ? docTable.getFieldIfExists('Name')               : null;
-    const dfDocSummary = docTable ? docTable.getFieldIfExists('Attachment Summary') : null;
-    const dfDocDetails = docTable ? docTable.getFieldIfExists('Documented Details') : null;
-    const hackDocList  = docTable ? hackDocs : [];
+    const dfDocName        = docTable ? docTable.getFieldIfExists('Name')               : null;
+    const dfDocSummary     = docTable ? docTable.getFieldIfExists('Attachment Summary') : null;
+    const dfDocDetails     = docTable ? docTable.getFieldIfExists('Documented Details') : null;
+    const dfDocCategorized = docTable ? docTable.getFieldIfExists('Categorized Rules')  : null;
+    const hackDocList      = docTable ? hackDocs : [];
 
-    const officialRulesText = useMemo(() => {
-        if (!dfDocName || !dfDocDetails) return '';
+    const { officialRulesText, officialRulesCategorized } = useMemo(() => {
+        if (!dfDocName) return { officialRulesText: '', officialRulesCategorized: '' };
         const rec = hackDocList.find(r => r.getCellValueAsString(dfDocName).trim() === 'Official Rules');
-        return rec ? rec.getCellValueAsString(dfDocDetails) : '';
-    }, [hackDocList, dfDocName, dfDocDetails]);
+        if (!rec) return { officialRulesText: '', officialRulesCategorized: '' };
+        return {
+            officialRulesText:        dfDocDetails     ? rec.getCellValueAsString(dfDocDetails)     : '',
+            officialRulesCategorized: dfDocCategorized ? rec.getCellValueAsString(dfDocCategorized) : '',
+        };
+    }, [hackDocList, dfDocName, dfDocDetails, dfDocCategorized]);
 
     // ── Field detection: directory ───────────────────────────────────────────
     const dfName  = dirTable.getFieldIfExists('Full Name');
@@ -1073,27 +1149,24 @@ function App() {
                     <h2 className="sec-h2">Rules & Guidelines</h2>
                     <p className="sec-sub">Everything you need to know before you build. Read this before registering.</p>
 
-                    {officialRulesText ? (
-                        <div className="rules-doc-body">{officialRulesText}</div>
-                    ) : (
-                        <div className="rule-cards">
-                            <div className="rule-card">
-                                <div className="rule-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
-                                <div className="rule-title">Eligibility</div>
-                                <div className="rule-desc">Open to all Walmart Home Office associates. Teams of 3–5; solo sign-ups will be matched to a team.</div>
+                    <div className="official-rules-card">
+                        <div className="official-rules-card-left">
+                            <div className="official-rules-card-icon">
+                                <ClipboardTextIcon size={22} color={T.blue} weight="duotone" />
                             </div>
-                            <div className="rule-card">
-                                <div className="rule-icon"><TimerIcon size={28} color={T.blue} weight="duotone" /></div>
-                                <div className="rule-title">Build Window</div>
-                                <div className="rule-desc">No building before March 16. All prototypes must be started and completed during the official 48-hour window.</div>
-                            </div>
-                            <div className="rule-card">
-                                <div className="rule-icon"><TrophyIcon size={28} color={T.blue} weight="duotone" /></div>
-                                <div className="rule-title">Judging</div>
-                                <div className="rule-desc">Projects scored on Impact (30%), Innovation (25%), Feasibility (25%), and Demo Quality (20%). Top 5 teams pitch to executive judges.</div>
+                            <div>
+                                <div className="official-rules-card-title">Official Rules</div>
+                                <div className="official-rules-card-sub">
+                                    {officialRulesCategorized || officialRulesText ? 'Full hackathon rules & eligibility requirements' : 'Rules document not yet available'}
+                                </div>
                             </div>
                         </div>
-                    )}
+                        {(officialRulesCategorized || officialRulesText) && (
+                            <button className="rules-open-btn" onClick={() => setShowRulesModal(true)}>
+                                <ClipboardTextIcon size={13} /> Open Rules
+                            </button>
+                        )}
+                    </div>
 
                     <div style={{ marginTop: 24 }}>
                         <button className="rubric-toggle" onClick={() => setShowRubric(s => !s)}>
@@ -1373,6 +1446,13 @@ function App() {
                     dirRecords={dirRecords}
                     dirNameField={dfName}
                     dirEmailField={dfEmail}
+                />
+            )}
+            {showRulesModal && (
+                <RulesModal
+                    categorized={officialRulesCategorized}
+                    fallback={officialRulesText}
+                    onClose={() => setShowRulesModal(false)}
                 />
             )}
         </div>
