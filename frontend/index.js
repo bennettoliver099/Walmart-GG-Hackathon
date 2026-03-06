@@ -2251,7 +2251,7 @@ function RegistrationSection({
                                 <div className="fr">
                                     <label className="form-label">Associate Type<span className="req">*</span></label>
                                     <div className="radio-group" style={{marginTop:6}}>
-                                        {['Full-Time','Temp','Part-Time','Other'].map(t => (
+                                        {['Full-Time','Temp','Part-Time','Volunteer','Other'].map(t => (
                                             <div className="rp" key={t}>
                                                 <input type="radio" id={`at-${t}`} name="addAssocType" value={t} checked={addAssocType===t} onChange={() => setAddAssocType(t)} autoComplete="off" />
                                                 <label htmlFor={`at-${t}`}>{t}</label>
