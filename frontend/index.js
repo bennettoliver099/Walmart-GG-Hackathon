@@ -496,6 +496,53 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .step-card-sub{font-size:13px;color:#5A7A9A;line-height:1.6;margin-bottom:20px;}
 .step-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 
+/* ── TEAM BUILDER ── */
+.tb-container{display:flex;gap:24px;min-height:480px;}
+.tb-sidebar{width:280px;min-width:280px;background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:20px;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(11,44,95,0.08);}
+.tb-main{flex:1;display:flex;flex-direction:column;gap:16px;}
+.tb-sidebar-badge{display:inline-block;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#0071CE;border:1px solid #0071CE;padding:3px 10px;border-radius:3px;margin-bottom:12px;align-self:flex-start;}
+.tb-sidebar-count{font-size:24px;font-weight:800;color:#0B2C5F;margin-bottom:4px;}
+.tb-sidebar-sub{font-size:12px;color:#5A7A9A;line-height:1.5;margin-bottom:16px;}
+.tb-agent-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px;scrollbar-width:thin;}
+.tb-agent-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,113,206,0.14);background:none;cursor:pointer;transition:all 0.15s;text-align:left;width:100%;font-family:inherit;}
+.tb-agent-row:hover{background:#F4F7FB;border-color:#0071CE;}
+.tb-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;flex-shrink:0;}
+.tb-agent-info{display:flex;flex-direction:column;gap:1px;}
+.tb-agent-name{font-size:13px;font-weight:700;color:#0B2C5F;}
+.tb-agent-action{font-size:11px;color:#5A7A9A;}
+.tb-empty{font-size:13px;color:#8BA5BF;font-style:italic;padding:20px 0;text-align:center;}
+.tb-toolbar{display:flex;align-items:center;justify-content:space-between;}
+.tb-toolbar-count{font-size:14px;font-weight:600;color:#5A7A9A;}
+.tb-toggle-btn{background:none;border:1px solid rgba(0,113,206,0.14);border-radius:100px;padding:6px 16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:#5A7A9A;cursor:pointer;transition:all 0.15s;}
+.tb-toggle-btn:hover{border-color:#0071CE;color:#0071CE;}
+.tb-create-bar{display:flex;gap:10px;align-items:center;}
+.tb-create-input{flex:1;padding:10px 14px;border:1px solid rgba(0,113,206,0.14);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;background:#F4F7FB;outline:none;transition:border 0.15s;}
+.tb-create-input:focus{border-color:#0071CE;background:#FFFFFF;}
+.tb-create-btn{background:#FFC220;color:#0B2C5F;border:none;border-radius:6px;padding:10px 20px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.tb-create-btn:hover:not(:disabled){background:#FFD050;transform:translateY(-1px);}
+.tb-create-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.tb-card{background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:20px;box-shadow:0 1px 3px rgba(11,44,95,0.08);display:flex;flex-direction:column;}
+.tb-card-header{margin-bottom:14px;}
+.tb-card-name{font-size:16px;font-weight:800;color:#0B2C5F;margin-bottom:8px;}
+.tb-card-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.tb-pill{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;white-space:nowrap;}
+.tb-card-slots{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;flex:1;}
+.tb-slot{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid rgba(0,113,206,0.14);border-radius:6px;min-height:40px;transition:all 0.12s;}
+.tb-slot-filled{background:#F4F7FB;border-color:rgba(0,113,206,0.2);}
+.tb-slot-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;flex-shrink:0;}
+.tb-slot-name{font-size:13px;font-weight:600;color:#0B2C5F;flex:1;}
+.tb-cap-badge{font-family:'Inter',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.06em;background:#FFC220;color:#0B2C5F;padding:2px 8px;border-radius:3px;text-transform:uppercase;}
+.tb-slot-empty-dot{width:28px;height:28px;border-radius:50%;border:2px dashed rgba(0,113,206,0.14);flex-shrink:0;}
+.tb-slot-empty-label{font-size:12px;color:#8BA5BF;font-style:italic;}
+.tb-card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(0,113,206,0.14);}
+.tb-card-count{font-size:12px;color:#5A7A9A;}
+.tb-card-join-btn{background:#0071CE;color:white;border:none;border-radius:5px;padding:6px 16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.tb-card-join-btn:hover:not(:disabled){background:#0B2C5F;transform:translateY(-1px);}
+.tb-card-join-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.tb-card-full{font-size:11px;color:#8BA5BF;font-weight:600;}
+.tb-step1-gate{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:40px;text-align:center;font-size:14px;color:#5A7A9A;}
+
 /* ── JOIN TEAM LIST ── */
 .join-team-list{max-height:320px;overflow-y:auto;border:1px solid rgba(0,113,206,0.14);border-radius:6px;margin-bottom:16px;scrollbar-width:thin;}
 .join-team-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,113,206,0.14);transition:background 0.12s;}
@@ -539,6 +586,9 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .help-cards{grid-template-columns:1fr;}
   .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
   .step-cols{grid-template-columns:1fr;}
+  .tb-container{flex-direction:column;}
+  .tb-sidebar{width:100%;min-width:0;}
+  .tb-grid{grid-template-columns:1fr;}
 }
 @media(max-width:900px){
   .hero-inner{grid-template-columns:1fr;gap:40px;}
@@ -1474,6 +1524,7 @@ function RegistrationSection({
     const [createSubmitting,  setCreateSubmitting] = useState(false);
     const [createError,       setCreateError]      = useState('');
     const [createSuccess,     setCreateSuccess]    = useState('');
+    const [hideFullTeams,     setHideFullTeams]    = useState(false);
     const [captainLeaveChoice, setCaptainLeaveChoice] = useState(null); // null | 'reassign' | 'disband'
     const [reassignTo,         setReassignTo]          = useState('');
 
@@ -1821,136 +1872,200 @@ function RegistrationSection({
             </div>
         </div>
 
-        {/* BLOCK 2: Join or Create a Team */}
+        {/* BLOCK 2: Team Builder */}
         <div className="step-block">
             <div className="step-block-header">Step 2 — Join or Create a Team</div>
-            <div className="step-cols">
-                {/* Card A: Join an Existing Team */}
-                <div className="step-card" style={{ borderTop: '3px solid #2C8EF4' }}>
-                    <div className="step-card-title">Join an Existing Team</div>
-                    <div className="step-card-sub">Browse open teams and request to join.</div>
 
-                    {!step1Complete && !selfRegistered ? (
-                        <div className="step-info"><span>ℹ️</span><div className="step-info-text">Complete Step 1 above to join a team.</div></div>
-                    ) : joinSuccess ? (
-                        <div className="step-success"><span>✓</span><div className="step-success-text">{joinSuccess}</div></div>
-                    ) : (
-                        <>
-                            {liveTeams.length === 0 ? (
-                                <div className="reg-empty" style={{padding:'24px 0'}}>No teams yet — be the first to create one.</div>
-                            ) : (
-                                <div className="join-team-list">
-                                    {liveTeams.map(teamRec => {
-                                        const tName = safeGetCellValueAsString(teamRec, 'Team Name');
-                                        const captainLink = safeGetCellValue(teamRec, 'Team Member # 1 (Captain)');
-                                        const captainName = Array.isArray(captainLink) && captainLink.length > 0 ? captainLink[0].name : '—';
-                                        const memberSlots = [
-                                            safeGetCellValue(teamRec, 'Team Member # 1 (Captain)'),
-                                            safeGetCellValue(teamRec, 'Team Member # 2'),
-                                            safeGetCellValue(teamRec, 'Team Member # 3'),
-                                            safeGetCellValue(teamRec, 'Team Member # 4'),
-                                            safeGetCellValue(teamRec, 'Team Member # 5'),
+            {!step1Complete && !selfRegistered ? (
+                <div className="tb-step1-gate">Complete Step 1 above to manage teams.</div>
+            ) : (
+                <div className="tb-container">
+                    {/* LEFT: Free Agent Pool */}
+                    <div className="tb-sidebar">
+                        <span className="tb-sidebar-badge">Free Agent Pool</span>
+                        <div className="tb-sidebar-count">{freeAgents.length} unplaced</div>
+                        <div className="tb-sidebar-sub">Participants not yet on a team.</div>
+                        <div className="tb-agent-list">
+                            {freeAgents.map(agent => {
+                                const name = safeGetCellValueAsString(agent, 'Full Name');
+                                const initials = name.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?';
+                                const isMe = userDirId && agent.id === userDirId;
+                                return (
+                                    <div key={agent.id} className="tb-agent-row" style={isMe ? {borderColor:'#0071CE',background:'#EFF6FF'} : {}}>
+                                        <div className="tb-avatar" style={{background: isMe ? '#0071CE' : '#334155', color:'white'}}>{initials}</div>
+                                        <div className="tb-agent-info">
+                                            <div className="tb-agent-name">{name}{isMe ? ' (you)' : ''}</div>
+                                            <div className="tb-agent-action">In free agent pool</div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                            {freeAgents.length === 0 && <div className="tb-empty">No free agents</div>}
+                        </div>
+                    </div>
+
+                    {/* RIGHT: Team Grid */}
+                    <div className="tb-main">
+                        {/* Toolbar */}
+                        <div className="tb-toolbar">
+                            <div className="tb-toolbar-count">{liveTeams.length} team{liveTeams.length !== 1 ? 's' : ''}</div>
+                            <button className="tb-toggle-btn" onClick={() => setHideFullTeams(h => !h)}>
+                                {hideFullTeams ? 'Show full teams' : 'Hide full teams'}
+                            </button>
+                        </div>
+
+                        {/* Create bar */}
+                        {createSuccess ? (
+                            <div className="step-success"><span>✓</span><div className="step-success-text">{createSuccess}</div></div>
+                        ) : (
+                            <>
+                                {currentMembership && currentMembership.isCaptain && (
+                                    <div className="step-warn" style={{marginTop:0}}>
+                                        <span>⚠️</span>
+                                        <div className="step-warn-text">You're captain of <strong>{currentMembership.teamName}</strong>. Assign a new captain before creating another team.</div>
+                                    </div>
+                                )}
+                                <div className="tb-create-bar">
+                                    <input
+                                        className="tb-create-input"
+                                        placeholder="New team name…"
+                                        value={createName}
+                                        onChange={e => setCreateName(e.target.value)}
+                                        onKeyDown={e => { if (e.key === 'Enter' && createName.trim()) handleCreateTeam(); }}
+                                        disabled={currentMembership && currentMembership.isCaptain}
+                                    />
+                                    <button
+                                        className="tb-create-btn"
+                                        disabled={createSubmitting || !createName.trim() || !!(currentMembership && currentMembership.isCaptain)}
+                                        onClick={handleCreateTeam}
+                                    >
+                                        {createSubmitting ? 'Creating…' : '+ Create Team'}
+                                    </button>
+                                </div>
+                                {createError && <div className="ferr">{createError}</div>}
+                            </>
+                        )}
+
+                        {/* Team Cards Grid */}
+                        {(() => {
+                            const slotFields = ['Team Member # 1 (Captain)','Team Member # 2','Team Member # 3','Team Member # 4','Team Member # 5'];
+                            const displayTeams = hideFullTeams
+                                ? liveTeams.filter(t => slotFields.filter(s => { const v = safeGetCellValue(t, s); return v && Array.isArray(v) && v.length > 0; }).length < 5)
+                                : liveTeams;
+
+                            if (displayTeams.length === 0) return (
+                                <div className="tb-empty" style={{padding:'40px 0',textAlign:'center'}}>
+                                    {liveTeams.length === 0 ? 'No teams yet — create the first one above.' : 'All teams are full.'}
+                                </div>
+                            );
+
+                            return (
+                                <div className="tb-grid">
+                                    {displayTeams.map(teamRec => {
+                                        const tName      = safeGetCellValueAsString(teamRec, 'Team Name');
+                                        const status     = safeGetCellValueAsString(teamRec, 'Submission Status');
+                                        const attendance = safeGetCellValueAsString(teamRec, 'Attendance Format');
+                                        const memberSlotDefs = [
+                                            { label:'Captain',  field:'Team Member # 1 (Captain)', isCaptain:true  },
+                                            { label:'Member 2', field:'Team Member # 2',            isCaptain:false },
+                                            { label:'Member 3', field:'Team Member # 3',            isCaptain:false },
+                                            { label:'Member 4', field:'Team Member # 4',            isCaptain:false },
+                                            { label:'Member 5', field:'Team Member # 5',            isCaptain:false },
                                         ];
-                                        const count = memberSlots.filter(v => v && (Array.isArray(v) ? v.length > 0 : true)).length;
-                                        const isFull = count >= 5;
-                                        const isOnThisTeam = userDirId ? (findUserOnTeam([teamRec], userDirId) !== null) : false;
-                                        const isOnAnyTeam  = currentMembership !== null;
+                                        let filledCount = 0;
+                                        const slots = memberSlotDefs.map(({ label, field, isCaptain }) => {
+                                            const link = safeGetCellValue(teamRec, field);
+                                            const filled = Array.isArray(link) && link.length > 0;
+                                            if (filled) filledCount++;
+                                            return { label, field, isCaptain, filled, memberName: filled ? link[0].name : null };
+                                        });
+                                        const openCount = 5 - filledCount;
+                                        const isOnThisTeam = userDirId ? findUserOnTeam([teamRec], userDirId) !== null : false;
                                         const isCurrentCaptain = currentMembership && currentMembership.isCaptain;
+                                        const statusColor = status === 'Registered' ? '#15803D' : status === 'Pending' ? '#A16207' : '#1D4ED8';
+                                        const statusBg    = status === 'Registered' ? '#DCFCE7'  : status === 'Pending' ? '#FEF3C7'  : '#EFF6FF';
 
                                         return (
-                                            <div key={teamRec.id} className="join-team-row">
-                                                <div className="join-team-info">
-                                                    <div className="join-team-name">{tName}</div>
-                                                    <div className="join-team-meta">Captain: {captainName} · {count}/5 members</div>
+                                            <div key={teamRec.id} className="tb-card">
+                                                <div className="tb-card-header">
+                                                    <div className="tb-card-name">{tName}</div>
+                                                    <div className="tb-card-pills">
+                                                        {status    && <span className="tb-pill" style={{background:statusBg,color:statusColor}}>{status}</span>}
+                                                        {attendance && <span className="tb-pill" style={{background:'#F4F7FB',color:'#5A7A9A'}}>{attendance}</span>}
+                                                    </div>
                                                 </div>
-                                                {isOnThisTeam ? (
-                                                    <span style={{fontSize:12,fontWeight:700,color:'#15803D',whiteSpace:'nowrap'}}>You're here ✓</span>
-                                                ) : isFull ? (
-                                                    <span style={{fontSize:12,color:'#8BA5BF',whiteSpace:'nowrap'}}>Full</span>
-                                                ) : isCurrentCaptain ? (
-                                                    <span style={{fontSize:12,color:'#8BA5BF',whiteSpace:'nowrap',maxWidth:120,textAlign:'right'}}>Assign captain first</span>
-                                                ) : isOnAnyTeam ? (
-                                                    <button className="join-btn" onClick={() => setJoinConfirmTeam(teamRec)} disabled={joinSubmitting}>
-                                                        Switch →
-                                                    </button>
-                                                ) : (
-                                                    <button className="join-btn" onClick={() => setJoinConfirmTeam(teamRec)} disabled={joinSubmitting}>
-                                                        Join →
-                                                    </button>
-                                                )}
+                                                <div className="tb-card-slots">
+                                                    {slots.map(({ label, field, isCaptain, filled, memberName }) => (
+                                                        <div key={field} className={`tb-slot${filled ? ' tb-slot-filled' : ''}`}>
+                                                            {filled ? (
+                                                                <>
+                                                                    <div className="tb-slot-avatar" style={{background:'#0071CE',color:'white'}}>
+                                                                        {(memberName||'').split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase()||'?'}
+                                                                    </div>
+                                                                    <div className="tb-slot-name">{memberName}</div>
+                                                                    {isCaptain && <span className="tb-cap-badge">CAP</span>}
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <div className="tb-slot-empty-dot" />
+                                                                    <div className="tb-slot-empty-label">{label} — open</div>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="tb-card-footer">
+                                                    <div className="tb-card-count">{filledCount}/5 · {openCount} open</div>
+                                                    {isOnThisTeam ? (
+                                                        <span style={{fontSize:12,fontWeight:700,color:'#15803D'}}>You're here ✓</span>
+                                                    ) : openCount > 0 ? (
+                                                        <button
+                                                            className="tb-card-join-btn"
+                                                            disabled={joinSubmitting || !!isCurrentCaptain}
+                                                            onClick={() => {
+                                                                if (isCurrentCaptain) { setJoinError('Assign a new captain before joining another team.'); return; }
+                                                                setJoinConfirmTeam(teamRec);
+                                                            }}
+                                                        >
+                                                            {currentMembership && !isOnThisTeam ? 'Switch →' : 'Join →'}
+                                                        </button>
+                                                    ) : (
+                                                        <span className="tb-card-full">Full</span>
+                                                    )}
+                                                </div>
                                             </div>
                                         );
                                     })}
                                 </div>
-                            )}
+                            );
+                        })()}
 
-                            {joinConfirmTeam && (
-                                <div className="confirm-overlay">
-                                    <div className="confirm-text">
-                                        {currentMembership
-                                            ? <>You'll leave <strong>{currentMembership.teamName}</strong> and join <strong>{safeGetCellValueAsString(joinConfirmTeam, 'Team Name')}</strong>. Continue?</>
-                                            : <>Join <strong>{safeGetCellValueAsString(joinConfirmTeam, 'Team Name')}</strong>?</>
-                                        }
-                                    </div>
-                                    {joinError && <div className="ferr" style={{marginBottom:8}}>{joinError}</div>}
-                                    <div className="confirm-btns">
-                                        <button className="confirm-btn-yes" disabled={joinSubmitting} onClick={() => handleJoinTeam(joinConfirmTeam)}>
-                                            {joinSubmitting ? <><span className="spinner"/> Joining…</> : 'Confirm'}
-                                        </button>
-                                        <button className="confirm-btn-no" onClick={() => { setJoinConfirmTeam(null); setJoinError(''); }}>Cancel</button>
-                                    </div>
+                        {/* Join confirm overlay */}
+                        {joinConfirmTeam && (
+                            <div className="confirm-overlay" style={{marginTop:16}}>
+                                <div className="confirm-text">
+                                    {currentMembership
+                                        ? <>You'll leave <strong>{currentMembership.teamName}</strong> and join <strong>{safeGetCellValueAsString(joinConfirmTeam, 'Team Name')}</strong>. Continue?</>
+                                        : <>Join <strong>{safeGetCellValueAsString(joinConfirmTeam, 'Team Name')}</strong>?</>
+                                    }
                                 </div>
-                            )}
-                            {joinError && !joinConfirmTeam && <div className="ferr" style={{marginTop:8}}>{joinError}</div>}
-                        </>
-                    )}
-                </div>
-
-                {/* Card B: Create a New Team */}
-                <div className="step-card" style={{ borderTop: '3px solid #FFC220' }}>
-                    <div className="step-card-title">Create a New Team</div>
-                    <div className="step-card-sub">Start fresh and recruit teammates. You'll be the captain.</div>
-
-                    {!step1Complete && !selfRegistered ? (
-                        <div className="step-info"><span>ℹ️</span><div className="step-info-text">Complete Step 1 above to create a team.</div></div>
-                    ) : createSuccess ? (
-                        <div className="step-success"><span>✓</span><div className="step-success-text">{createSuccess}</div></div>
-                    ) : (
-                        <>
-                            {currentMembership && currentMembership.isCaptain && (
-                                <div className="step-warn">
-                                    <span>⚠️</span>
-                                    <div className="step-warn-text">You are currently the captain of <strong>{currentMembership.teamName}</strong>. You must assign a new captain or disband that team before creating a new one. Contact the Internal Support Team for help.</div>
+                                {joinError && <div className="ferr" style={{marginBottom:8}}>{joinError}</div>}
+                                <div className="confirm-btns">
+                                    <button className="confirm-btn-yes" disabled={joinSubmitting} onClick={() => handleJoinTeam(joinConfirmTeam)}>
+                                        {joinSubmitting ? <><span className="spinner"/> Joining…</> : 'Confirm'}
+                                    </button>
+                                    <button className="confirm-btn-no" onClick={() => { setJoinConfirmTeam(null); setJoinError(''); }}>Cancel</button>
                                 </div>
-                            )}
-                            <div className="fr">
-                                <label className="form-label">Team Name<span className="req">*</span></label>
-                                <input
-                                    className="fi"
-                                    placeholder="e.g. The Compliance Crushers"
-                                    value={createName}
-                                    onChange={e => setCreateName(e.target.value)}
-                                    disabled={currentMembership && currentMembership.isCaptain}
-                                />
                             </div>
-                            {createError && <div className="ferr">{createError}</div>}
-                            <button
-                                className="btn-primary"
-                                disabled={createSubmitting || (currentMembership && currentMembership.isCaptain)}
-                                onClick={handleCreateTeam}
-                            >
-                                {createSubmitting ? <><span className="spinner"/> Creating…</> : 'Create Team →'}
-                            </button>
-                            <div style={{fontSize:12,color:'#5A7A9A',marginTop:12,lineHeight:1.5}}>
-                                {MAX_TEAMS - liveTeams.length} of {MAX_TEAMS} spots available
-                            </div>
-                        </>
-                    )}
+                        )}
+                        {joinError && !joinConfirmTeam && <div className="ferr" style={{marginTop:8}}>{joinError}</div>}
+                        {joinSuccess && <div className="step-success" style={{marginTop:12}}><span>✓</span><div className="step-success-text">{joinSuccess}</div></div>}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Free Agent Note */}
-            <div className="free-agent-note">
+            <div className="free-agent-note" style={{marginTop:24}}>
                 <strong>Don't have a team yet?</strong> No problem — you're already in the free agent pool after completing Step 1. The organizing committee will assign you to a team before kickoff. Once you're placed on a team, you'll automatically be removed from the free agent pool.
             </div>
         </div>
