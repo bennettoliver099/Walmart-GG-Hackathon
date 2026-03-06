@@ -558,6 +558,8 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .step-card-hero .ms-selected-email{color:rgba(255,255,255,0.6);}
 .step-card-hero .ms-clear{color:rgba(255,255,255,0.6);}
 .step-card-hero .ms-clear:hover{color:white;}
+.step-card-hero .ms-sel{width:fit-content;min-width:220px;gap:20px;}
+.hero-select{width:auto !important;min-width:150px;}
 .step-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 
 /* ── TEAM BUILDER ── */
