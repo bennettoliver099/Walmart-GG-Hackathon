@@ -261,6 +261,8 @@ section[id]{scroll-margin-top:70px;}
 .hub-card-body{font-size:13px;color:${T.muted};line-height:1.65;flex:1;margin-bottom:18px;}
 .hub-card-link{font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:${T.blue};text-decoration:none;display:inline-flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;padding:0;margin-top:auto;}
 .hub-card-link:hover{text-decoration:underline;}
+.inline-link{background:none;border:none;padding:0;margin:0;font:inherit;font-weight:600;color:${T.blue};cursor:pointer;text-decoration:underline;}
+.inline-link:hover{color:${T.deep};}
 
 /* ── HUB MARKDOWN ── */
 .hub-md{font-family:'Inter',sans-serif;}
@@ -558,7 +560,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .step-card-hero .ms-selected-email{color:rgba(255,255,255,0.6);}
 .step-card-hero .ms-clear{color:rgba(255,255,255,0.6);}
 .step-card-hero .ms-clear:hover{color:white;}
-.step-card-hero .ms-sel{width:fit-content;min-width:264px;gap:20px;}
+.step-card-hero .ms-sel{width:30%;min-width:220px;gap:20px;}
 .hero-select{width:auto !important;min-width:150px;}
 .step-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 
@@ -1109,7 +1111,7 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
                             <div className="ck-row">
                                 <input type="checkbox" id="agAgreed" checked={agentAgreed} onChange={e => setAgentAgreed(e.target.checked)} />
                                 <label className="ck-label" htmlFor="agAgreed">
-                                    I have read the <a href={RULES_URL} target="_blank" rel="noreferrer">hackathon rules & guidelines</a> and agree to follow them.
+                                    I have read the <button className="inline-link" onClick={() => document.getElementById('rules-card')?.scrollIntoView({ behavior: 'smooth' })}>hackathon rules & guidelines</button> and agree to follow them.
                                 </label>
                             </div>
                             {errors.agentAgreed && <div className="ferr">{errors.agentAgreed}</div>}
@@ -2118,7 +2120,7 @@ function RegistrationSection({
                             <div className="ck-row">
                                 <input type="checkbox" id="s1agreed" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
                                 <label className="ck-label" htmlFor="s1agreed">
-                                    I have read the <a href={RULES_URL} target="_blank" rel="noreferrer">hackathon rules & guidelines</a> and agree to follow them.
+                                    I have read the <button className="inline-link" onClick={() => document.getElementById('rules-card')?.scrollIntoView({ behavior: 'smooth' })}>hackathon rules & guidelines</button> and agree to follow them.
                                 </label>
                             </div>
                         </div>
@@ -3109,7 +3111,7 @@ function App() {
                     <p className="sec-sub">Everything you need to know before you build.</p>
 
                     <div className="hub-cards">
-                        <div className="hub-card" style={{ borderTop: `3px solid ${T.blue}` }} onClick={() => setHubDocModal('rules')}>
+                        <div id="rules-card" className="hub-card" style={{ borderTop: `3px solid ${T.blue}` }} onClick={() => setHubDocModal('rules')}>
                             <div className="hub-card-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="hub-card-title">Rules & Guidelines</div>
                             <div className="hub-card-body">Official hackathon rules, eligibility requirements, and code of conduct. Read this before registering.</div>
