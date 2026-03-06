@@ -211,6 +211,13 @@ section[id]{scroll-margin-top:70px;}
 .tool-link:hover{text-decoration:underline;}
 .callout-box{background:${T.ice};border:1px solid ${T.border2};border-radius:8px;padding:16px 20px;font-size:13px;color:${T.muted};line-height:1.7;}
 .callout-box strong{color:${T.deep};}
+/* ── HACKATHON DOCS ── */
+.doc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.doc-card{background:${T.white};border:1px solid ${T.border};border-radius:8px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:10px;transition:box-shadow 0.18s;}
+.doc-card:hover{box-shadow:${T.shadowM};}
+.doc-card-name{font-size:14px;font-weight:700;color:${T.deep};line-height:1.3;}
+.doc-card-summary{font-size:12px;color:${T.muted};line-height:1.65;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;}
+.doc-card-empty{text-align:center;padding:52px 20px;color:${T.muted};font-size:14px;}
 
 /* ── REGISTRATION COLS ── */
 .reg-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
@@ -537,14 +544,13 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
             try { const f = submissionsTable.getFieldIfExists('Other Technology');   if (f && technology === 'Other') fields[f.id] = otherTech.trim(); } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Attendance Format');  if (f) fields[f.id] = { name: attendance }; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Submission Status');  if (f) fields[f.id] = { name: 'Registered' }; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member # 1 ( Captain)'); if (f && captain) fields[f.id] = [{ id: captain.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member # 2');   if (f && member2) fields[f.id] = [{ id: member2.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member # 3');   if (f && member3) fields[f.id] = [{ id: member3.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member # 4');   if (f && member4) fields[f.id] = [{ id: member4.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member # 5');   if (f && member5) fields[f.id] = [{ id: member5.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('By Selecting the checkbox, you attest that you have read the rules linked above and agree that your team will follow them.'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member #1 (Captain)'); if (f && captain) fields[f.id] = [{ id: captain.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member #2');    if (f && member2) fields[f.id] = [{ id: member2.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member #3');    if (f && member3) fields[f.id] = [{ id: member3.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member #4');    if (f && member4) fields[f.id] = [{ id: member4.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member #5');    if (f && member5) fields[f.id] = [{ id: member5.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Rules Agreement Checkbox'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Link To Hackathon Rules & Guidelines'); if (f) fields[f.id] = RULES_URL; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('AI Skill Level');    if (f && skillLevel) fields[f.id] = parseInt(skillLevel, 10); } catch (e_) { /* skip */ }
 
             await createRecordWithRetry(submissionsTable, fields, 3);
             if (onRegister) onRegister();
@@ -564,13 +570,12 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
         try {
             const fields = {};
             try { const f = submissionsTable.getFieldIfExists('Team Name');          if (f) fields[f.id] = 'Free Agent Pool'; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Submission Status');  if (f) fields[f.id] = { name: 'Free Agent' }; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Submission Status');  if (f) fields[f.id] = { name: 'Registered' }; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Technology');         if (f && agentTool) fields[f.id] = { name: agentTool }; } catch (e_) { /* skip */ }
             try { const f = submissionsTable.getFieldIfExists('Attendance Format');  if (f) fields[f.id] = { name: agentAttend }; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Team Member # 1 ( Captain)'); if (f && agentSelf) fields[f.id] = [{ id: agentSelf.id }]; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('By Selecting the checkbox, you attest that you have read the rules linked above and agree that your team will follow them.'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('Problem Interest');   if (f && agentInterest) fields[f.id] = agentInterest; } catch (e_) { /* skip */ }
-            try { const f = submissionsTable.getFieldIfExists('AI Skill Level');     if (f && agentSkill) fields[f.id] = parseInt(agentSkill, 10); } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Team Member #1 (Captain)'); if (f && agentSelf) fields[f.id] = [{ id: agentSelf.id }]; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Rules Agreement Checkbox'); if (f) fields[f.id] = true; } catch (e_) { /* skip */ }
+            try { const f = submissionsTable.getFieldIfExists('Use Case');           if (f && agentInterest) fields[f.id] = agentInterest; } catch (e_) { /* skip */ }
 
             await createRecordWithRetry(submissionsTable, fields, 3);
             if (onRegister) onRegister();
@@ -878,6 +883,7 @@ const FAQS = [
 const NAV_SECTIONS = [
     ['rules',     'Rules'    ],
     ['tools',     'Tools'    ],
+    ['resources', 'Resources'],
     ['register',  'Register' ],
     ['workspace', 'Workspace'],
     ['help',      'Help'     ],
@@ -890,9 +896,10 @@ function App() {
     // ── Tables ──────────────────────────────────────────────────────────────
     const subTable  = base.getTableByNameIfExists('Hackathon Submissions') ?? base.tables[0];
     const probTable = base.getTableByNameIfExists('Problem Statements')    ?? base.tables[0];
-    const dirTable  = base.getTableByNameIfExists('GG Directory')          ?? base.tables[0];
-    const prmTable  = base.getTableByNameIfExists('Prompt Library')        ?? base.tables[0];
+    const dirTable  = base.getTableByNameIfExists('WM Directory')          ?? base.tables[0];
+    const prmTable  = base.getTableByNameIfExists('Sample Prompts')        ?? base.tables[0];
     const regTable  = base.getTableByNameIfExists('Regulatory Documents')  ?? base.tables[0];
+    const docTable  = base.getTableByNameIfExists('Hackathon Documents')   ?? null;
 
     // ── Records ─────────────────────────────────────────────────────────────
     const submissions = useRecords(subTable);
@@ -900,6 +907,7 @@ function App() {
     const dirRecords  = useRecords(dirTable);
     const prmRecords  = useRecords(prmTable);
     const regDocs     = useRecords(regTable);
+    const hackDocs    = useRecords(docTable ?? subTable);  // fallback avoids null crash
 
     // ── UI State ─────────────────────────────────────────────────────────────
     const [showReg,         setShowReg]        = useState(false);
@@ -915,7 +923,7 @@ function App() {
     }, []);
 
     useEffect(() => {
-        const ids = ['hero', 'rules', 'tools', 'register', 'workspace', 'help'];
+        const ids = ['hero', 'rules', 'tools', 'resources', 'register', 'workspace', 'help'];
         const obs = new IntersectionObserver(entries => {
             entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(entry.target.id); });
         }, { threshold: 0.25, rootMargin: '-70px 0px -40% 0px' });
@@ -927,9 +935,15 @@ function App() {
     const sfTeamName     = subTable.getFieldIfExists('Team Name');
     const sfStatus       = subTable.getFieldIfExists('Submission Status');
 
+    // ── Field detection: hackathon docs ─────────────────────────────────────
+    const dfDocName    = docTable ? docTable.getFieldIfExists('Name')               : null;
+    const dfDocSummary = docTable ? docTable.getFieldIfExists('Attachment Summary') : null;
+    const dfDocDetails = docTable ? docTable.getFieldIfExists('Documented Details') : null;
+    const hackDocList  = docTable ? hackDocs : [];
+
     // ── Field detection: directory ───────────────────────────────────────────
-    const dfName  = dirTable.getFieldIfExists('Name')  ?? dirTable.getFieldIfExists('Associate Name');
-    const dfEmail = dirTable.getFieldIfExists('Email') ?? dirTable.getFieldIfExists('Work Email');
+    const dfName  = dirTable.getFieldIfExists('Full Name');
+    const dfEmail = dirTable.getFieldIfExists('Work Email');
 
     // ── Derived data ─────────────────────────────────────────────────────────
     const { liveTeams } = useMemo(() => {
@@ -1146,7 +1160,34 @@ function App() {
                 </div>
             </section>
 
-            {/* ── SECTION 4: HOW TO REGISTER ── */}
+            {/* ── SECTION 4: HACKATHON RESOURCES ── */}
+            <section id="resources" className="sec-white">
+                <div className="sec-wrap">
+                    <span className="sec-label">Resources</span>
+                    <h2 className="sec-h2">Hackathon Documents</h2>
+                    <p className="sec-sub">Reference materials, guides, and supporting documents for the event — AI-summarized for quick review.</p>
+                    {hackDocList.length === 0 ? (
+                        <div className="doc-card-empty">Documents will appear here once uploaded to the Hackathon Documents table.</div>
+                    ) : (
+                        <div className="doc-grid">
+                            {hackDocList.map(r => {
+                                const name    = dfDocName    ? r.getCellValueAsString(dfDocName)    : r.name;
+                                const summary = dfDocSummary ? r.getCellValueAsString(dfDocSummary) : '';
+                                const details = dfDocDetails ? r.getCellValueAsString(dfDocDetails) : '';
+                                return (
+                                    <div key={r.id} className="doc-card">
+                                        <div className="doc-card-name">{name}</div>
+                                        {summary && <div className="doc-card-summary">{summary}</div>}
+                                        {!summary && details && <div className="doc-card-summary">{details}</div>}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* ── SECTION 5: HOW TO REGISTER ── */}
             <section id="register" className="sec-white">
                 <div className="sec-wrap">
                     <span className="sec-label">Registration</span>
@@ -1196,7 +1237,7 @@ function App() {
                 </div>
             </section>
 
-            {/* ── SECTION 5: TEAM WORKSPACE PREVIEW ── */}
+            {/* ── SECTION 6: TEAM WORKSPACE PREVIEW ── */}
             <section id="workspace" className="sec-dark">
                 <div className="sec-wrap">
                     <span className="sec-label sec-label-dark">Workspace</span>
@@ -1226,7 +1267,7 @@ function App() {
                 </div>
             </section>
 
-            {/* ── SECTION 6: HELP & SUPPORT ── */}
+            {/* ── SECTION 7: HELP & SUPPORT ── */}
             <section id="help" className="sec-cloud">
                 <div className="sec-wrap">
                     <span className="sec-label">Support</span>
