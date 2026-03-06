@@ -145,7 +145,7 @@ section[id]{scroll-margin-top:70px;}
 .sec-sub-white{color:rgba(255,255,255,0.72);}
 
 /* ── HERO ── */
-.hero{background:${T.heroGrad};padding:72px 48px 72px;position:relative;overflow:hidden;min-height:420px;}
+.hero{background:${T.heroGrad};padding:72px 48px 100px;position:relative;overflow:hidden;min-height:420px;}
 .hero::after{content:'';position:absolute;top:-40%;right:-8%;width:55%;height:180%;background:radial-gradient(ellipse,rgba(44,142,244,0.18),transparent 65%);pointer-events:none;}
 .hero-inner{width:100%;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
 .hero-left{min-width:0;padding-left:48px;}
@@ -163,11 +163,18 @@ section[id]{scroll-margin-top:70px;}
 .orb-t1 .orb-dot{width:11px;height:11px;background:#FFC220;box-shadow:0 0 12px rgba(255,194,32,0.7),0 0 24px rgba(255,194,32,0.3);}
 .orb-t2 .orb-dot{width:8px;height:8px;background:white;box-shadow:0 0 9px rgba(255,255,255,0.7),0 0 18px rgba(255,255,255,0.3);}
 @keyframes lpspin{to{transform:rotate(360deg);}}
-.hero-phases-br{position:absolute;bottom:28px;right:56px;display:flex;align-items:flex-start;gap:0;z-index:2;}
-.hero-phases-br .hero-phase-node{flex:none;min-width:76px;}
+.hero-stepper{position:absolute;bottom:0;left:0;right:0;padding:16px 48px 24px;display:flex;align-items:flex-start;border-top:1px solid rgba(255,255,255,0.1);z-index:2;}
 .hero-phase-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
-.hero-phase-node:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:1px;background:rgba(255,255,255,0.2);}
-.hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.4;max-width:90px;margin-top:6px;}
+.hero-phase-node:not(:last-child)::after{content:'';position:absolute;top:6px;left:50%;width:100%;height:1px;background:rgba(255,255,255,0.18);}
+.hero-step-dot{width:12px;height:12px;border-radius:50%;position:relative;z-index:1;margin-bottom:8px;}
+.hero-step-dot-active{background:#FFC220;box-shadow:0 0 0 3px rgba(255,194,32,0.2);}
+.hero-step-dot-inactive{background:transparent;border:1.5px solid rgba(255,255,255,0.3);}
+.hero-step-label{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-align:center;margin-bottom:3px;}
+.hero-step-label-active{color:#fff;}
+.hero-step-label-inactive{color:rgba(255,255,255,0.5);}
+.hero-phase-sub{font-family:'Inter',sans-serif;font-size:10px;font-weight:400;text-align:center;line-height:1.4;}
+.hero-step-sub-active{color:rgba(255,255,255,0.7);}
+.hero-step-sub-inactive{color:rgba(255,255,255,0.38);}
 .hero-h1-pre{display:block;font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);-webkit-text-fill-color:rgba(255,255,255,0.5);background:none;margin-bottom:12px;}
 .hero h1{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-0.025em;color:${T.yellow};margin-bottom:16px;}
 .hero h1 .accent{background:linear-gradient(90deg,#CFE8FF 0%,#7EC8F8 50%,#2C8EF4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -190,7 +197,7 @@ section[id]{scroll-margin-top:70px;}
 
 /* ── STAT BAR ── */
 .stat-bar{background:${T.white};border-bottom:1px solid ${T.border};}
-.stat-bar-inner{display:grid;grid-template-columns:repeat(6,1fr);width:100%;}
+.stat-bar-inner{display:grid;grid-template-columns:repeat(5,1fr);width:100%;}
 .stat-item{padding:18px 0;border-right:1px solid ${T.border};display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;}
 .stat-item:last-child{border-right:none;}
 .stat-num{font-family:'Inter',sans-serif;font-size:22px;font-weight:700;color:${T.blue};line-height:1;}
@@ -422,7 +429,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 @media(max-width:900px){
   .hero-inner{grid-template-columns:1fr;gap:40px;}
   .hero-right{transform:scale(0.78);transform-origin:center;}
-  .hero-phases-br{right:20px;bottom:16px;}
+  .hero-stepper{padding:14px 20px 20px;}
 }
 @media(max-width:680px){
   .nav{padding:0 16px;}
@@ -431,7 +438,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .hero{padding:40px 16px 56px;}
   .hero-orbital{display:none;}
   .hero-inner{gap:0;}
-  .hero-phases-br{display:none;}
+  .hero-stepper{display:none;}
   .sec-wrap{padding:40px 20px;}
   .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
   .phase-section{padding:16px 16px 12px;}
@@ -1166,11 +1173,12 @@ function App() {
                         )}
                     </div>
                 </div>
-                <div className="hero-phases-br">
+                <div className="hero-stepper">
                     {PHASES.map(p => (
                         <div key={p.label} className="hero-phase-node">
-                            <div className={`phase-pill ${p.active ? 'phase-pill-active' : 'phase-pill-inactive'}`}>{p.label}</div>
-                            <div className="hero-phase-sub">{p.sub}</div>
+                            <div className={`hero-step-dot ${p.active ? 'hero-step-dot-active' : 'hero-step-dot-inactive'}`} />
+                            <div className={`hero-step-label ${p.active ? 'hero-step-label-active' : 'hero-step-label-inactive'}`}>{p.label}</div>
+                            <div className={`hero-phase-sub ${p.active ? 'hero-step-sub-active' : 'hero-step-sub-inactive'}`}>{p.sub}</div>
                         </div>
                     ))}
                 </div>
@@ -1198,10 +1206,6 @@ function App() {
                     <div className="stat-item">
                         <div className={`stat-num${spotsLeft <= 10 ? ' stat-num-red' : ''}`}>{spotsLeft}</div>
                         <div className="stat-label">Spots Left</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-num-sm">{countdown}</div>
-                        <div className="stat-label">Registration Closes</div>
                     </div>
                 </div>
             </div>
