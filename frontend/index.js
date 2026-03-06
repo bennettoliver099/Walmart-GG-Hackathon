@@ -515,6 +515,8 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .step-card-hero .step-info-text{color:rgba(255,255,255,0.85);}
 .step-card-hero .ferr{color:${T.yellow};background:rgba(185,28,28,0.2);}
 .step-card-hero .radio-group label{color:rgba(255,255,255,0.8);font-size:11px;}
+.step-card-hero .rp label{color:rgba(255,255,255,0.85);}
+.step-card-hero .rp input[type="radio"]:checked + label{color:white;}
 .step-card-hero .submit-err{background:rgba(185,28,28,0.2);color:#FCA5A5;}
 .step-card-hero .add-self-form{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);}
 .step-card-hero .add-self-title{color:white;}
@@ -1545,6 +1547,7 @@ function RegistrationSection({
     // ── Step 1 state ──────────────────────────────────────────────────────────
     const [selfSelected,    setSelfSelected]   = useState(null);
     const [agreed,          setAgreed]         = useState(false);
+    const [tshirtSize,      setTshirtSize]     = useState('');
     const [step1Submitting, setStep1Submitting]= useState(false);
     const [step1Error,      setStep1Error]     = useState('');
     const [step1Done,       setStep1Done]      = useState(false);
@@ -1634,16 +1637,19 @@ function RegistrationSection({
     async function handleStep1Submit() {
         if (!selfSelected) { setStep1Error('Please find and select yourself from the directory first.'); return; }
         if (!agreed)        { setStep1Error('You must agree to the rules to register.'); return; }
+        if (!tshirtSize)    { setStep1Error('Please select a T-Shirt size.'); return; }
         setStep1Error('');
         setStep1Submitting(true);
         try {
             const confirmedField     = dirTable.getFieldIfExists('Confirmed');
             const rulesField         = dirTable.getFieldIfExists('Rules Attestation');
             const freeAgentField     = dirTable.getFieldIfExists('Free Agent Registration');
+            const tshirtField        = dirTable.getFieldIfExists('T-Shirt Size');
             const updates = {};
             if (confirmedField)     updates[confirmedField.id]     = true;
             if (rulesField)         updates[rulesField.id]         = true;
             if (freeAgentField)     updates[freeAgentField.id]     = true;
+            if (tshirtField)        updates[tshirtField.id]        = { name: tshirtSize };
             await dirTable.updateRecordAsync(selfSelected.id, updates);
             setSelfRegistered({ id: selfSelected.id, name: selfSelected.name, email: selfSelected.email });
             setStep1Complete(true);
@@ -1922,6 +1928,18 @@ function RegistrationSection({
                                 )}
                             </div>
                         )}
+
+                        <div className="fr" style={{marginTop:12}}>
+                            <label className="form-label">T-Shirt Size<span className="req">*</span></label>
+                            <div className="radio-group" style={{marginTop:6,flexWrap:'wrap'}}>
+                                {['XXS','XS','S','M','L','XL','XXL','XXXL','XXXXL'].map(size => (
+                                    <div className="rp" key={size}>
+                                        <input type="radio" id={`ts-${size}`} name="tshirtSize" value={size} checked={tshirtSize === size} onChange={() => setTshirtSize(size)} autoComplete="off" />
+                                        <label htmlFor={`ts-${size}`}>{size}</label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
                         <div className="fr" style={{marginTop:16}}>
                             <div className="ck-row">
