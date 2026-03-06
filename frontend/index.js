@@ -1626,6 +1626,25 @@ function RegistrationSection({
     const dirRecordsRef = useRef(dirRecords);
     dirRecordsRef.current = dirRecords;
 
+    // ── Auto-verify localStorage identity against live data on mount ──────────
+    useEffect(() => {
+        if (!selfRegistered?.id || step1Done) return;
+        const rec = dirRecords.find(r => r.id === selfRegistered.id);
+        if (!rec) return;
+        const confirmed   = safeGetCellValue(rec, 'Confirmed');
+        const isFreeAgent = safeGetCellValue(rec, 'Free Agent Registration');
+        const onTeam      = findUserOnTeam(liveTeams, selfRegistered.id);
+        if (confirmed || isFreeAgent || onTeam) {
+            setStep1Done(true);
+            setStep1Complete(true);
+            if (onTeam) { setDuplicateStatus('on-team'); setDuplicateTeamName(onTeam.teamName); }
+        } else {
+            // Record exists but isn't registered — clear stale localStorage
+            setSelfRegistered(null);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dirRecords.length, liveTeams.length]);
+
     // ── Check if selected person is already registered ────────────────────────
     function checkDuplicate(selected) {
         if (!selected) { setDuplicateStatus(null); return; }
@@ -1816,7 +1835,6 @@ function RegistrationSection({
         if (!userDirId) return;
         const membership = findUserOnTeam([teamRecord], userDirId);
         if (!membership) return;
-        if (membership.isCaptain) { setLeaveConfirm(null); return; } // shouldn't reach here
         setLeaveSubmitting(true);
         try {
             const slotField = subTable.getFieldIfExists(membership.slot);
@@ -2174,15 +2192,13 @@ function RegistrationSection({
                                                         {isOnThisTeam ? (
                                                             <div style={{display:'flex',alignItems:'center',gap:8}}>
                                                                 <span style={{fontSize:11,fontWeight:700,color:'#15803D'}}>You're here ✓</span>
-                                                                {!isCurrentCaptain && (
-                                                                    <button
-                                                                        className="tb-leave-btn"
-                                                                        disabled={leaveSubmitting}
-                                                                        onClick={() => setLeaveConfirm(leaveConfirm?.id === teamRec.id ? null : teamRec)}
-                                                                    >
-                                                                        Leave
-                                                                    </button>
-                                                                )}
+                                                                <button
+                                                                    className="tb-leave-btn"
+                                                                    disabled={leaveSubmitting}
+                                                                    onClick={() => setLeaveConfirm(leaveConfirm?.id === teamRec.id ? null : teamRec)}
+                                                                >
+                                                                    Leave
+                                                                </button>
                                                             </div>
                                                         ) : openCount > 0 ? (
                                                             <button
@@ -2593,7 +2609,9 @@ function App() {
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
     const [hubDocModal,     setHubDocModal]    = useState(null); // null | 'rules'|'prizes'|'reginfo'|'faqs'
-    const [selfRegistered,  setSelfRegistered] = useState(null);
+    const [selfRegistered,  setSelfRegistered] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('gg_reg_user')) || null; } catch { return null; }
+    });
     const [step1Complete,   setStep1Complete]  = useState(false);
     const [showRubric,      setShowRubric]     = useState(false);
     const [productModal,    setProductModal]   = useState(null);
@@ -2622,6 +2640,14 @@ function App() {
         handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Persist selfRegistered across sessions
+    useEffect(() => {
+        try {
+            if (selfRegistered) localStorage.setItem('gg_reg_user', JSON.stringify(selfRegistered));
+            else localStorage.removeItem('gg_reg_user');
+        } catch {}
+    }, [selfRegistered]);
 
     // One-time cleanup: remove any stale localStorage from previous version
     useEffect(() => {
