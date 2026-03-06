@@ -473,11 +473,72 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .reg-pill-yellow{background:#FFF8E6;color:#78500E;}
 .reg-empty{padding:52px;text-align:center;color:${T.muted};font-size:14px;font-style:italic;}
 
+/* ── WIDER SECTION WRAP ── */
+.sec-wrap-wide{max-width:1280px;margin:0 auto;padding:72px 40px;}
+
+/* ── STEP INDICATOR ── */
+.step-indicator{display:flex;align-items:flex-start;margin-bottom:40px;position:relative;}
+.step-ind-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+.step-ind-node:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:2px;background:rgba(0,113,206,0.14);z-index:0;}
+.step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;position:relative;z-index:1;transition:all 0.2s;}
+.step-circle-active{background:#0071CE;color:white;}
+.step-circle-done{background:#22C55E;color:white;}
+.step-circle-pending{background:#F4F7FB;border:2px solid rgba(0,113,206,0.14);color:#8BA5BF;}
+.step-ind-label{margin-top:10px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;text-align:center;}
+.step-ind-label-active{color:#0B2C5F;}
+.step-ind-label-inactive{color:#8BA5BF;}
+
+/* ── STEP CONTENT BLOCKS ── */
+.step-block{margin-bottom:40px;}
+.step-block-header{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5A7A9A;margin-bottom:10px;}
+.step-card{background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:28px 28px 24px;box-shadow:0 1px 3px rgba(11,44,95,0.08);}
+.step-card-title{font-size:18px;font-weight:800;color:#0B2C5F;margin-bottom:6px;}
+.step-card-sub{font-size:13px;color:#5A7A9A;line-height:1.6;margin-bottom:20px;}
+.step-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+
+/* ── JOIN TEAM LIST ── */
+.join-team-list{max-height:320px;overflow-y:auto;border:1px solid rgba(0,113,206,0.14);border-radius:6px;margin-bottom:16px;scrollbar-width:thin;}
+.join-team-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(0,113,206,0.14);transition:background 0.12s;}
+.join-team-row:hover{background:#F4F7FB;}
+.join-team-row:last-child{border-bottom:none;}
+.join-team-info{display:flex;flex-direction:column;gap:2px;}
+.join-team-name{font-size:14px;font-weight:700;color:#0B2C5F;}
+.join-team-meta{font-size:12px;color:#5A7A9A;}
+.join-btn{background:#0071CE;color:white;border:none;border-radius:5px;padding:6px 16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;flex-shrink:0;}
+.join-btn:hover:not(:disabled){background:#0B2C5F;transform:translateY(-1px);}
+.join-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+
+/* ── INLINE SUCCESS / WARN / INFO ── */
+.step-success{display:flex;align-items:flex-start;gap:10px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:14px 18px;margin-top:16px;}
+.step-success-text{font-size:13px;font-weight:600;color:#15803D;line-height:1.5;}
+.step-warn{display:flex;align-items:flex-start;gap:10px;background:#FFF8E6;border:1px solid #F4D04A;border-radius:8px;padding:14px 18px;margin-top:12px;}
+.step-warn-text{font-size:13px;color:#78500E;line-height:1.5;}
+.step-info{display:flex;align-items:flex-start;gap:10px;background:#EFF6FF;border:1px solid rgba(0,113,206,0.26);border-radius:8px;padding:14px 18px;margin-top:12px;}
+.step-info-text{font-size:13px;color:#1D4ED8;line-height:1.5;}
+
+/* ── FREE AGENT NOTE ── */
+.free-agent-note{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:8px;padding:16px 20px;font-size:13px;color:#5A7A9A;line-height:1.65;margin-top:24px;margin-bottom:32px;}
+.free-agent-note strong{color:#0B2C5F;}
+
+/* ── CONFIRM DIALOG ── */
+.confirm-overlay{background:#FFF8E6;border:1px solid #F4D04A;border-radius:8px;padding:16px 18px;margin-top:12px;}
+.confirm-text{font-size:13px;color:#78500E;margin-bottom:12px;line-height:1.5;}
+.confirm-btns{display:flex;gap:8px;}
+.confirm-btn-yes{background:#0071CE;color:white;border:none;border-radius:5px;padding:7px 18px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.confirm-btn-yes:hover{background:#0B2C5F;}
+.confirm-btn-no{background:none;border:1px solid rgba(0,113,206,0.26);border-radius:5px;padding:7px 18px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:#5A7A9A;cursor:pointer;transition:all 0.15s;}
+.confirm-btn-no:hover{border-color:#0B2C5F;color:#0B2C5F;}
+
+/* ── ADD YOURSELF FORM ── */
+.add-self-form{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:8px;padding:20px;margin-top:12px;}
+.add-self-title{font-size:13px;font-weight:700;color:#0B2C5F;margin-bottom:14px;}
+
 /* ── MOBILE ── */
 @media(max-width:900px){
   .rule-cards,.tool-cards{grid-template-columns:1fr 1fr;}
   .help-cards{grid-template-columns:1fr;}
   .ws-feature-grid{grid-template-columns:repeat(2,1fr);}
+  .step-cols{grid-template-columns:1fr;}
 }
 @media(max-width:900px){
   .hero-inner{grid-template-columns:1fr;gap:40px;}
@@ -493,6 +554,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .hero-inner{gap:0;}
   .hero-stepper{display:none;}
   .sec-wrap{padding:40px 20px;}
+  .sec-wrap-wide{padding:40px 20px;} .step-indicator{display:none;}
   .stat-bar-inner{grid-template-columns:repeat(3,1fr);}
   .phase-section{padding:16px 16px 12px;}
   .hub-cards,.rule-cards,.tool-cards,.help-cards{grid-template-columns:1fr;}
@@ -990,20 +1052,11 @@ const WORKSPACE_TILES = [
     { Icon: UserCircleIcon,    label: 'Mentor Access',        desc: "Your assigned mentor's contact info and office hours."                 },
 ];
 
-const FAQS = [
-    { q: 'Can I use more than one tool?',                               a: 'Yes, if your use case calls for it. Just note one primary tool on your registration.' },
-    { q: "What if a teammate can't participate?",                       a: 'Submit a team change request via the #gg-hackathon Teams channel. Changes must be finalized before March 14.' },
-    { q: 'Do we need to have a problem statement picked before registering?', a: 'No. You can refine your use case after registration. Use the Problem Statements section in the main portal for inspiration.' },
-    { q: 'When does the build window start?',                           a: 'Monday March 16. No building before then — but you can plan, research tools, and attend training.' },
-    { q: 'Who judges the submissions?',                                 a: 'A panel of Global Governance leadership and invited executives. Top 5 teams present at the Science Fair on March 20.' },
-];
-
 const NAV_SECTIONS = [
-    ['rules',         'Rules'               ],
-    ['tools',         'Tools'               ],
-    ['register',      'Register'            ],
-    ['registrations', 'Active Registrations'],
-    ['help',          'Help'                ],
+    ['rules',    'Rules'    ],
+    ['tools',    'Tools'    ],
+    ['register', 'Register' ],
+    ['help',     'Help'     ],
 ];
 
 // ─── RULES MODAL ──────────────────────────────────────────────────────────────
@@ -1385,6 +1438,634 @@ function AdminView({ onBack, liveTeams, subTable, sfTeamName, sfStatus, totalTea
     );
 }
 
+// ─── REGISTRATION SECTION ─────────────────────────────────────────────────────
+function RegistrationSection({
+    dirTable, subTable, dirRecords, liveTeams, freeAgents,
+    dfName, dfEmail,
+    regTab, setRegTab, rosterTeam, setRosterTeam,
+    selfRegistered, setSelfRegistered, step1Complete, setStep1Complete,
+}) {
+    // ── Step 1 state ──────────────────────────────────────────────────────────
+    const [selfSelected,    setSelfSelected]   = useState(null);
+    const [agreed,          setAgreed]         = useState(false);
+    const [step1Submitting, setStep1Submitting]= useState(false);
+    const [step1Error,      setStep1Error]     = useState('');
+    const [step1Done,       setStep1Done]      = useState(false);
+    const [duplicateStatus, setDuplicateStatus]= useState(null); // null | 'on-team' | 'free-agent'
+    const [duplicateTeamName, setDuplicateTeamName] = useState('');
+
+    // ── Add Yourself form state ───────────────────────────────────────────────
+    const [showAddSelf,     setShowAddSelf]    = useState(false);
+    const [addFirstName,    setAddFirstName]   = useState('');
+    const [addLastName,     setAddLastName]    = useState('');
+    const [addEmail,        setAddEmail]       = useState('');
+    const [addAssocType,    setAddAssocType]   = useState('');
+    const [addPayType,      setAddPayType]     = useState('');
+    const [addSubmitting,   setAddSubmitting]  = useState(false);
+    const [addError,        setAddError]       = useState('');
+    const [addEmailMatch,   setAddEmailMatch]  = useState(null);
+
+    // ── Step 2 state ──────────────────────────────────────────────────────────
+    const [joinConfirmTeam,   setJoinConfirmTeam]  = useState(null);
+    const [joinSubmitting,    setJoinSubmitting]   = useState(false);
+    const [joinError,         setJoinError]        = useState('');
+    const [joinSuccess,       setJoinSuccess]      = useState('');
+    const [createName,        setCreateName]       = useState('');
+    const [createSubmitting,  setCreateSubmitting] = useState(false);
+    const [createError,       setCreateError]      = useState('');
+    const [createSuccess,     setCreateSuccess]    = useState('');
+    const [captainLeaveChoice, setCaptainLeaveChoice] = useState(null); // null | 'reassign' | 'disband'
+    const [reassignTo,         setReassignTo]          = useState('');
+
+    const userDirId = selfRegistered ? selfRegistered.id : null;
+
+    // ── Check if selected person is already registered ────────────────────────
+    function checkDuplicate(selected) {
+        if (!selected) { setDuplicateStatus(null); return; }
+        const rec = dirRecords.find(r => r.id === selected.id);
+        const confirmed   = rec ? safeGetCellValue(rec, 'Confirmed') : false;
+        const isFreeAgent = rec ? safeGetCellValue(rec, 'Free Agent Registration') : false;
+        const onTeam      = findUserOnTeam(liveTeams, selected.id);
+        if (onTeam) {
+            setDuplicateStatus('on-team');
+            setDuplicateTeamName(onTeam.teamName);
+        } else if (confirmed || isFreeAgent) {
+            setDuplicateStatus('free-agent');
+            setDuplicateTeamName('');
+        } else {
+            setDuplicateStatus(null);
+        }
+    }
+
+    function handleSelfSelect(val) {
+        setSelfSelected(val);
+        checkDuplicate(val);
+    }
+
+    // ── Step 1 submit ─────────────────────────────────────────────────────────
+    async function handleStep1Submit() {
+        if (!selfSelected) { setStep1Error('Please find and select yourself from the directory first.'); return; }
+        if (!agreed)        { setStep1Error('You must agree to the rules to register.'); return; }
+        setStep1Error('');
+        setStep1Submitting(true);
+        try {
+            const confirmedField     = dirTable.getFieldIfExists('Confirmed');
+            const rulesField         = dirTable.getFieldIfExists('Rules Attestation');
+            const freeAgentField     = dirTable.getFieldIfExists('Free Agent Registration');
+            const updates = {};
+            if (confirmedField)     updates[confirmedField.id]     = true;
+            if (rulesField)         updates[rulesField.id]         = true;
+            if (freeAgentField)     updates[freeAgentField.id]     = true;
+            await dirTable.updateRecordAsync(selfSelected.id, updates);
+            setSelfRegistered({ id: selfSelected.id, name: selfSelected.name, email: selfSelected.email });
+            setStep1Complete(true);
+            setStep1Done(true);
+        } catch (err) {
+            const msg = (err?.message ?? '').toLowerCase();
+            const isPerms = msg.includes('permission') || msg.includes('not authorized') || msg.includes('read only');
+            setStep1Error(isPerms
+                ? `Write access required. Please complete registration via the external form: ${EXTERNAL_FORM_URL}`
+                : (err?.message || 'Something went wrong. Please try again.')
+            );
+        } finally {
+            setStep1Submitting(false);
+        }
+    }
+
+    // ── Add Yourself ──────────────────────────────────────────────────────────
+    async function handleAddSelf() {
+        if (!addFirstName.trim() || !addLastName.trim() || !addEmail.trim() || !addAssocType || !addPayType) {
+            setAddError('All fields are required.');
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addEmail.trim())) {
+            setAddError('Please enter a valid work email.');
+            return;
+        }
+        setAddError('');
+        const emailLower = addEmail.trim().toLowerCase();
+        const existing = dirRecords.find(r => safeGetCellValueAsString(r, 'Work Email').trim().toLowerCase() === emailLower);
+        if (existing) {
+            setAddEmailMatch(existing);
+            return;
+        }
+        setAddSubmitting(true);
+        try {
+            const f1 = dirTable.getFieldIfExists('First Name');
+            const f2 = dirTable.getFieldIfExists('Last Name');
+            const f3 = dirTable.getFieldIfExists('Work Email');
+            const f4 = dirTable.getFieldIfExists('Associate Type');
+            const f5 = dirTable.getFieldIfExists('Pay Type');
+            const fields = {};
+            if (f1) fields[f1.id] = addFirstName.trim();
+            if (f2) fields[f2.id] = addLastName.trim();
+            if (f3) fields[f3.id] = addEmail.trim();
+            if (f4) fields[f4.id] = { name: addAssocType };
+            if (f5) fields[f5.id] = { name: addPayType };
+            await dirTable.createRecordAsync(fields);
+            setShowAddSelf(false);
+            // Wait for reactive update then auto-select
+            setTimeout(() => {
+                const newRec = dirRecords.find(r =>
+                    safeGetCellValueAsString(r, 'Work Email').trim().toLowerCase() === emailLower
+                );
+                if (newRec) {
+                    const name  = dfName  ? newRec.getCellValueAsString(dfName)  : `${addFirstName} ${addLastName}`;
+                    const email = dfEmail ? newRec.getCellValueAsString(dfEmail) : addEmail;
+                    handleSelfSelect({ id: newRec.id, name, email });
+                }
+            }, 800);
+        } catch (err) {
+            setAddError(err?.message || 'Failed to add. Please try again.');
+        } finally {
+            setAddSubmitting(false);
+        }
+    }
+
+    function handleEmailMatchSelect(rec) {
+        const name  = dfName  ? rec.getCellValueAsString(dfName)  : safeGetCellValueAsString(rec, 'Full Name');
+        const email = dfEmail ? rec.getCellValueAsString(dfEmail) : safeGetCellValueAsString(rec, 'Work Email');
+        handleSelfSelect({ id: rec.id, name, email });
+        setAddEmailMatch(null);
+        setShowAddSelf(false);
+    }
+
+    // ── Step 2: Join Team ─────────────────────────────────────────────────────
+    async function handleJoinTeam(teamRecord) {
+        if (!userDirId) { setJoinError('Complete Step 1 first.'); return; }
+        setJoinSubmitting(true);
+        setJoinError('');
+        try {
+            // Check if already on a team → need to leave first
+            const existing = findUserOnTeam(liveTeams, userDirId);
+            if (existing) {
+                if (!existing.isCaptain) {
+                    // Simple removal
+                    const oldField = subTable.getFieldIfExists(existing.slot);
+                    if (oldField) {
+                        await subTable.updateRecordAsync(existing.team.id, { [oldField.id]: [] });
+                    }
+                }
+                // If captain, the UI should have prevented this path — skip for safety
+            }
+            // Find first empty slot
+            const slots = ['Team Member # 2', 'Team Member # 3', 'Team Member # 4', 'Team Member # 5'];
+            let placed = false;
+            for (const slotName of slots) {
+                const val = safeGetCellValue(teamRecord, slotName);
+                if (!val || (Array.isArray(val) && val.length === 0)) {
+                    const f = subTable.getFieldIfExists(slotName);
+                    if (f) {
+                        await subTable.updateRecordAsync(teamRecord.id, { [f.id]: [{ id: userDirId }] });
+                        placed = true;
+                        break;
+                    }
+                }
+            }
+            if (!placed) { setJoinError('This team is full.'); return; }
+            // Remove from free agent pool
+            const faField = dirTable.getFieldIfExists('Free Agent Registration');
+            if (faField) await dirTable.updateRecordAsync(userDirId, { [faField.id]: false });
+            const tName = safeGetCellValueAsString(teamRecord, 'Team Name');
+            setJoinSuccess(`✓ You've joined ${tName}! You can see your team in the Active Participants list below.`);
+            setJoinConfirmTeam(null);
+        } catch (err) {
+            setJoinError(err?.message || 'Failed to join team. Please try again.');
+        } finally {
+            setJoinSubmitting(false);
+        }
+    }
+
+    // ── Step 2: Create Team ───────────────────────────────────────────────────
+    async function handleCreateTeam() {
+        if (!userDirId) { setCreateError('Complete Step 1 first.'); return; }
+        if (!createName.trim()) { setCreateError('Team name is required.'); return; }
+        const nameExists = liveTeams.some(r =>
+            safeGetCellValueAsString(r, 'Team Name').trim().toLowerCase() === createName.trim().toLowerCase()
+        );
+        if (nameExists) { setCreateError('A team with this name already exists.'); return; }
+        setCreateSubmitting(true);
+        setCreateError('');
+        try {
+            // If already on a team (non-captain), leave first
+            const existing = findUserOnTeam(liveTeams, userDirId);
+            if (existing && !existing.isCaptain) {
+                const oldField = subTable.getFieldIfExists(existing.slot);
+                if (oldField) await subTable.updateRecordAsync(existing.team.id, { [oldField.id]: [] });
+            }
+            const fields = {};
+            const f1 = subTable.getFieldIfExists('Team Name');
+            const f2 = subTable.getFieldIfExists('Submission Status');
+            const f3 = subTable.getFieldIfExists('Team Member # 1 (Captain)');
+            if (f1) fields[f1.id] = createName.trim();
+            if (f2) fields[f2.id] = { name: 'Registered' };
+            if (f3) fields[f3.id] = [{ id: userDirId }];
+            await subTable.createRecordAsync(fields);
+            const faField = dirTable.getFieldIfExists('Free Agent Registration');
+            if (faField) await dirTable.updateRecordAsync(userDirId, { [faField.id]: false });
+            setCreateSuccess(`✓ ${createName.trim()} created! You're the team captain. Share this page with teammates so they can join.`);
+            setCreateName('');
+        } catch (err) {
+            setCreateError(err?.message || 'Failed to create team. Please try again.');
+        } finally {
+            setCreateSubmitting(false);
+        }
+    }
+
+    // ── Computed values ───────────────────────────────────────────────────────
+    const currentMembership = userDirId ? findUserOnTeam(liveTeams, userDirId) : null;
+    const step1State = step1Done || (selfRegistered && selfRegistered.id) ? 'done' : 'active';
+    const step2State = (step1Done || (selfRegistered && selfRegistered.id)) ? 'active' : 'pending';
+    const step3State = currentMembership ? 'done' : step2State === 'active' ? 'active' : 'pending';
+
+    return (
+        <>
+        {/* Step Indicator */}
+        <div className="step-indicator">
+            {[
+                { num: '1', label: 'Register Yourself', state: step1State },
+                { num: '2', label: 'Join or Create a Team', state: step2State },
+                { num: '3', label: "You're In", state: step3State },
+            ].map(({ num, label, state }) => (
+                <div key={num} className="step-ind-node">
+                    <div className={`step-circle ${state === 'done' ? 'step-circle-done' : state === 'active' ? 'step-circle-active' : 'step-circle-pending'}`}>
+                        {state === 'done' ? '✓' : num}
+                    </div>
+                    <div className={`step-ind-label ${state === 'pending' ? 'step-ind-label-inactive' : 'step-ind-label-active'}`}>{label}</div>
+                </div>
+            ))}
+        </div>
+
+        {/* BLOCK 1: Register Yourself */}
+        <div className="step-block">
+            <div className="step-block-header">Step 1 — Register for the Event</div>
+            <div className="step-card" style={{ borderTop: '3px solid #0071CE' }}>
+                <div className="step-card-title">Register for the Event</div>
+                <div className="step-card-sub">Find yourself in the Walmart directory, agree to the rules, and register as a participant. Everyone starts as a free agent — you'll join or create a team in Step 2.</div>
+
+                {step1Done || (selfRegistered && selfRegistered.id) ? (
+                    <div className="step-success">
+                        <span style={{fontSize:18}}>✓</span>
+                        <div className="step-success-text">
+                            You're registered as <strong>{selfRegistered ? selfRegistered.name : 'a participant'}</strong>! Join or create a team below — or stay in the free agent pool for assignment.
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <MemberSearch
+                            label="Find Yourself in the Directory"
+                            dirRecords={dirRecords}
+                            nameField={dfName}
+                            emailField={dfEmail}
+                            selected={selfSelected}
+                            onSelect={handleSelfSelect}
+                        />
+
+                        {duplicateStatus === 'on-team' && (
+                            <div className="step-warn">
+                                <span>⚠️</span>
+                                <div className="step-warn-text">You have already registered and are on team <strong>{duplicateTeamName}</strong>. If you need to make changes, please reach out to the Internal Support Team.</div>
+                            </div>
+                        )}
+                        {duplicateStatus === 'free-agent' && (
+                            <div className="step-info">
+                                <span>ℹ️</span>
+                                <div className="step-info-text">You're already registered and in the free agent pool. Scroll down to Step 2 to join or create a team.</div>
+                            </div>
+                        )}
+
+                        <div style={{marginTop:12}}>
+                            <button className="hub-card-link" onClick={() => setShowAddSelf(s => !s)}>
+                                {showAddSelf ? '▾' : '▸'} Can't find your name? Add yourself to the directory →
+                            </button>
+                        </div>
+
+                        {showAddSelf && (
+                            <div className="add-self-form">
+                                <div className="add-self-title">Add Yourself to the Directory</div>
+                                {addEmailMatch ? (
+                                    <div className="step-info" style={{marginTop:0,marginBottom:12}}>
+                                        <div>
+                                            <div className="step-info-text">We found <strong>{safeGetCellValueAsString(addEmailMatch, 'Full Name') || 'someone'}</strong> with that email. Is this you?</div>
+                                            <button className="join-btn" style={{marginTop:8}} onClick={() => handleEmailMatchSelect(addEmailMatch)}>Select This Person</button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="fr-2">
+                                            <div className="fr">
+                                                <label className="form-label">First Name<span className="req">*</span></label>
+                                                <input className="fi" placeholder="First" value={addFirstName} onChange={e => setAddFirstName(e.target.value)} />
+                                            </div>
+                                            <div className="fr">
+                                                <label className="form-label">Last Name<span className="req">*</span></label>
+                                                <input className="fi" placeholder="Last" value={addLastName} onChange={e => setAddLastName(e.target.value)} />
+                                            </div>
+                                        </div>
+                                        <div className="fr">
+                                            <label className="form-label">Work Email<span className="req">*</span></label>
+                                            <input className="fi" type="email" placeholder="you@walmart.com" value={addEmail} onChange={e => setAddEmail(e.target.value)} />
+                                        </div>
+                                        <div className="fr">
+                                            <label className="form-label">Associate Type<span className="req">*</span></label>
+                                            <div className="radio-group" style={{marginTop:6}}>
+                                                {['Full-Time','Temp','Part-Time','Other'].map(t => (
+                                                    <div className="rp" key={t}>
+                                                        <input type="radio" id={`at-${t}`} name="addAssocType" value={t} checked={addAssocType===t} onChange={() => setAddAssocType(t)} />
+                                                        <label htmlFor={`at-${t}`}>{t}</label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="fr">
+                                            <label className="form-label">Pay Type<span className="req">*</span></label>
+                                            <div className="radio-group" style={{marginTop:6}}>
+                                                {['Salaried','Hourly'].map(t => (
+                                                    <div className="rp" key={t}>
+                                                        <input type="radio" id={`pt-${t}`} name="addPayType" value={t} checked={addPayType===t} onChange={() => setAddPayType(t)} />
+                                                        <label htmlFor={`pt-${t}`}>{t}</label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        {addError && <div className="ferr">{addError}</div>}
+                                        <button className="submit-btn" style={{marginTop:8}} disabled={addSubmitting} onClick={handleAddSelf}>
+                                            {addSubmitting ? <><span className="spinner"/> Adding…</> : '+ Add to Directory'}
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="fr" style={{marginTop:16}}>
+                            <div className="ck-row">
+                                <input type="checkbox" id="s1agreed" checked={agreed} onChange={e => setAgreed(e.target.checked)} />
+                                <label className="ck-label" htmlFor="s1agreed">
+                                    I have read the <a href={RULES_URL} target="_blank" rel="noreferrer">hackathon rules & guidelines</a> and agree to follow them.
+                                </label>
+                            </div>
+                        </div>
+
+                        {step1Error && <div className="submit-err" style={{marginTop:8}}>{step1Error}</div>}
+
+                        <button
+                            className="btn-primary"
+                            style={{marginTop:16}}
+                            disabled={step1Submitting || duplicateStatus !== null}
+                            onClick={handleStep1Submit}
+                        >
+                            {step1Submitting ? <><span className="spinner"/> Registering…</> : 'Register as Participant →'}
+                        </button>
+                    </>
+                )}
+            </div>
+        </div>
+
+        {/* BLOCK 2: Join or Create a Team */}
+        <div className="step-block">
+            <div className="step-block-header">Step 2 — Join or Create a Team</div>
+            <div className="step-cols">
+                {/* Card A: Join an Existing Team */}
+                <div className="step-card" style={{ borderTop: '3px solid #2C8EF4' }}>
+                    <div className="step-card-title">Join an Existing Team</div>
+                    <div className="step-card-sub">Browse open teams and request to join.</div>
+
+                    {!step1Complete && !selfRegistered ? (
+                        <div className="step-info"><span>ℹ️</span><div className="step-info-text">Complete Step 1 above to join a team.</div></div>
+                    ) : joinSuccess ? (
+                        <div className="step-success"><span>✓</span><div className="step-success-text">{joinSuccess}</div></div>
+                    ) : (
+                        <>
+                            {liveTeams.length === 0 ? (
+                                <div className="reg-empty" style={{padding:'24px 0'}}>No teams yet — be the first to create one.</div>
+                            ) : (
+                                <div className="join-team-list">
+                                    {liveTeams.map(teamRec => {
+                                        const tName = safeGetCellValueAsString(teamRec, 'Team Name');
+                                        const captainLink = safeGetCellValue(teamRec, 'Team Member # 1 (Captain)');
+                                        const captainName = Array.isArray(captainLink) && captainLink.length > 0 ? captainLink[0].name : '—';
+                                        const memberSlots = [
+                                            safeGetCellValue(teamRec, 'Team Member # 1 (Captain)'),
+                                            safeGetCellValue(teamRec, 'Team Member # 2'),
+                                            safeGetCellValue(teamRec, 'Team Member # 3'),
+                                            safeGetCellValue(teamRec, 'Team Member # 4'),
+                                            safeGetCellValue(teamRec, 'Team Member # 5'),
+                                        ];
+                                        const count = memberSlots.filter(v => v && (Array.isArray(v) ? v.length > 0 : true)).length;
+                                        const isFull = count >= 5;
+                                        const isOnThisTeam = userDirId ? (findUserOnTeam([teamRec], userDirId) !== null) : false;
+                                        const isOnAnyTeam  = currentMembership !== null;
+                                        const isCurrentCaptain = currentMembership && currentMembership.isCaptain;
+
+                                        return (
+                                            <div key={teamRec.id} className="join-team-row">
+                                                <div className="join-team-info">
+                                                    <div className="join-team-name">{tName}</div>
+                                                    <div className="join-team-meta">Captain: {captainName} · {count}/5 members</div>
+                                                </div>
+                                                {isOnThisTeam ? (
+                                                    <span style={{fontSize:12,fontWeight:700,color:'#15803D',whiteSpace:'nowrap'}}>You're here ✓</span>
+                                                ) : isFull ? (
+                                                    <span style={{fontSize:12,color:'#8BA5BF',whiteSpace:'nowrap'}}>Full</span>
+                                                ) : isCurrentCaptain ? (
+                                                    <span style={{fontSize:12,color:'#8BA5BF',whiteSpace:'nowrap',maxWidth:120,textAlign:'right'}}>Assign captain first</span>
+                                                ) : isOnAnyTeam ? (
+                                                    <button className="join-btn" onClick={() => setJoinConfirmTeam(teamRec)} disabled={joinSubmitting}>
+                                                        Switch →
+                                                    </button>
+                                                ) : (
+                                                    <button className="join-btn" onClick={() => setJoinConfirmTeam(teamRec)} disabled={joinSubmitting}>
+                                                        Join →
+                                                    </button>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+                            {joinConfirmTeam && (
+                                <div className="confirm-overlay">
+                                    <div className="confirm-text">
+                                        {currentMembership
+                                            ? <>You'll leave <strong>{currentMembership.teamName}</strong> and join <strong>{safeGetCellValueAsString(joinConfirmTeam, 'Team Name')}</strong>. Continue?</>
+                                            : <>Join <strong>{safeGetCellValueAsString(joinConfirmTeam, 'Team Name')}</strong>?</>
+                                        }
+                                    </div>
+                                    {joinError && <div className="ferr" style={{marginBottom:8}}>{joinError}</div>}
+                                    <div className="confirm-btns">
+                                        <button className="confirm-btn-yes" disabled={joinSubmitting} onClick={() => handleJoinTeam(joinConfirmTeam)}>
+                                            {joinSubmitting ? <><span className="spinner"/> Joining…</> : 'Confirm'}
+                                        </button>
+                                        <button className="confirm-btn-no" onClick={() => { setJoinConfirmTeam(null); setJoinError(''); }}>Cancel</button>
+                                    </div>
+                                </div>
+                            )}
+                            {joinError && !joinConfirmTeam && <div className="ferr" style={{marginTop:8}}>{joinError}</div>}
+                        </>
+                    )}
+                </div>
+
+                {/* Card B: Create a New Team */}
+                <div className="step-card" style={{ borderTop: '3px solid #FFC220' }}>
+                    <div className="step-card-title">Create a New Team</div>
+                    <div className="step-card-sub">Start fresh and recruit teammates. You'll be the captain.</div>
+
+                    {!step1Complete && !selfRegistered ? (
+                        <div className="step-info"><span>ℹ️</span><div className="step-info-text">Complete Step 1 above to create a team.</div></div>
+                    ) : createSuccess ? (
+                        <div className="step-success"><span>✓</span><div className="step-success-text">{createSuccess}</div></div>
+                    ) : (
+                        <>
+                            {currentMembership && currentMembership.isCaptain && (
+                                <div className="step-warn">
+                                    <span>⚠️</span>
+                                    <div className="step-warn-text">You are currently the captain of <strong>{currentMembership.teamName}</strong>. You must assign a new captain or disband that team before creating a new one. Contact the Internal Support Team for help.</div>
+                                </div>
+                            )}
+                            <div className="fr">
+                                <label className="form-label">Team Name<span className="req">*</span></label>
+                                <input
+                                    className="fi"
+                                    placeholder="e.g. The Compliance Crushers"
+                                    value={createName}
+                                    onChange={e => setCreateName(e.target.value)}
+                                    disabled={currentMembership && currentMembership.isCaptain}
+                                />
+                            </div>
+                            {createError && <div className="ferr">{createError}</div>}
+                            <button
+                                className="btn-primary"
+                                disabled={createSubmitting || (currentMembership && currentMembership.isCaptain)}
+                                onClick={handleCreateTeam}
+                            >
+                                {createSubmitting ? <><span className="spinner"/> Creating…</> : 'Create Team →'}
+                            </button>
+                            <div style={{fontSize:12,color:'#5A7A9A',marginTop:12,lineHeight:1.5}}>
+                                {MAX_TEAMS - liveTeams.length} of {MAX_TEAMS} spots available
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+
+            {/* Free Agent Note */}
+            <div className="free-agent-note">
+                <strong>Don't have a team yet?</strong> No problem — you're already in the free agent pool after completing Step 1. The organizing committee will assign you to a team before kickoff. Once you're placed on a team, you'll automatically be removed from the free agent pool.
+            </div>
+        </div>
+
+        {/* BLOCK 3: Active Participants */}
+        <div className="step-block">
+            <div className="step-block-header">Step 3 — Active Participants</div>
+            <div style={{marginBottom:8}}>
+                <div style={{fontSize:13,color:'#5A7A9A',marginBottom:20}}>All registered teams and free agents for the hackathon.</div>
+                <div className="reg-tabs">
+                    <button className={`reg-tab${regTab === 'teams' ? ' active' : ''}`} onClick={() => setRegTab('teams')}>
+                        Teams ({liveTeams.length})
+                    </button>
+                    <button className={`reg-tab${regTab === 'agents' ? ' active' : ''}`} onClick={() => setRegTab('agents')}>
+                        Free Agents ({freeAgents.length})
+                    </button>
+                </div>
+
+                {regTab === 'teams' ? (
+                    liveTeams.length === 0 ? (
+                        <div className="reg-empty">No teams registered yet.</div>
+                    ) : (<>
+                        <div className="reg-header-row">
+                            <div className="reg-header-col">Team</div>
+                            <div className="reg-header-col">Tool</div>
+                            <div className="reg-header-col">Captain</div>
+                            <div className="reg-header-col">Status</div>
+                            <div className="reg-header-col">Members</div>
+                        </div>
+                        {liveTeams.map(r => {
+                            const name        = safeGetCellValueAsString(r, 'Team Name');
+                            const tech        = safeGetCellValueAsString(r, 'Technology');
+                            const status      = safeGetCellValueAsString(r, 'Submission Status');
+                            const captainLink = safeGetCellValue(r, 'Team Member # 1 (Captain)');
+                            const captainName = Array.isArray(captainLink) && captainLink.length > 0 ? captainLink[0].name : '';
+                            const memberFields = [
+                                captainLink,
+                                safeGetCellValue(r, 'Team Member # 2'),
+                                safeGetCellValue(r, 'Team Member # 3'),
+                                safeGetCellValue(r, 'Team Member # 4'),
+                                safeGetCellValue(r, 'Team Member # 5'),
+                            ];
+                            const memberCount = memberFields.filter(v => v && (Array.isArray(v) ? v.length > 0 : true)).length;
+                            const techPill   = tech === 'Airtable' ? 'reg-pill-blue' : tech === 'CodePuppy' ? 'reg-pill-green' : tech === 'Harvey' ? 'reg-pill-purple' : 'reg-pill-gray';
+                            const statusPill = status === 'Submitted' ? 'reg-pill-blue' : status === 'Registered' ? 'reg-pill-green' : status === 'Pending' ? 'reg-pill-yellow' : 'reg-pill-gray';
+                            return (
+                                <div key={r.id} className="reg-row">
+                                    <button className="reg-team-link" onClick={() => setRosterTeam(r)}>{name || '—'}</button>
+                                    <div><span className={`reg-pill ${techPill}`}>{tech || '—'}</span></div>
+                                    <div className="reg-cell">{captainName || '—'}</div>
+                                    <div><span className={`reg-pill ${statusPill}`}>{status || '—'}</span></div>
+                                    <div className="reg-cell">{memberCount > 0 ? `${memberCount}/5` : '—'}</div>
+                                </div>
+                            );
+                        })}
+                    </>)
+                ) : (
+                    freeAgents.length === 0 ? (
+                        <div className="reg-empty">No free agents have signed up yet.</div>
+                    ) : (<>
+                        <div className="reg-header-row" style={{gridTemplateColumns:'2fr 2fr 1fr 1fr'}}>
+                            <div className="reg-header-col">Name</div>
+                            <div className="reg-header-col">Email</div>
+                            <div className="reg-header-col">Function</div>
+                            <div className="reg-header-col">Location</div>
+                        </div>
+                        {freeAgents.map(r => {
+                            const name     = safeGetCellValueAsString(r, 'Full Name');
+                            const email    = safeGetCellValueAsString(r, 'Work Email');
+                            const fn       = safeGetCellValueAsString(r, 'Function');
+                            const city     = safeGetCellValueAsString(r, 'Work City');
+                            const state    = safeGetCellValueAsString(r, 'Work State');
+                            const location = [city, state].filter(Boolean).join(', ').toUpperCase();
+                            return (
+                                <div key={r.id} className="reg-row" style={{gridTemplateColumns:'2fr 2fr 1fr 1fr'}}>
+                                    <div className="reg-cell-name">{name || '—'}</div>
+                                    <div className="reg-cell">{email || '—'}</div>
+                                    <div className="reg-cell">{fn || '—'}</div>
+                                    <div className="reg-cell">{location || '—'}</div>
+                                </div>
+                            );
+                        })}
+                    </>)
+                )}
+            </div>
+        </div>
+        </>
+    );
+}
+
+// ─── FIND USER ON TEAM ────────────────────────────────────────────────────────
+function findUserOnTeam(liveTeams, userId) {
+    const slots = [
+        'Team Member # 1 (Captain)',
+        'Team Member # 2',
+        'Team Member # 3',
+        'Team Member # 4',
+        'Team Member # 5',
+    ];
+    for (const team of liveTeams) {
+        for (const slot of slots) {
+            const val = safeGetCellValue(team, slot);
+            if (Array.isArray(val) && val.some(link => link.id === userId)) {
+                return {
+                    team,
+                    slot,
+                    teamName: safeGetCellValueAsString(team, 'Team Name'),
+                    isCaptain: slot.includes('Captain'),
+                };
+            }
+        }
+    }
+    return null;
+}
+
 // ─── ROSTER MODAL ─────────────────────────────────────────────────────────────
 function RosterModal({ record: r, onClose }) {
     const name       = safeGetCellValueAsString(r, 'Team Name');
@@ -1466,7 +2147,8 @@ function App() {
     const [modalInitScreen, setModalInitScreen]= useState(0);
     const [showRulesModal,  setShowRulesModal] = useState(false);
     const [hubDocModal,     setHubDocModal]    = useState(null); // null | 'rules'|'prizes'|'reginfo'|'faqs'
-    const [openFaq,         setOpenFaq]        = useState(null);
+    const [selfRegistered,  setSelfRegistered] = useState(null);
+    const [step1Complete,   setStep1Complete]  = useState(false);
     const [showRubric,      setShowRubric]     = useState(false);
     const [countdown,       setCountdown]      = useState(getCountdown);
     const cd = useCountdown(HERO_COUNTDOWN_TARGET);
@@ -1477,7 +2159,7 @@ function App() {
     }, []);
 
     useEffect(() => {
-        const ids = ['hero', 'rules', 'tools', 'register', 'registrations', 'help'];
+        const ids = ['hero', 'rules', 'tools', 'register', 'help'];
         const handleScroll = () => {
             let active = ids[0];
             for (const id of ids) {
@@ -1606,8 +2288,7 @@ function App() {
                     ))}
                 </div>
                 <div className="nav-right">
-                    <span className="nav-countdown">Closes {countdown}</span>
-                    <button className="nav-cta" onClick={() => openModal(0)}>Register Now →</button>
+                    <button className="nav-cta" onClick={() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })}>Register Now →</button>
                     <button className="nav-cta" style={{background:T.deep,color:'#fff',boxShadow:'none'}} onClick={() => setCurrentView('admin')}>Admin</button>
                 </div>
             </nav>
@@ -1789,142 +2470,33 @@ function App() {
                 </div>
             </section>
 
-            {/* ── SECTION 4: HOW TO REGISTER ── */}
+            {/* ── SECTION 4: REGISTRATION ── */}
             <section id="register" className="sec-white">
-                <div className="sec-wrap">
-                    <span className="sec-label">Registration</span>
-                    <h2 className="sec-h2">Join the Hackathon</h2>
-                    <p className="sec-sub">Registration closes March 9 at 5pm CT. Spots are limited to 50 teams.</p>
-
-                    <div className="reg-cols">
-                        <div className="reg-col-card" style={{ borderTop: `3px solid ${T.blue}` }}>
-                            <div className="reg-col-head">Team Registration</div>
-                            <ol className="step-list">
-                                {[
-                                    'Team captain fills out the registration form below.',
-                                    'Each teammate receives an email invitation to confirm and agree to the rules.',
-                                    'Once all members accept, your team is officially registered.',
-                                    "You'll receive a link to your Team Workspace.",
-                                ].map((step, i) => (
-                                    <li key={i} className="step-item">
-                                        <div className="step-num">{i + 1}</div>
-                                        <div className="step-text">{step}</div>
-                                    </li>
-                                ))}
-                            </ol>
-                            <div className="warn-note">⚠️ Minimum 3 members required. Maximum 5.</div>
-                            <button className="btn-primary" onClick={() => openModal(0)}>Register Your Team →</button>
-                        </div>
-
-                        <div className="reg-col-card" style={{ borderTop: `3px solid ${T.muted2}` }}>
-                            <div className="reg-col-head">No Team? No Problem.</div>
-                            <p style={{ fontSize: 13, color: T.muted, lineHeight: 1.65, marginBottom: 16 }}>
-                                Sign up as a free agent and we'll match you with a team based on your skills and interests. Matching closes March 8.
-                            </p>
-                            <ul className="fa-bullets">
-                                <li className="fa-bullet">Tell us your preferred tool</li>
-                                <li className="fa-bullet">Share your problem area of interest</li>
-                                <li className="fa-bullet">Rate your AI skill level (1–5)</li>
-                            </ul>
-                            <button className="btn-outline-dark" onClick={() => openModal('freeagent')}>
-                                Sign Up as Free Agent →
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="already-reg">
-                        <strong style={{ color: T.deep }}>Already registered?</strong> Need to make a change to your team?{' '}
-                        Email the hackathon team or find us in the <strong style={{ color: T.deep }}>#gg-hackathon</strong> Teams channel.
-                    </div>
+                <div className="sec-wrap-wide">
+                    <span className="sec-label">Get Involved</span>
+                    <h2 className="sec-h2">Hackathon Registration</h2>
+                    <p className="sec-sub" style={{marginBottom:32}}>Follow the steps below to register for the event, form or join a team, and get started.</p>
+                    <RegistrationSection
+                        dirTable={dirTable}
+                        subTable={subTable}
+                        dirRecords={dirRecords}
+                        liveTeams={liveTeams}
+                        freeAgents={freeAgents}
+                        dfName={dfName}
+                        dfEmail={dfEmail}
+                        regTab={regTab}
+                        setRegTab={setRegTab}
+                        rosterTeam={rosterTeam}
+                        setRosterTeam={setRosterTeam}
+                        selfRegistered={selfRegistered}
+                        setSelfRegistered={setSelfRegistered}
+                        step1Complete={step1Complete}
+                        setStep1Complete={setStep1Complete}
+                    />
                 </div>
             </section>
 
-            {/* ── SECTION 6: ACTIVE REGISTRATIONS ── */}
-            <section id="registrations" className="sec-white">
-                <div className="sec-wrap">
-                    <span className="sec-label">Active Registrations</span>
-                    <h2 className="sec-h2">Registered Teams & Free Agents</h2>
-                    <p className="sec-sub">All confirmed hackathon participants.</p>
-
-                    <div className="reg-tabs">
-                        <button className={`reg-tab${regTab === 'teams' ? ' active' : ''}`} onClick={() => setRegTab('teams')}>
-                            Teams ({liveTeams.length})
-                        </button>
-                        <button className={`reg-tab${regTab === 'agents' ? ' active' : ''}`} onClick={() => setRegTab('agents')}>
-                            Free Agents ({freeAgents.length})
-                        </button>
-                    </div>
-
-                    {regTab === 'teams' ? (
-                        liveTeams.length === 0 ? (
-                            <div className="reg-empty">No teams registered yet.</div>
-                        ) : (<>
-                            <div className="reg-header-row">
-                                <div className="reg-header-col">Team</div>
-                                <div className="reg-header-col">Tool</div>
-                                <div className="reg-header-col">Captain</div>
-                                <div className="reg-header-col">Status</div>
-                                <div className="reg-header-col">Members</div>
-                            </div>
-                            {liveTeams.map(r => {
-                                const name       = safeGetCellValueAsString(r, 'Team Name');
-                                const tech       = safeGetCellValueAsString(r, 'Technology');
-                                const status     = safeGetCellValueAsString(r, 'Submission Status');
-                                const captainLink = safeGetCellValue(r, 'Team Member # 1 (Captain)');
-                                const captainName = Array.isArray(captainLink) && captainLink.length > 0 ? captainLink[0].name : '';
-                                const memberFields = [
-                                    captainLink,
-                                    safeGetCellValue(r, 'Team Member # 2'),
-                                    safeGetCellValue(r, 'Team Member # 3'),
-                                    safeGetCellValue(r, 'Team Member # 4'),
-                                    safeGetCellValue(r, 'Team Member # 5'),
-                                ];
-                                const memberCount = memberFields.filter(v => v && (Array.isArray(v) ? v.length > 0 : true)).length;
-                                const techPill   = tech === 'Airtable' ? 'reg-pill-blue' : tech === 'CodePuppy' ? 'reg-pill-green' : tech === 'Harvey' ? 'reg-pill-purple' : 'reg-pill-gray';
-                                const statusPill = status === 'Submitted' ? 'reg-pill-blue' : status === 'Registered' ? 'reg-pill-green' : status === 'Pending' ? 'reg-pill-yellow' : 'reg-pill-gray';
-                                return (
-                                    <div key={r.id} className="reg-row">
-                                        <button className="reg-team-link" onClick={() => setRosterTeam(r)}>{name || '—'}</button>
-                                        <div><span className={`reg-pill ${techPill}`}>{tech || '—'}</span></div>
-                                        <div className="reg-cell">{captainName || '—'}</div>
-                                        <div><span className={`reg-pill ${statusPill}`}>{status || '—'}</span></div>
-                                        <div className="reg-cell">{memberCount > 0 ? `${memberCount}/5` : '—'}</div>
-                                    </div>
-                                );
-                            })}
-                        </>)
-                    ) : (
-                        freeAgents.length === 0 ? (
-                            <div className="reg-empty">No free agents have signed up yet.</div>
-                        ) : (<>
-                            <div className="reg-header-row" style={{gridTemplateColumns:'2fr 2fr 1fr 1fr'}}>
-                                <div className="reg-header-col">Name</div>
-                                <div className="reg-header-col">Email</div>
-                                <div className="reg-header-col">Function</div>
-                                <div className="reg-header-col">Location</div>
-                            </div>
-                            {freeAgents.map(r => {
-                                const name     = safeGetCellValueAsString(r, 'Full Name');
-                                const email    = safeGetCellValueAsString(r, 'Work Email');
-                                const fn       = safeGetCellValueAsString(r, 'Function');
-                                const city     = safeGetCellValueAsString(r, 'Work City');
-                                const state    = safeGetCellValueAsString(r, 'Work State');
-                                const location = [city, state].filter(Boolean).join(', ').toUpperCase();
-                                return (
-                                    <div key={r.id} className="reg-row" style={{gridTemplateColumns:'2fr 2fr 1fr 1fr'}}>
-                                        <div className="reg-cell-name">{name || '—'}</div>
-                                        <div className="reg-cell">{email || '—'}</div>
-                                        <div className="reg-cell">{fn || '—'}</div>
-                                        <div className="reg-cell">{location || '—'}</div>
-                                    </div>
-                                );
-                            })}
-                        </>)
-                    )}
-                </div>
-            </section>
-
-            {/* ── SECTION 7: HELP & SUPPORT ── */}
+            {/* ── SECTION 5: HELP & SUPPORT ── */}
             <section id="help" className="sec-cloud">
                 <div className="sec-wrap">
                     <span className="sec-label">Support</span>
@@ -1932,46 +2504,56 @@ function App() {
                     <p className="sec-sub">Multiple support channels available before and during the event.</p>
 
                     <div className="help-cards">
-                        {/* Card 1: FAQs */}
+                        {/* Card 1: Internal Support Team */}
                         <div className="help-card">
-                            <div className="help-card-icon"><QuestionIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="help-card-title">Frequently Asked Questions</div>
-                            <div className="faq-list">
-                                {FAQS.map((item, i) => (
-                                    <div key={i} className="faq-item">
-                                        <button className="faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                                            <span>{item.q}</span>
-                                            <span className={`faq-chevron${openFaq === i ? ' open' : ''}`}>▸</span>
-                                        </button>
-                                        <div className={`faq-a${openFaq === i ? ' open' : ''}`}>{item.a}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Card 2: Associate Support */}
-                        <div className="help-card">
-                            <div className="help-card-icon"><HeadsetIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="help-card-title">Associate Support</div>
+                            <div className="help-card-icon"><UsersThreeIcon size={28} color={T.blue} weight="duotone" /></div>
+                            <div className="help-card-title">Internal Support Team</div>
                             <div className="contact-blocks">
                                 <div className="contact-block">
-                                    <div className="contact-topic">Airtable Questions</div>
-                                    <div className="contact-name">Bennett Oliver</div>
-                                    <div className="contact-role">Account Executive</div>
-                                    <div className="contact-note">Office hours: Thursdays 10–11am CT</div>
+                                    <div className="contact-topic">Hackathon Lead</div>
+                                    <div className="contact-name">Nick Hammons</div>
+                                    <div className="contact-role">GG Digital Acceleration</div>
                                 </div>
                                 <div className="contact-block">
-                                    <div className="contact-topic">Harvey Questions</div>
+                                    <div className="contact-topic">Operations Lead</div>
                                     <div className="contact-name">Abby Worley</div>
                                     <div className="contact-role">GG Digital Acceleration</div>
                                 </div>
                                 <div className="contact-block">
-                                    <div className="contact-topic">CodePuppy Questions</div>
-                                    <div className="contact-name">Michael [GG team]</div>
+                                    <div className="contact-topic">Technical Lead</div>
+                                    <div className="contact-name">Michael Chapman</div>
                                     <div className="contact-role">GG Digital Acceleration</div>
                                 </div>
                             </div>
                             <div className="help-footer-note">For anything else → <strong>#gg-hackathon</strong> in Teams</div>
+                        </div>
+
+                        {/* Card 2: Product Support */}
+                        <div className="help-card">
+                            <div className="help-card-icon"><HeadsetIcon size={28} color={T.blue} weight="duotone" /></div>
+                            <div className="help-card-title">Product Support</div>
+                            <div className="contact-blocks">
+                                <div className="contact-block">
+                                    <div className="contact-topic">Airtable Support</div>
+                                    <div className="contact-name">Bennett Oliver</div>
+                                    <div className="contact-role">bennett.oliver@airtable.com</div>
+                                </div>
+                                <div className="contact-block">
+                                    <div className="contact-topic">Airtable Support</div>
+                                    <div className="contact-name">Chris Cain</div>
+                                    <div className="contact-role">chris.cain@airtable.com</div>
+                                </div>
+                                <div className="contact-block">
+                                    <div className="contact-topic">Harvey Support</div>
+                                    <div className="contact-name">TBD</div>
+                                    <div className="contact-role">Contact coming soon</div>
+                                </div>
+                                <div className="contact-block">
+                                    <div className="contact-topic">CodePuppy Support</div>
+                                    <div className="contact-name">TBD</div>
+                                    <div className="contact-role">Contact coming soon</div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Card 3: Mentor Program */}
@@ -1979,7 +2561,7 @@ function App() {
                             <div className="help-card-icon"><ChalkboardTeacherIcon size={28} color={T.blue} weight="duotone" /></div>
                             <div className="help-card-title">Mentor Program</div>
                             <div className="mentor-body">
-                                Every registered team is assigned one internal mentor with relevant domain or technical expertise.
+                                Every registered team is assigned one internal mentor with relevant domain or technical expertise. Please reach out to the Internal Support Team for help regarding mentor assignments.
                             </div>
                             <ul className="mentor-bullets">
                                 <li className="mentor-bullet">1 mentor per team (subject to team count)</li>
@@ -2002,7 +2584,7 @@ function App() {
                         <span className="site-footer-brand-text">GG Digital Acceleration · AI Hackathon 2026</span>
                     </div>
                     <div className="site-footer-links">
-                        <button className="site-footer-link-cta" onClick={() => openModal(0)}>Register →</button>
+                        <button className="site-footer-link-cta" onClick={() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })}>Register →</button>
                         <a className="site-footer-link" href={RULES_URL} target="_blank" rel="noreferrer">Rules ↗</a>
                         <span className="site-footer-link">#gg-hackathon</span>
                     </div>
