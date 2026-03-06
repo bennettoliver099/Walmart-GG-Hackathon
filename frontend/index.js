@@ -474,73 +474,106 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .reg-empty{padding:52px;text-align:center;color:${T.muted};font-size:14px;font-style:italic;}
 
 /* ── WIDER SECTION WRAP ── */
-.sec-wrap-wide{max-width:1280px;margin:0 auto;padding:72px 40px;}
+.sec-wrap-wide{max-width:1280px;margin:0 auto;padding:48px 36px;}
 
 /* ── STEP INDICATOR ── */
 .step-indicator{display:flex;align-items:flex-start;margin-bottom:40px;position:relative;}
 .step-ind-node{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
-.step-ind-node:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:2px;background:rgba(0,113,206,0.14);z-index:0;}
-.step-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;position:relative;z-index:1;transition:all 0.2s;}
+.step-ind-node:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:rgba(0,113,206,0.14);z-index:0;}
+.step-circle{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;position:relative;z-index:1;transition:all 0.2s;}
 .step-circle-active{background:#0071CE;color:white;}
 .step-circle-done{background:#22C55E;color:white;}
 .step-circle-pending{background:#F4F7FB;border:2px solid rgba(0,113,206,0.14);color:#8BA5BF;}
-.step-ind-label{margin-top:10px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;text-align:center;}
+.step-ind-label{margin-top:6px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;text-align:center;}
 .step-ind-label-active{color:#0B2C5F;}
 .step-ind-label-inactive{color:#8BA5BF;}
 
 /* ── STEP CONTENT BLOCKS ── */
-.step-block{margin-bottom:40px;}
-.step-block-header{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5A7A9A;margin-bottom:10px;}
-.step-card{background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:28px 28px 24px;box-shadow:0 1px 3px rgba(11,44,95,0.08);}
-.step-card-title{font-size:18px;font-weight:800;color:#0B2C5F;margin-bottom:6px;}
-.step-card-sub{font-size:13px;color:#5A7A9A;line-height:1.6;margin-bottom:20px;}
+.step-block{margin-bottom:28px;}
+.step-block-header{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5A7A9A;margin-bottom:10px;}
+.step-card{background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:20px 22px 18px;box-shadow:0 1px 3px rgba(11,44,95,0.08);}
+.step-card-title{font-size:15px;font-weight:800;color:#0B2C5F;margin-bottom:6px;}
+.step-card-sub{font-size:12px;color:#5A7A9A;line-height:1.6;margin-bottom:14px;}
+/* ── STEP 1 HERO CARD ── */
+.step-card-hero{background:${T.heroGrad};border:none;color:white;}
+.step-card-hero .step-card-title{color:white;font-size:14px;}
+.step-card-hero .step-card-sub{color:rgba(255,255,255,0.7);font-size:11px;}
+.step-card-hero .form-label{color:rgba(255,255,255,0.85);font-size:11px;}
+.step-card-hero .req{color:${T.yellow};}
+.step-card-hero .fi{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);color:white;}
+.step-card-hero .fi::placeholder{color:rgba(255,255,255,0.4);}
+.step-card-hero .fi:focus{border-color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.18);}
+.step-card-hero .ck-label{color:rgba(255,255,255,0.85);font-size:11px;}
+.step-card-hero .ck-label a{color:${T.yellow};}
+.step-card-hero .btn-primary{background:${T.yellow};color:${T.deep};}
+.step-card-hero .hub-card-link{color:${T.yellow};font-size:11px;}
+.step-card-hero .step-success{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);}
+.step-card-hero .step-success-text{color:white;}
+.step-card-hero .step-warn{background:rgba(255,194,32,0.15);border-color:rgba(255,194,32,0.3);}
+.step-card-hero .step-warn-text{color:rgba(255,255,255,0.9);}
+.step-card-hero .step-info{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);}
+.step-card-hero .step-info-text{color:rgba(255,255,255,0.85);}
+.step-card-hero .ferr{color:${T.yellow};background:rgba(185,28,28,0.2);}
+.step-card-hero .radio-group label{color:rgba(255,255,255,0.8);font-size:11px;}
+.step-card-hero .submit-err{background:rgba(185,28,28,0.2);color:#FCA5A5;}
+.step-card-hero .add-self-form{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);}
+.step-card-hero .add-self-title{color:white;}
+.step-card-hero .ms-input{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);color:white;}
+.step-card-hero .ms-input::placeholder{color:rgba(255,255,255,0.4);}
+.step-card-hero .ms-input:focus{border-color:rgba(255,255,255,0.5);}
+.step-card-hero .ms-selected{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);}
+.step-card-hero .ms-selected-name{color:white;}
+.step-card-hero .ms-selected-email{color:rgba(255,255,255,0.6);}
+.step-card-hero .ms-clear{color:rgba(255,255,255,0.6);}
+.step-card-hero .ms-clear:hover{color:white;}
 .step-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 
 /* ── TEAM BUILDER ── */
 .tb-container{display:flex;gap:24px;min-height:480px;}
-.tb-sidebar{width:280px;min-width:280px;background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:20px;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(11,44,95,0.08);}
+.tb-sidebar{width:240px;min-width:240px;background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:14px;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(11,44,95,0.08);}
 .tb-main{flex:1;display:flex;flex-direction:column;gap:16px;}
-.tb-sidebar-badge{display:inline-block;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#0071CE;border:1px solid #0071CE;padding:3px 10px;border-radius:3px;margin-bottom:12px;align-self:flex-start;}
-.tb-sidebar-count{font-size:24px;font-weight:800;color:#0B2C5F;margin-bottom:4px;}
-.tb-sidebar-sub{font-size:12px;color:#5A7A9A;line-height:1.5;margin-bottom:16px;}
-.tb-agent-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px;scrollbar-width:thin;}
-.tb-agent-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;border:1px solid rgba(0,113,206,0.14);background:none;cursor:pointer;transition:all 0.15s;text-align:left;width:100%;font-family:inherit;}
+.tb-sidebar-badge{display:inline-block;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#0071CE;border:1px solid #0071CE;padding:2px 8px;border-radius:3px;margin-bottom:8px;align-self:flex-start;}
+.tb-sidebar-count{font-size:20px;font-weight:800;color:#0B2C5F;margin-bottom:4px;}
+.tb-sidebar-sub{font-size:11px;color:#5A7A9A;line-height:1.5;margin-bottom:12px;}
+.tb-agent-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;scrollbar-width:thin;max-height:480px;}
+.tb-agent-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;border:1px solid rgba(0,113,206,0.14);background:none;cursor:default;transition:all 0.15s;text-align:left;width:100%;font-family:inherit;}
 .tb-agent-row:hover{background:#F4F7FB;border-color:#0071CE;}
-.tb-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;flex-shrink:0;}
+.tb-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;flex-shrink:0;}
 .tb-agent-info{display:flex;flex-direction:column;gap:1px;}
-.tb-agent-name{font-size:13px;font-weight:700;color:#0B2C5F;}
-.tb-agent-action{font-size:11px;color:#5A7A9A;}
-.tb-empty{font-size:13px;color:#8BA5BF;font-style:italic;padding:20px 0;text-align:center;}
-.tb-toolbar{display:flex;align-items:center;justify-content:space-between;}
-.tb-toolbar-count{font-size:14px;font-weight:600;color:#5A7A9A;}
-.tb-toggle-btn{background:none;border:1px solid rgba(0,113,206,0.14);border-radius:100px;padding:6px 16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:#5A7A9A;cursor:pointer;transition:all 0.15s;}
+.tb-agent-name{font-size:11px;font-weight:700;color:#0B2C5F;}
+.tb-empty{font-size:12px;color:#8BA5BF;font-style:italic;padding:16px 0;text-align:center;}
+.tb-agent-group{margin-bottom:6px;}
+.tb-agent-group-label{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8BA5BF;padding:3px 0;border-bottom:1px solid rgba(0,113,206,0.14);margin-bottom:3px;}
+.tb-search-wrap{position:relative;margin-bottom:10px;}
+.tb-search-input{width:100%;padding:7px 10px 7px 30px;border:1px solid rgba(0,113,206,0.14);border-radius:5px;font-family:'Inter',sans-serif;font-size:11px;background:#F4F7FB;transition:border 0.15s;box-sizing:border-box;outline:none;}
+.tb-search-input:focus{border-color:#0071CE;background:#FFFFFF;}
+.tb-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px;}
+.tb-toolbar-left{display:flex;align-items:center;gap:8px;flex:1;}
+.tb-toggle-btn{background:none;border:1px solid rgba(0,113,206,0.14);border-radius:100px;padding:5px 12px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#5A7A9A;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .tb-toggle-btn:hover{border-color:#0071CE;color:#0071CE;}
-.tb-create-bar{display:flex;gap:10px;align-items:center;}
-.tb-create-input{flex:1;padding:10px 14px;border:1px solid rgba(0,113,206,0.14);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;background:#F4F7FB;outline:none;transition:border 0.15s;}
-.tb-create-input:focus{border-color:#0071CE;background:#FFFFFF;}
-.tb-create-btn{background:#FFC220;color:#0B2C5F;border:none;border-radius:6px;padding:10px 20px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.tb-create-btn{background:#FFC220;color:#0B2C5F;border:none;border-radius:6px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .tb-create-btn:hover:not(:disabled){background:#FFD050;transform:translateY(-1px);}
 .tb-create-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
-.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
-.tb-card{background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:20px;box-shadow:0 1px 3px rgba(11,44,95,0.08);display:flex;flex-direction:column;}
-.tb-card-header{margin-bottom:14px;}
-.tb-card-name{font-size:16px;font-weight:800;color:#0B2C5F;margin-bottom:8px;}
+.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.tb-card{background:#FFFFFF;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:14px 16px;box-shadow:0 1px 3px rgba(11,44,95,0.08);display:flex;flex-direction:column;transition:border-color 0.15s,box-shadow 0.15s;}
+.tb-card-header{margin-bottom:10px;}
+.tb-card-name{font-size:13px;font-weight:800;color:#0B2C5F;margin-bottom:4px;}
 .tb-card-pills{display:flex;gap:6px;flex-wrap:wrap;}
-.tb-pill{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;white-space:nowrap;}
-.tb-card-slots{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;flex:1;}
-.tb-slot{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid rgba(0,113,206,0.14);border-radius:6px;min-height:40px;transition:all 0.12s;}
+.tb-pill{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px;white-space:nowrap;}
+.tb-card-slots{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;flex:1;}
+.tb-slot{display:flex;align-items:center;gap:10px;padding:5px 8px;border:1px solid rgba(0,113,206,0.14);border-radius:6px;min-height:32px;transition:all 0.12s;}
 .tb-slot-filled{background:#F4F7FB;border-color:rgba(0,113,206,0.2);}
-.tb-slot-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;flex-shrink:0;}
-.tb-slot-name{font-size:13px;font-weight:600;color:#0B2C5F;flex:1;}
-.tb-cap-badge{font-family:'Inter',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.06em;background:#FFC220;color:#0B2C5F;padding:2px 8px;border-radius:3px;text-transform:uppercase;}
-.tb-slot-empty-dot{width:28px;height:28px;border-radius:50%;border:2px dashed rgba(0,113,206,0.14);flex-shrink:0;}
-.tb-slot-empty-label{font-size:12px;color:#8BA5BF;font-style:italic;}
-.tb-card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(0,113,206,0.14);}
-.tb-card-count{font-size:12px;color:#5A7A9A;}
-.tb-card-join-btn{background:#0071CE;color:white;border:none;border-radius:5px;padding:6px 16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.tb-slot-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;flex-shrink:0;}
+.tb-slot-name{font-size:11px;font-weight:600;color:#0B2C5F;flex:1;}
+.tb-cap-badge{font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.06em;background:#FFC220;color:#0B2C5F;padding:1px 5px;border-radius:3px;text-transform:uppercase;}
+.tb-slot-empty-dot{width:22px;height:22px;border-radius:50%;border:2px dashed rgba(0,113,206,0.14);flex-shrink:0;}
+.tb-slot-empty-label{font-size:10px;color:#8BA5BF;font-style:italic;}
+.tb-card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(0,113,206,0.14);}
+.tb-card-count{font-size:10px;color:#5A7A9A;}
+.tb-card-join-btn{background:#0071CE;color:white;border:none;border-radius:5px;padding:4px 12px;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;}
 .tb-card-join-btn:hover:not(:disabled){background:#0B2C5F;transform:translateY(-1px);}
 .tb-card-join-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
-.tb-card-full{font-size:11px;color:#8BA5BF;font-weight:600;}
+.tb-card-full{font-size:10px;color:#8BA5BF;font-weight:600;}
 .tb-step1-gate{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:10px;padding:40px;text-align:center;font-size:14px;color:#5A7A9A;}
 .tb-page-nav{display:flex;align-items:center;justify-content:space-between;padding:4px 0;}
 .tb-page-arrow{background:none;border:1px solid rgba(0,113,206,0.22);border-radius:7px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#0071CE;transition:all 0.15s;flex-shrink:0;}
@@ -549,9 +582,9 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .tb-page-dots{display:flex;gap:6px;align-items:center;}
 .tb-page-dot{width:7px;height:7px;border-radius:50%;background:rgba(0,113,206,0.2);transition:all 0.2s;cursor:pointer;border:none;padding:0;}
 .tb-page-dot.active{background:#0071CE;width:20px;border-radius:4px;}
-.tb-page-label{font-size:12px;color:#5A7A9A;font-weight:600;}
-.tb-card-confirm{margin-top:12px;padding:14px 16px;background:#EFF6FF;border:1px solid rgba(0,113,206,0.28);border-radius:8px;animation:fadeIn 0.12s ease;}
-.tb-card-confirm-text{font-size:13px;color:#0B2C5F;margin-bottom:10px;line-height:1.5;font-weight:500;}
+.tb-page-label{font-size:10px;color:#5A7A9A;font-weight:600;}
+.tb-card-confirm{margin-top:8px;padding:10px 12px;background:#EFF6FF;border:1px solid rgba(0,113,206,0.28);border-radius:8px;animation:fadeIn 0.12s ease;}
+.tb-card-confirm-text{font-size:11px;color:#0B2C5F;margin-bottom:6px;line-height:1.5;font-weight:500;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 
 /* ── JOIN TEAM LIST ── */
@@ -575,7 +608,7 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
 .step-info-text{font-size:13px;color:#1D4ED8;line-height:1.5;}
 
 /* ── FREE AGENT NOTE ── */
-.free-agent-note{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:8px;padding:16px 20px;font-size:13px;color:#5A7A9A;line-height:1.65;margin-top:24px;margin-bottom:32px;}
+.free-agent-note{background:#F4F7FB;border:1px solid rgba(0,113,206,0.14);border-radius:8px;padding:12px 16px;font-size:12px;color:#5A7A9A;line-height:1.65;margin-top:16px;margin-bottom:24px;}
 .free-agent-note strong{color:#0B2C5F;}
 
 /* ── CONFIRM DIALOG ── */
@@ -600,6 +633,8 @@ textarea.fi{resize:vertical;min-height:76px;line-height:1.5;}
   .tb-container{flex-direction:column;}
   .tb-sidebar{width:100%;min-width:0;}
   .tb-grid{grid-template-columns:1fr;}
+  .tb-toolbar{flex-wrap:wrap;}
+  .tb-toolbar-left{flex:1;min-width:0;}
 }
 @media(max-width:900px){
   .hero-inner{grid-template-columns:1fr;gap:40px;}
@@ -1503,7 +1538,6 @@ function AdminView({ onBack, liveTeams, subTable, sfTeamName, sfStatus, totalTea
 function RegistrationSection({
     dirTable, subTable, dirRecords, liveTeams, freeAgents,
     dfName, dfEmail,
-    regTab, setRegTab, rosterTeam, setRosterTeam,
     selfRegistered, setSelfRegistered, step1Complete, setStep1Complete,
 }) {
     // ── Step 1 state ──────────────────────────────────────────────────────────
@@ -1539,8 +1573,31 @@ function RegistrationSection({
     const [teamPage,          setTeamPage]         = useState(0);
     const [captainLeaveChoice, setCaptainLeaveChoice] = useState(null); // null | 'reassign' | 'disband'
     const [reassignTo,         setReassignTo]          = useState('');
+    const [agentSearch,        setAgentSearch]         = useState('');
+    const [teamSearch,         setTeamSearch]          = useState('');
+    const [showCreateModal,    setShowCreateModal]     = useState(false);
 
     const userDirId = selfRegistered ? selfRegistered.id : null;
+
+    // ── Auto-verify localStorage user against live data on mount ─────────────
+    useEffect(() => {
+        if (selfRegistered && selfRegistered.id && !step1Done) {
+            const rec = dirRecords.find(r => r.id === selfRegistered.id);
+            if (rec) {
+                const confirmed   = safeGetCellValue(rec, 'Confirmed');
+                const isFreeAgent = safeGetCellValue(rec, 'Free Agent Registration');
+                const onTeam      = findUserOnTeam(liveTeams, selfRegistered.id);
+                if (confirmed || isFreeAgent || onTeam) {
+                    setStep1Done(true);
+                    setStep1Complete(true);
+                    if (onTeam) {
+                        setDuplicateStatus('on-team');
+                        setDuplicateTeamName(onTeam.teamName);
+                    }
+                }
+            }
+        }
+    }, [dirRecords.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // ── Check if selected person is already registered ────────────────────────
     function checkDuplicate(selected) {
@@ -1745,7 +1802,6 @@ function RegistrationSection({
     const currentMembership = userDirId ? findUserOnTeam(liveTeams, userDirId) : null;
     const step1State = step1Done || (selfRegistered && selfRegistered.id) ? 'done' : 'active';
     const step2State = (step1Done || (selfRegistered && selfRegistered.id)) ? 'active' : 'pending';
-    const step3State = currentMembership ? 'done' : step2State === 'active' ? 'active' : 'pending';
 
     return (
         <>
@@ -1754,7 +1810,6 @@ function RegistrationSection({
             {[
                 { num: '1', label: 'Register Yourself', state: step1State },
                 { num: '2', label: 'Join or Create a Team', state: step2State },
-                { num: '3', label: "You're In", state: step3State },
             ].map(({ num, label, state }) => (
                 <div key={num} className="step-ind-node">
                     <div className={`step-circle ${state === 'done' ? 'step-circle-done' : state === 'active' ? 'step-circle-active' : 'step-circle-pending'}`}>
@@ -1768,7 +1823,7 @@ function RegistrationSection({
         {/* BLOCK 1: Register Yourself */}
         <div className="step-block">
             <div className="step-block-header">Step 1 — Register for the Event</div>
-            <div className="step-card" style={{ borderTop: '3px solid #0071CE' }}>
+            <div className="step-card step-card-hero">
                 <div className="step-card-title">Register for the Event</div>
                 <div className="step-card-sub">Find yourself in the Walmart directory, agree to the rules, and register as a participant. Everyone starts as a free agent — you'll join or create a team in Step 2.</div>
 
@@ -1900,75 +1955,106 @@ function RegistrationSection({
                     <div className="tb-sidebar">
                         <span className="tb-sidebar-badge">Free Agent Pool</span>
                         <div className="tb-sidebar-count">{freeAgents.length} unplaced</div>
-                        <div className="tb-sidebar-sub">Participants not yet on a team.</div>
+
+                        {/* Search bar */}
+                        <div className="tb-search-wrap">
+                            <MagnifyingGlassIcon size={14} color={T.muted} style={{position:'absolute',left:10,top:9}} />
+                            <input
+                                className="tb-search-input"
+                                placeholder="Search free agents..."
+                                value={agentSearch}
+                                onChange={e => setAgentSearch(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Grouped agent list */}
                         <div className="tb-agent-list">
-                            {freeAgents.map(agent => {
-                                const name = safeGetCellValueAsString(agent, 'Full Name');
-                                const initials = name.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?';
-                                const isMe = userDirId && agent.id === userDirId;
-                                return (
-                                    <div key={agent.id} className="tb-agent-row" style={isMe ? {borderColor:'#0071CE',background:'#EFF6FF'} : {}}>
-                                        <div className="tb-avatar" style={{background: isMe ? '#0071CE' : '#334155', color:'white'}}>{initials}</div>
-                                        <div className="tb-agent-info">
-                                            <div className="tb-agent-name">{name}{isMe ? ' (you)' : ''}</div>
-                                            <div className="tb-agent-action">In free agent pool</div>
-                                        </div>
-                                    </div>
+                            {(() => {
+                                const filtered = freeAgents.filter(a => {
+                                    const name = safeGetCellValueAsString(a, 'Full Name').toLowerCase();
+                                    return name.includes(agentSearch.toLowerCase());
+                                });
+                                if (filtered.length === 0) return (
+                                    <div className="tb-empty">{agentSearch ? 'No matches' : 'No free agents'}</div>
                                 );
-                            })}
-                            {freeAgents.length === 0 && <div className="tb-empty">No free agents</div>}
+                                const groups = {};
+                                filtered.forEach(a => {
+                                    const lastName = safeGetCellValueAsString(a, 'Last Name').trim();
+                                    const initial = lastName ? lastName[0].toUpperCase() : '#';
+                                    if (!groups[initial]) groups[initial] = [];
+                                    groups[initial].push(a);
+                                });
+                                return Object.keys(groups).sort().map(letter => (
+                                    <div key={letter} className="tb-agent-group">
+                                        <div className="tb-agent-group-label">{letter}</div>
+                                        {groups[letter].map(agent => {
+                                            const name = safeGetCellValueAsString(agent, 'Full Name');
+                                            const initials = name.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0,2).toUpperCase() || '?';
+                                            const isMe = userDirId && agent.id === userDirId;
+                                            return (
+                                                <div key={agent.id} className="tb-agent-row" style={isMe ? {borderColor:T.blue,background:'#EFF6FF'} : {}}>
+                                                    <div className="tb-avatar" style={{background: isMe ? T.blue : '#334155', color:'white'}}>{initials}</div>
+                                                    <div className="tb-agent-info">
+                                                        <div className="tb-agent-name">{name}{isMe ? ' (you)' : ''}</div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ));
+                            })()}
                         </div>
                     </div>
 
                     {/* RIGHT: Team Grid */}
                     <div className="tb-main">
-                        {/* Toolbar */}
+                        {/* Toolbar: search + hide full + create */}
                         <div className="tb-toolbar">
-                            <div className="tb-toolbar-count">{liveTeams.length} team{liveTeams.length !== 1 ? 's' : ''}</div>
-                            <button className="tb-toggle-btn" onClick={() => setHideFullTeams(h => !h)}>
-                                {hideFullTeams ? 'Show full teams' : 'Hide full teams'}
+                            <div className="tb-toolbar-left">
+                                <div className="tb-search-wrap" style={{flex:1}}>
+                                    <MagnifyingGlassIcon size={14} color={T.muted} style={{position:'absolute',left:10,top:9}} />
+                                    <input
+                                        className="tb-search-input"
+                                        placeholder="Search teams or members..."
+                                        value={teamSearch}
+                                        onChange={e => { setTeamSearch(e.target.value); setTeamPage(0); }}
+                                    />
+                                </div>
+                                <button className="tb-toggle-btn" onClick={() => setHideFullTeams(h => !h)}>
+                                    {hideFullTeams ? 'Show full' : 'Hide full'}
+                                </button>
+                            </div>
+                            <button
+                                className="tb-create-btn"
+                                disabled={!!(currentMembership && currentMembership.isCaptain) || !userDirId}
+                                onClick={() => setShowCreateModal(true)}
+                            >
+                                + Create Team
                             </button>
                         </div>
 
-                        {/* Create bar */}
-                        {createSuccess ? (
-                            <div className="step-success"><span>✓</span><div className="step-success-text">{createSuccess}</div></div>
-                        ) : (
-                            <>
-                                {currentMembership && currentMembership.isCaptain && (
-                                    <div className="step-warn" style={{marginTop:0}}>
-                                        <span>⚠️</span>
-                                        <div className="step-warn-text">You're captain of <strong>{currentMembership.teamName}</strong>. Assign a new captain before creating another team.</div>
-                                    </div>
-                                )}
-                                <div className="tb-create-bar">
-                                    <input
-                                        className="tb-create-input"
-                                        placeholder="New team name…"
-                                        value={createName}
-                                        onChange={e => setCreateName(e.target.value)}
-                                        onKeyDown={e => { if (e.key === 'Enter' && createName.trim()) handleCreateTeam(); }}
-                                        disabled={currentMembership && currentMembership.isCaptain}
-                                    />
-                                    <button
-                                        className="tb-create-btn"
-                                        disabled={createSubmitting || !createName.trim() || !!(currentMembership && currentMembership.isCaptain)}
-                                        onClick={handleCreateTeam}
-                                    >
-                                        {createSubmitting ? 'Creating…' : '+ Create Team'}
-                                    </button>
-                                </div>
-                                {createError && <div className="ferr">{createError}</div>}
-                            </>
-                        )}
+                        {createSuccess && <div className="step-success" style={{marginTop:0}}><span>✓</span><div className="step-success-text">{createSuccess}</div></div>}
 
                         {/* Team Cards — Paginated Gallery */}
                         {(() => {
                             const PAGE_SIZE = 6;
                             const slotFields = ['Team Member # 1 (Captain)','Team Member # 2','Team Member # 3','Team Member # 4','Team Member # 5'];
-                            const displayTeams = hideFullTeams
-                                ? liveTeams.filter(t => slotFields.filter(s => { const v = safeGetCellValue(t, s); return v && Array.isArray(v) && v.length > 0; }).length < 5)
-                                : liveTeams;
+                            const displayTeams = liveTeams.filter(t => {
+                                if (hideFullTeams) {
+                                    const count = slotFields.filter(s => { const v = safeGetCellValue(t, s); return v && Array.isArray(v) && v.length > 0; }).length;
+                                    if (count >= 5) return false;
+                                }
+                                if (teamSearch.trim()) {
+                                    const q = teamSearch.toLowerCase();
+                                    if (safeGetCellValueAsString(t, 'Team Name').toLowerCase().includes(q)) return true;
+                                    for (const s of slotFields) {
+                                        const val = safeGetCellValue(t, s);
+                                        if (Array.isArray(val) && val.length > 0 && val[0].name && val[0].name.toLowerCase().includes(q)) return true;
+                                    }
+                                    return false;
+                                }
+                                return true;
+                            });
                             const totalPages = Math.max(1, Math.ceil(displayTeams.length / PAGE_SIZE));
                             const safePage   = Math.min(teamPage, totalPages - 1);
                             const pageTeams  = displayTeams.slice(safePage * PAGE_SIZE, (safePage + 1) * PAGE_SIZE);
@@ -2024,7 +2110,7 @@ function RegistrationSection({
                                             const statusBg    = status === 'Registered' ? '#DCFCE7'  : status === 'Pending' ? '#FEF3C7'  : '#EFF6FF';
 
                                             return (
-                                                <div key={teamRec.id} className="tb-card" style={isConfirming ? {borderColor:'#0071CE',boxShadow:'0 0 0 2px rgba(0,113,206,0.18)'} : {}}>
+                                                <div key={teamRec.id} id={`tb-card-${teamRec.id}`} className="tb-card" style={isConfirming ? {borderColor:'#0071CE',boxShadow:'0 0 0 2px rgba(0,113,206,0.18)'} : {}}>
                                                     <div className="tb-card-header">
                                                         <div className="tb-card-name">{tName}</div>
                                                         <div className="tb-card-pills">
@@ -2065,6 +2151,12 @@ function RegistrationSection({
                                                                     if (isCurrentCaptain) { setJoinError('Assign a new captain before joining another team.'); return; }
                                                                     setJoinConfirmTeam(isConfirming ? null : teamRec);
                                                                     setJoinError('');
+                                                                    if (!isConfirming) {
+                                                                        setTimeout(() => {
+                                                                            const el = document.getElementById(`tb-card-${teamRec.id}`);
+                                                                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                                        }, 50);
+                                                                    }
                                                                 }}
                                                             >
                                                                 {isConfirming ? 'Cancel' : currentMembership && !isOnThisTeam ? 'Switch →' : 'Join →'}
@@ -2119,88 +2211,52 @@ function RegistrationSection({
             </div>
         </div>
 
-        {/* BLOCK 3: Active Participants */}
-        <div className="step-block">
-            <div className="step-block-header">Step 3 — Active Participants</div>
-            <div style={{marginBottom:8}}>
-                <div style={{fontSize:13,color:'#5A7A9A',marginBottom:20}}>All registered teams and free agents for the hackathon.</div>
-                <div className="reg-tabs">
-                    <button className={`reg-tab${regTab === 'teams' ? ' active' : ''}`} onClick={() => setRegTab('teams')}>
-                        Teams ({liveTeams.length})
-                    </button>
-                    <button className={`reg-tab${regTab === 'agents' ? ' active' : ''}`} onClick={() => setRegTab('agents')}>
-                        Free Agents ({freeAgents.length})
-                    </button>
+        {/* Create Team Modal */}
+        {showCreateModal && (
+            <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowCreateModal(false); }}>
+                <div className="modal" style={{maxWidth:480}}>
+                    <div className="modal-header">
+                        <div>
+                            <div className="modal-title">Create a New Team</div>
+                            <div className="modal-subtitle">You will be assigned as team captain.</div>
+                        </div>
+                        <button className="modal-close" onClick={() => setShowCreateModal(false)}>✕</button>
+                    </div>
+                    <div className="modal-body">
+                        <div className="fr">
+                            <label className="form-label">Team Name<span className="req">*</span></label>
+                            <input
+                                className="fi"
+                                placeholder="e.g. The Compliance Crushers"
+                                value={createName}
+                                onChange={e => setCreateName(e.target.value)}
+                                onKeyDown={e => { if (e.key === 'Enter' && createName.trim() && !createSubmitting) handleCreateTeam().then(() => { if (!createError) setShowCreateModal(false); }); }}
+                            />
+                        </div>
+                        <div className="fr" style={{marginTop:12}}>
+                            <label className="form-label">Team Captain</label>
+                            <div style={{padding:'10px 14px',background:T.cloud,border:'1px solid '+T.border,borderRadius:6,fontSize:13,color:T.deep,fontWeight:600}}>
+                                {selfRegistered ? selfRegistered.name : 'You'} <span style={{fontSize:10,color:T.muted,fontWeight:400,marginLeft:6}}>Captain</span>
+                            </div>
+                        </div>
+                        {createError && <div className="ferr" style={{marginTop:8}}>{createError}</div>}
+                    </div>
+                    <div className="modal-footer">
+                        <button className="cancel-btn" onClick={() => { setShowCreateModal(false); setCreateError(''); setCreateName(''); }}>Cancel</button>
+                        <button
+                            className="submit-btn"
+                            disabled={createSubmitting || !createName.trim()}
+                            onClick={async () => {
+                                await handleCreateTeam();
+                                if (!createError) setShowCreateModal(false);
+                            }}
+                        >
+                            {createSubmitting ? <><span className="spinner"/> Creating…</> : 'Create Team →'}
+                        </button>
+                    </div>
                 </div>
-
-                {regTab === 'teams' ? (
-                    liveTeams.length === 0 ? (
-                        <div className="reg-empty">No teams registered yet.</div>
-                    ) : (<>
-                        <div className="reg-header-row">
-                            <div className="reg-header-col">Team</div>
-                            <div className="reg-header-col">Tool</div>
-                            <div className="reg-header-col">Captain</div>
-                            <div className="reg-header-col">Status</div>
-                            <div className="reg-header-col">Members</div>
-                        </div>
-                        {liveTeams.map(r => {
-                            const name        = safeGetCellValueAsString(r, 'Team Name');
-                            const tech        = safeGetCellValueAsString(r, 'Technology');
-                            const status      = safeGetCellValueAsString(r, 'Submission Status');
-                            const captainLink = safeGetCellValue(r, 'Team Member # 1 (Captain)');
-                            const captainName = Array.isArray(captainLink) && captainLink.length > 0 ? captainLink[0].name : '';
-                            const memberFields = [
-                                captainLink,
-                                safeGetCellValue(r, 'Team Member # 2'),
-                                safeGetCellValue(r, 'Team Member # 3'),
-                                safeGetCellValue(r, 'Team Member # 4'),
-                                safeGetCellValue(r, 'Team Member # 5'),
-                            ];
-                            const memberCount = memberFields.filter(v => v && (Array.isArray(v) ? v.length > 0 : true)).length;
-                            const techPill   = tech === 'Airtable' ? 'reg-pill-blue' : tech === 'CodePuppy' ? 'reg-pill-green' : tech === 'Harvey' ? 'reg-pill-purple' : 'reg-pill-gray';
-                            const statusPill = status === 'Submitted' ? 'reg-pill-blue' : status === 'Registered' ? 'reg-pill-green' : status === 'Pending' ? 'reg-pill-yellow' : 'reg-pill-gray';
-                            return (
-                                <div key={r.id} className="reg-row">
-                                    <button className="reg-team-link" onClick={() => setRosterTeam(r)}>{name || '—'}</button>
-                                    <div><span className={`reg-pill ${techPill}`}>{tech || '—'}</span></div>
-                                    <div className="reg-cell">{captainName || '—'}</div>
-                                    <div><span className={`reg-pill ${statusPill}`}>{status || '—'}</span></div>
-                                    <div className="reg-cell">{memberCount > 0 ? `${memberCount}/5` : '—'}</div>
-                                </div>
-                            );
-                        })}
-                    </>)
-                ) : (
-                    freeAgents.length === 0 ? (
-                        <div className="reg-empty">No free agents have signed up yet.</div>
-                    ) : (<>
-                        <div className="reg-header-row" style={{gridTemplateColumns:'2fr 2fr 1fr 1fr'}}>
-                            <div className="reg-header-col">Name</div>
-                            <div className="reg-header-col">Email</div>
-                            <div className="reg-header-col">Function</div>
-                            <div className="reg-header-col">Location</div>
-                        </div>
-                        {freeAgents.map(r => {
-                            const name     = safeGetCellValueAsString(r, 'Full Name');
-                            const email    = safeGetCellValueAsString(r, 'Work Email');
-                            const fn       = safeGetCellValueAsString(r, 'Function');
-                            const city     = safeGetCellValueAsString(r, 'Work City');
-                            const state    = safeGetCellValueAsString(r, 'Work State');
-                            const location = [city, state].filter(Boolean).join(', ').toUpperCase();
-                            return (
-                                <div key={r.id} className="reg-row" style={{gridTemplateColumns:'2fr 2fr 1fr 1fr'}}>
-                                    <div className="reg-cell-name">{name || '—'}</div>
-                                    <div className="reg-cell">{email || '—'}</div>
-                                    <div className="reg-cell">{fn || '—'}</div>
-                                    <div className="reg-cell">{location || '—'}</div>
-                                </div>
-                            );
-                        })}
-                    </>)
-                )}
             </div>
-        </div>
+        )}
         </>
     );
 }
@@ -2464,7 +2520,6 @@ function App() {
                 </div>
                 <div className="nav-right">
                     <button className="nav-cta" onClick={() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })}>Register Now →</button>
-                    <button className="nav-cta" style={{background:T.deep,color:'#fff',boxShadow:'none'}} onClick={() => setCurrentView('admin')}>Admin</button>
                 </div>
             </nav>
 
@@ -2659,10 +2714,6 @@ function App() {
                         freeAgents={freeAgents}
                         dfName={dfName}
                         dfEmail={dfEmail}
-                        regTab={regTab}
-                        setRegTab={setRegTab}
-                        rosterTeam={rosterTeam}
-                        setRosterTeam={setRosterTeam}
                         selfRegistered={selfRegistered}
                         setSelfRegistered={setSelfRegistered}
                         step1Complete={step1Complete}
