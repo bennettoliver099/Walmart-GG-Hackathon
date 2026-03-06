@@ -1685,8 +1685,17 @@ function RegistrationSection({
     }
 
     // ── Add Yourself ──────────────────────────────────────────────────────────
+    function resetAddSelfForm() {
+        setAddFirstName('');
+        setAddLastName('');
+        setAddEmail('');
+        setAddAssocType('');
+        setAddError('');
+        setAddEmailMatch(null);
+    }
+
     async function handleAddSelf() {
-        if (!addFirstName.trim() || !addLastName.trim() || !addEmail.trim() || !addAssocType || !addPayType) {
+        if (!addFirstName.trim() || !addLastName.trim() || !addEmail.trim() || !addAssocType) {
             setAddError('All fields are required.');
             return;
         }
@@ -1716,6 +1725,7 @@ function RegistrationSection({
             if (f5) fields[f5.id] = { name: addPayType };
             await dirTable.createRecordAsync(fields);
             setShowAddSelf(false);
+            resetAddSelfForm();
             // Wait for reactive update then auto-select
             setTimeout(() => {
                 const newRec = dirRecords.find(r =>
@@ -1885,67 +1895,10 @@ function RegistrationSection({
                         )}
 
                         <div style={{marginTop:12}}>
-                            <button className="hub-card-link" onClick={() => setShowAddSelf(s => !s)}>
-                                {showAddSelf ? '▾' : '▸'} Can't find your name? Add yourself to the directory →
+                            <button className="hub-card-link" onClick={() => setShowAddSelf(true)}>
+                                Can't find your name? Add yourself to the directory →
                             </button>
                         </div>
-
-                        {showAddSelf && (
-                            <div className="add-self-form">
-                                <div className="add-self-title">Add Yourself to the Directory</div>
-                                {addEmailMatch ? (
-                                    <div className="step-info" style={{marginTop:0,marginBottom:12}}>
-                                        <div>
-                                            <div className="step-info-text">We found <strong>{safeGetCellValueAsString(addEmailMatch, 'Full Name') || 'someone'}</strong> with that email. Is this you?</div>
-                                            <button className="join-btn" style={{marginTop:8}} onClick={() => handleEmailMatchSelect(addEmailMatch)}>Select This Person</button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div className="fr-2">
-                                            <div className="fr">
-                                                <label className="form-label">First Name<span className="req">*</span></label>
-                                                <input className="fi" placeholder="First" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" value={addFirstName} onChange={e => setAddFirstName(e.target.value)} />
-                                            </div>
-                                            <div className="fr">
-                                                <label className="form-label">Last Name<span className="req">*</span></label>
-                                                <input className="fi" placeholder="Last" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" value={addLastName} onChange={e => setAddLastName(e.target.value)} />
-                                            </div>
-                                        </div>
-                                        <div className="fr">
-                                            <label className="form-label">Work Email<span className="req">*</span></label>
-                                            <input className="fi" type="email" placeholder="you@walmart.com" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" value={addEmail} onChange={e => setAddEmail(e.target.value)} />
-                                        </div>
-                                        <div className="fr">
-                                            <label className="form-label">Associate Type<span className="req">*</span></label>
-                                            <div className="radio-group" style={{marginTop:6}}>
-                                                {['Full-Time','Temp','Part-Time','Other'].map(t => (
-                                                    <div className="rp" key={t}>
-                                                        <input type="radio" id={`at-${t}`} name="addAssocType" value={t} checked={addAssocType===t} onChange={() => setAddAssocType(t)} />
-                                                        <label htmlFor={`at-${t}`}>{t}</label>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div className="fr">
-                                            <label className="form-label">Pay Type<span className="req">*</span></label>
-                                            <div className="radio-group" style={{marginTop:6}}>
-                                                {['Salaried','Hourly'].map(t => (
-                                                    <div className="rp" key={t}>
-                                                        <input type="radio" id={`pt-${t}`} name="addPayType" value={t} checked={addPayType===t} onChange={() => setAddPayType(t)} />
-                                                        <label htmlFor={`pt-${t}`}>{t}</label>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        {addError && <div className="ferr">{addError}</div>}
-                                        <button className="submit-btn" style={{marginTop:8}} disabled={addSubmitting} onClick={handleAddSelf}>
-                                            {addSubmitting ? <><span className="spinner"/> Adding…</> : '+ Add to Directory'}
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        )}
 
                         <div className="fr" style={{marginTop:12}}>
                             <label className="form-label">T-Shirt Size<span className="req">*</span></label>
@@ -2252,6 +2205,74 @@ function RegistrationSection({
                 <strong>Don't have a team yet?</strong> No problem — you're already in the free agent pool after completing Step 1. The organizing committee will assign you to a team before kickoff. Once you're placed on a team, you'll automatically be removed from the free agent pool.
             </div>
         </div>
+
+        {/* Add Yourself Modal */}
+        {showAddSelf && (
+            <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) { setShowAddSelf(false); resetAddSelfForm(); } }}>
+                <div className="modal" style={{maxWidth:480}}>
+                    <div className="modal-header">
+                        <div>
+                            <div className="modal-title">Add Yourself to the Directory</div>
+                            <div className="modal-subtitle">Fill out the fields below to register for the hackathon.</div>
+                        </div>
+                        <button className="modal-close" onClick={() => { setShowAddSelf(false); resetAddSelfForm(); }}>✕</button>
+                    </div>
+                    <div className="modal-body">
+                        {addEmailMatch ? (
+                            <div className="step-info" style={{marginBottom:12}}>
+                                <div>
+                                    <div className="step-info-text">
+                                        We found <strong>{safeGetCellValueAsString(addEmailMatch, 'Full Name') || 'someone'}</strong> with that email. Is this you?
+                                    </div>
+                                    <button className="join-btn" style={{marginTop:8}} onClick={() => { handleEmailMatchSelect(addEmailMatch); setShowAddSelf(false); resetAddSelfForm(); }}>
+                                        Yes, Select Me
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="fr-2">
+                                    <div className="fr">
+                                        <label className="form-label">First Name<span className="req">*</span></label>
+                                        <input className="fi" placeholder="First" value={addFirstName} onChange={e => setAddFirstName(e.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" />
+                                    </div>
+                                    <div className="fr">
+                                        <label className="form-label">Last Name<span className="req">*</span></label>
+                                        <input className="fi" placeholder="Last" value={addLastName} onChange={e => setAddLastName(e.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" />
+                                    </div>
+                                </div>
+                                <div className="fr">
+                                    <label className="form-label">Work Email<span className="req">*</span></label>
+                                    <input className="fi" type="email" placeholder="you@walmart.com" value={addEmail} onChange={e => setAddEmail(e.target.value)} autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} data-lpignore="true" data-form-type="other" />
+                                </div>
+                                <div className="fr">
+                                    <label className="form-label">Associate Type<span className="req">*</span></label>
+                                    <div className="radio-group" style={{marginTop:6}}>
+                                        {['Full-Time','Temp','Part-Time','Other'].map(t => (
+                                            <div className="rp" key={t}>
+                                                <input type="radio" id={`at-${t}`} name="addAssocType" value={t} checked={addAssocType===t} onChange={() => setAddAssocType(t)} autoComplete="off" />
+                                                <label htmlFor={`at-${t}`}>{t}</label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                {addError && <div className="ferr">{addError}</div>}
+                            </>
+                        )}
+                    </div>
+                    <div className="modal-footer">
+                        <button className="cancel-btn" onClick={() => { setShowAddSelf(false); resetAddSelfForm(); }}>Cancel</button>
+                        {!addEmailMatch && (
+                            <button className="submit-btn" disabled={addSubmitting} onClick={async () => {
+                                await handleAddSelf();
+                            }}>
+                                {addSubmitting ? <><span className="spinner"/> Adding…</> : 'Register & Add to Directory'}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+        )}
 
         {/* Create Team Modal */}
         {showCreateModal && (
