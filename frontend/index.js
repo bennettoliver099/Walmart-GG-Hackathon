@@ -26,7 +26,6 @@ const RULES_URL             = 'https://teams.wal-mart.com/sites/GGDigitalAcceler
 const TEST_NAMES            = ['Test', 'Test ', 'Test2', 'test 5', 'Rest'];
 const TECH_OPTIONS          = ['Airtable', 'CodePuppy', 'Harvey', 'Other'];
 const ATTENDANCE_OPTIONS    = ['Virtual', 'In Person', 'Hybrid'];
-const HERO_COUNTDOWN_TARGET = new Date('2026-05-04T05:00:00Z'); // May 4, 2026 midnight CDT
 const MAX_TEAMS             = 50;
 const HUB_DOC_TITLES        = { rules: 'Rules & Guidelines', prizes: 'Payouts & Prizes', reginfo: 'Registration Info', faqs: 'FAQs' };
 
@@ -43,13 +42,42 @@ const SparkIcon = React.memo(function SparkIcon({ size = 20, color = 'white' }) 
 
 
 
-// ─── PHASE TIMELINE ───────────────────────────────────────────────────────────
-const PHASES = [
-    { label: 'Register', sub: 'Now Open',         active: true  },
-    { label: 'Train',    sub: 'March 10 – May 1', active: false },
-    { label: 'Build',    sub: 'Starts May 4',     active: false },
-    { label: 'Present',  sub: 'Starts May 7',     active: false },
+// ─── HOME DASHBOARD CONSTANTS ────────────────────────────────────────────────
+const KEY_DATES = [
+    { label: 'Registration Closes', date: 'April 10, 2026' },
+    { label: 'Hackathon Kickoff',   date: 'May 4 @ 9am CT' },
+    { label: 'Submission Deadline', date: 'May 6 @ 5pm CT' },
+    { label: 'Judging Day',         date: 'May 7 @ 9am CT' },
 ];
+const ANNOUNCEMENTS = [
+    { date: 'May 1',  title: 'Final prep resources posted',       body: 'Check the Resources tab for updated problem statement guides and judging rubric.' },
+    { date: 'Apr 25', title: 'Office Hours this Friday @ 2pm CT', body: 'Teams with questions about problem statement selection are encouraged to join.' },
+    { date: 'Apr 10', title: 'Registration closes April 10',      body: 'Make sure all team members have submitted their attestation before the deadline.' },
+];
+const TOOL_NAMES_ORDERED = ['Airtable', 'Harvey', 'CodePuppy', 'Dataiku'];
+const HOME_TARGETS = {
+    kickoff:  new Date('2026-05-04T14:00:00Z'),
+    deadline: new Date('2026-05-06T22:00:00Z'),
+    judging:  new Date('2026-05-07T14:00:00Z'),
+};
+function daysUntil(target) {
+    const diff = target.getTime() - Date.now();
+    return diff <= 0 ? '0' : String(Math.max(0, Math.floor(diff / 86400000)));
+}
+
+function HomeCountdownCell({ label, target }) {
+    const [days, setDays] = useState(() => daysUntil(target));
+    useEffect(() => {
+        const id = setInterval(() => setDays(daysUntil(target)), 60000);
+        return () => clearInterval(id);
+    }, [target]);
+    return (
+        <div className="hcd-cell">
+            <div className="hcd-num">{days}</div>
+            <div className="hcd-label">{label}</div>
+        </div>
+    );
+}
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
 const T = {
@@ -71,47 +99,6 @@ const T = {
 };
 
 
-function useCountdown(target) {
-    const [now, setNow] = useState(Date.now());
-    useEffect(() => {
-        const id = setInterval(() => setNow(Date.now()), 1000);
-        return () => clearInterval(id);
-    }, []);
-    const diff = target.getTime() - now;
-    if (diff <= 0) return null;
-    return {
-        d: String(Math.floor(diff / 86400000)).padStart(2, '0'),
-        h: String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0'),
-        m: String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0'),
-        s: String(Math.floor((diff % 60000) / 1000)).padStart(2, '0'),
-    };
-}
-
-
-// ─── COUNTDOWN DISPLAY (isolated so 1-second ticks don't re-render App) ──────
-const CountdownDisplay = React.memo(function CountdownDisplay({ target }) {
-    const cd = useCountdown(target);
-    if (!cd) return (
-        <div className="hero-countdown">
-            <div className="hero-countdown-label">Hackathon Begins</div>
-            <div style={{fontSize:'22px',fontWeight:800,color:'#fff',letterSpacing:'-0.02em'}}>Soon</div>
-        </div>
-    );
-    return (
-        <div className="hero-countdown">
-            <div className="hero-countdown-label">Hackathon Begins</div>
-            <div className="countdown-blocks">
-                <div className="countdown-block"><div className="countdown-num">{cd.d}</div><div className="countdown-unit">Days</div></div>
-                <div className="countdown-sep">:</div>
-                <div className="countdown-block"><div className="countdown-num">{cd.h}</div><div className="countdown-unit">Hours</div></div>
-                <div className="countdown-sep">:</div>
-                <div className="countdown-block"><div className="countdown-num">{cd.m}</div><div className="countdown-unit">Min</div></div>
-                <div className="countdown-sep">:</div>
-                <div className="countdown-block"><div className="countdown-num">{cd.s}</div><div className="countdown-unit">Sec</div></div>
-            </div>
-        </div>
-    );
-});
 
 // ─── MEMBER SEARCH ────────────────────────────────────────────────────────────
 const MemberSearch = React.memo(function MemberSearch({ label, optional, dirRecords, nameField, emailField, selected, onSelect, onNoResults }) {
@@ -533,15 +520,6 @@ function RegistrationModal({ onClose, onRegister, submissionsTable, dirRecords, 
         </div>
     );
 }
-
-// ─── STATIC DATA ──────────────────────────────────────────────────────────────
-
-const NAV_SECTIONS = [
-    ['rules',    'Rules'    ],
-    ['tools',    'Tools'    ],
-    ['register', 'Register' ],
-    ['help',     'Help'     ],
-];
 
 // ─── RULES MODAL ──────────────────────────────────────────────────────────────
 function parseRuleSections(text) {
@@ -2335,7 +2313,7 @@ function App() {
     const prodResRecords = useRecords(prodResTable);
 
     // ── UI State ─────────────────────────────────────────────────────────────
-    const [currentView,     setCurrentView]    = useState('portal');
+    const [currentView,     setCurrentView]    = useState('home');
     const [rosterTeam,      setRosterTeam]     = useState(null);
     const [showReg,         setShowReg]        = useState(false);
     const [showRulesModal,  setShowRulesModal] = useState(false);
@@ -2343,29 +2321,6 @@ function App() {
     const [selfRegistered,  setSelfRegistered] = useState(null);
     const [step1Complete,   setStep1Complete]  = useState(false);
     const [productModal,    setProductModal]   = useState(null);
-    useEffect(() => {
-        const ids = ['hero', 'rules', 'tools', 'register', 'help'];
-        let ticking = false;
-        const handleScroll = () => {
-            if (ticking) return;
-            ticking = true;
-            requestAnimationFrame(() => {
-                let active = ids[0];
-                for (const id of ids) {
-                    const el = document.getElementById(id);
-                    if (el && el.getBoundingClientRect().top <= 80) active = id;
-                }
-                for (const id of ids) {
-                    const link = document.querySelector(`.nav-link[data-navid="${id}"]`);
-                    if (link) link.classList.toggle('active', id === active);
-                }
-                ticking = false;
-            });
-        };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     // One-time cleanup: remove all stale localStorage identity keys
     useEffect(() => {
@@ -2454,7 +2409,7 @@ function App() {
         <>
         {currentView === 'admin' ? (
             <AdminView
-                onBack={() => setCurrentView('portal')}
+                onBack={() => setCurrentView('home')}
                 liveTeams={liveTeams}
                 subTable={subTable}
                 sfTeamName={sfTeamName}
@@ -2470,274 +2425,221 @@ function App() {
 
             {/* ── STICKY NAV ── */}
             <nav className="nav">
-                <div className="nav-brand">
+                <button className="nav-brand-btn" onClick={() => setCurrentView('home')}>
                     <div className="nav-spark"><SparkIcon size={16} /></div>
-                    FY27 Global Governance AI Hackathon
-                </div>
+                    GG AI HACKATHON FY27
+                </button>
                 <div className="nav-links">
-                    {NAV_SECTIONS.map(([id, label]) => (
-                        <button key={id} data-navid={id} className={`nav-link${id === 'hero' ? ' active' : ''}`}
-                            onClick={() => {
-                                document.querySelectorAll('.nav-link[data-navid]').forEach(el => el.classList.remove('active'));
-                                document.querySelector(`.nav-link[data-navid="${id}"]`)?.classList.add('active');
-                                document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
-                            }}>
+                    {[['home','Home'],['rules','Rules'],['tools','Tools'],['register','Register'],['help','Help']].map(([id, label]) => (
+                        <button key={id} className={`nav-link${currentView === id ? ' active' : ''}`}
+                            onClick={() => setCurrentView(id)}>
                             {label}
                         </button>
                     ))}
                 </div>
                 <div className="nav-right">
-                    <button className="nav-cta" onClick={() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })}>Register Now →</button>
+                    <button className="nav-cta" onClick={() => setCurrentView('help')}>Get Help</button>
                 </div>
             </nav>
 
-            {/* ── SECTION 1: HERO ── */}
-            <section id="hero" className="hero">
-                <div className="hero-inner">
-                    <div className="hero-left">
-                        <h1><span className="hero-h1-pre">FY27</span>Global Governance<br /><span className="accent">AI Hackathon</span></h1>
-                        <div className="hero-byline">Build something that matters. Win something that counts.</div>
-                        <div className="hero-sub">
-                            48 hours. Real data. Real problems. Use Airtable, Harvey, or CodePuppy to build an AI-powered solution for Walmart&apos;s Global Governance team — then pitch it.
-                        </div>
-                    </div>
-                    <div className="hero-right">
-                        <div className="hero-orbital">
-                            <div className="orb-ring orb-r1" />
-                            <div className="orb-ring orb-r2" />
-                            <div className="orb-ring orb-r3" />
-                            <div className="orb-track orb-t1"><div className="orb-dot" /></div>
-                            <div className="orb-track orb-t2"><div className="orb-dot" /></div>
-                            <div className="orb-core" />
-                        </div>
-                        <CountdownDisplay target={HERO_COUNTDOWN_TARGET} />
-                    </div>
-                </div>
-                <div className="hero-stepper">
-                    {PHASES.map(p => (
-                        <div key={p.label} className="hero-phase-node">
-                            <div className={`hero-step-dot ${p.active ? 'hero-step-dot-active' : 'hero-step-dot-inactive'}`} />
-                            <div className={`hero-step-label ${p.active ? 'hero-step-label-active' : 'hero-step-label-inactive'}`}>{p.label}</div>
-                            <div className={`hero-phase-sub ${p.active ? 'hero-step-sub-active' : 'hero-step-sub-inactive'}`}>{p.sub}</div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+            {/* ── VIEW ROUTING ── */}
+            {currentView === 'home' && (
+                <HomeView
+                    sessionUserRec={sessionUserRec}
+                    liveTeams={liveTeams}
+                    prodRecords={prodRecords}
+                    totalTeams={totalTeams}
+                    onNavigate={setCurrentView}
+                />
+            )}
 
-            {/* ── STAT BAR ── */}
-            <div className="stat-bar">
-                <div className="stat-bar-inner">
-                    <div className="stat-item">
-                        <div className="stat-num">{totalTeams}</div>
-                        <div className="stat-label">Teams Registered</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-num">{submittedTeams}</div>
-                        <div className="stat-label">Submitted</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-num">{registeredTeams}</div>
-                        <div className="stat-label">Registered</div>
-                    </div>
-                </div>
-            </div>
+            {currentView === 'rules' && (
+                <div className="section-view">
+                    <section id="rules" className="sec-white">
+                        <div className="sec-wrap">
+                            <span className="sec-label">Learning Hub</span>
+                            <h2 className="sec-h2">Learning Hub</h2>
+                            <p className="sec-sub">Everything you need to know before you build.</p>
 
-
-            {/* ── SECTION 2: LEARNING HUB ── */}
-            <section id="rules" className="sec-white">
-                <div className="sec-wrap">
-                    <span className="sec-label">Learning Hub</span>
-                    <h2 className="sec-h2">Learning Hub</h2>
-                    <p className="sec-sub">Everything you need to know before you build.</p>
-
-                    <div className="hub-cards">
-                        <div id="rules-card" className="hub-card" style={{ borderTop: `3px solid ${T.blue}` }} onClick={() => setHubDocModal('rules')}>
-                            <div className="hub-card-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="hub-card-title">Rules & Guidelines</div>
-                            <div className="hub-card-body">Official hackathon rules, eligibility requirements, and code of conduct. Read this before registering.</div>
-                            <span className="hub-card-link">Read the Rules →</span>
-                        </div>
-                        <div className="hub-card" style={{ borderTop: `3px solid ${T.yellow}` }} onClick={() => setHubDocModal('prizes')}>
-                            <div className="hub-card-icon"><TrophyIcon size={28} color={T.yellow} weight="duotone" /></div>
-                            <div className="hub-card-title">Payouts & Prizes</div>
-                            <div className="hub-card-body">What&apos;s at stake. Prize tiers, judging criteria, and how winners are selected.</div>
-                            <span className="hub-card-link">View Prize Details →</span>
-                        </div>
-                        <div className="hub-card" style={{ borderTop: `3px solid ${T.azure}` }} onClick={() => setHubDocModal('reginfo')}>
-                            <div className="hub-card-icon"><NotePencilIcon size={28} color={T.azure} weight="duotone" /></div>
-                            <div className="hub-card-title">Registration Info</div>
-                            <div className="hub-card-body">How to register your team, deadlines, team size requirements, and free agent sign-up.</div>
-                            <span className="hub-card-link">Go to Registration →</span>
-                        </div>
-                        <div className="hub-card" style={{ borderTop: `3px solid ${T.muted}` }} onClick={() => setHubDocModal('faqs')}>
-                            <div className="hub-card-icon"><QuestionIcon size={28} color={T.muted} weight="duotone" /></div>
-                            <div className="hub-card-title">FAQs</div>
-                            <div className="hub-card-body">Common questions about tools, submissions, team formation, and the 48-hour sprint format.</div>
-                            <span className="hub-card-link">View FAQs →</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* ── SECTION 3: TOOLS & ACCESS ── */}
-            <section id="tools" className="sec-cloud">
-                <div className="sec-wrap">
-                    <span className="sec-label">Tools</span>
-                    <h2 className="sec-h2">Tool Selection</h2>
-                    <p className="sec-sub">Free training is available for all tools. Pick one — or combine them if your use case calls for it.</p>
-                    <p className="sec-sub" style={{marginTop:6}}><strong>Click any card for details, resources, and training links.</strong></p>
-
-                    <div className="prod-grid">
-                        {(() => {
-                            const ORDER = ['airtable','harvey','code puppy','dataiku'];
-                            const sorted = [...prodRecords].sort((a, b) => {
-                                const ai = ORDER.indexOf(safeGetCellValueAsString(a, 'Name').toLowerCase());
-                                const bi = ORDER.indexOf(safeGetCellValueAsString(b, 'Name').toLowerCase());
-                                return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-                            });
-                            return sorted.map(prod => {
-                                const name    = safeGetCellValueAsString(prod, 'Name');
-                                const logo    = safeGetCellValue(prod, 'Logo');
-                                const logoUrl = Array.isArray(logo) && logo.length > 0
-                                    ? (logo[0].thumbnails?.large?.url || logo[0].url)
-                                    : null;
-                                return (
-                                    <button key={prod.id} className="prod-card" onClick={() => setProductModal(prod)}>
-                                        {logoUrl
-                                            ? <img src={logoUrl} alt={name} className="prod-card-bg" />
-                                            : <div className="prod-card-bg-fallback" />
-                                        }
-                                        <div className="prod-card-shade" />
-                                        <div className="prod-card-overlay">
-                                            <div className="prod-card-hover-label">View Product Details</div>
-                                            <div className="prod-card-hover-btn">Explore {name} →</div>
-                                        </div>
-                                    </button>
-                                );
-                            });
-                        })()}
-                    </div>
-                </div>
-            </section>
-
-            {/* ── SECTION 4: REGISTRATION ── */}
-            <section id="register" className="sec-white">
-                <div className="sec-wrap-wide">
-                    <span className="sec-label">Get Involved</span>
-                    <h2 className="sec-h2">Hackathon Registration</h2>
-                    <p className="sec-sub" style={{marginBottom:32}}>Follow the steps below to register for the event, form or join a team, and get started.</p>
-                    <RegistrationSection
-                        dirTable={dirTable}
-                        subTable={subTable}
-                        dirRecords={dirRecords}
-                        liveTeams={liveTeams}
-                        freeAgents={freeAgents}
-                        volunteerAgents={volunteerAgents}
-                        dfName={dfName}
-                        dfEmail={dfEmail}
-                        selfRegistered={selfRegistered}
-                        setSelfRegistered={setSelfRegistered}
-                        step1Complete={step1Complete}
-                        setStep1Complete={setStep1Complete}
-                        sessionEmail={sessionEmail}
-                        sessionUserRec={sessionUserRec}
-                    />
-                </div>
-            </section>
-
-            {/* ── SECTION 5: HELP & SUPPORT ── */}
-            <section id="help" className="sec-cloud">
-                <div className="sec-wrap">
-                    <span className="sec-label">Support</span>
-                    <h2 className="sec-h2">We&apos;ve Got You Covered</h2>
-                    <p className="sec-sub">Multiple support channels available before and during the event.</p>
-
-                    <div className="help-cards">
-                        {/* Card 1: Internal Support Team */}
-                        <div className="help-card">
-                            <div className="help-card-icon"><UsersThreeIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="help-card-title">Internal Support Team</div>
-                            <div className="contact-blocks">
-                                <div className="contact-block">
-                                    <div className="contact-topic">Hackathon Lead</div>
-                                    <div className="contact-name">Nick Hammons</div>
-                                    <div className="contact-role">GG Digital Acceleration</div>
+                            <div className="hub-cards">
+                                <div id="rules-card" className="hub-card" style={{ borderTop: `3px solid ${T.blue}` }} onClick={() => setHubDocModal('rules')}>
+                                    <div className="hub-card-icon"><ClipboardTextIcon size={28} color={T.blue} weight="duotone" /></div>
+                                    <div className="hub-card-title">Rules &amp; Guidelines</div>
+                                    <div className="hub-card-body">Official hackathon rules, eligibility requirements, and code of conduct. Read this before registering.</div>
+                                    <span className="hub-card-link">Read the Rules →</span>
                                 </div>
-                                <div className="contact-block">
-                                    <div className="contact-topic">Operations Lead</div>
-                                    <div className="contact-name">Abby Worley</div>
-                                    <div className="contact-role">GG Digital Acceleration</div>
+                                <div className="hub-card" style={{ borderTop: `3px solid ${T.yellow}` }} onClick={() => setHubDocModal('prizes')}>
+                                    <div className="hub-card-icon"><TrophyIcon size={28} color={T.yellow} weight="duotone" /></div>
+                                    <div className="hub-card-title">Payouts &amp; Prizes</div>
+                                    <div className="hub-card-body">What&apos;s at stake. Prize tiers, judging criteria, and how winners are selected.</div>
+                                    <span className="hub-card-link">View Prize Details →</span>
                                 </div>
-                                <div className="contact-block">
-                                    <div className="contact-topic">Technical Lead</div>
-                                    <div className="contact-name">Michael Chapman</div>
-                                    <div className="contact-role">GG Digital Acceleration</div>
+                                <div className="hub-card" style={{ borderTop: `3px solid ${T.azure}` }} onClick={() => setHubDocModal('reginfo')}>
+                                    <div className="hub-card-icon"><NotePencilIcon size={28} color={T.azure} weight="duotone" /></div>
+                                    <div className="hub-card-title">Registration Info</div>
+                                    <div className="hub-card-body">How to register your team, deadlines, team size requirements, and free agent sign-up.</div>
+                                    <span className="hub-card-link">Go to Registration →</span>
+                                </div>
+                                <div className="hub-card" style={{ borderTop: `3px solid ${T.muted}` }} onClick={() => setHubDocModal('faqs')}>
+                                    <div className="hub-card-icon"><QuestionIcon size={28} color={T.muted} weight="duotone" /></div>
+                                    <div className="hub-card-title">FAQs</div>
+                                    <div className="hub-card-body">Common questions about tools, submissions, team formation, and the 48-hour sprint format.</div>
+                                    <span className="hub-card-link">View FAQs →</span>
                                 </div>
                             </div>
-                            <div className="card-footer-email">Email: ggda@email.wal-mart.com</div>
                         </div>
+                    </section>
+                </div>
+            )}
 
-                        {/* Card 2: Product Support */}
-                        <div className="help-card">
-                            <div className="help-card-icon"><HeadsetIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="help-card-title">Product Support</div>
-                            <div className="contact-blocks">
-                                {prodRecords && prodRecords.length > 0 ? (
-                                    prodRecords.map(product => {
-                                        const productName   = safeGetCellValueAsString(product, 'Name');
-                                        const supportEmail  = safeGetCellValueAsString(product, 'Product Support');
+            {currentView === 'tools' && (
+                <div className="section-view">
+                    <section id="tools" className="sec-cloud">
+                        <div className="sec-wrap">
+                            <span className="sec-label">Tools</span>
+                            <h2 className="sec-h2">Tool Selection</h2>
+                            <p className="sec-sub">Free training is available for all tools. Pick one &mdash; or combine them if your use case calls for it.</p>
+                            <p className="sec-sub" style={{marginTop:6}}><strong>Click any card for details, resources, and training links.</strong></p>
+
+                            <div className="prod-grid">
+                                {(() => {
+                                    const ORDER = ['airtable','harvey','code puppy','dataiku'];
+                                    const sorted = [...prodRecords].sort((a, b) => {
+                                        const ai = ORDER.indexOf(safeGetCellValueAsString(a, 'Name').toLowerCase());
+                                        const bi = ORDER.indexOf(safeGetCellValueAsString(b, 'Name').toLowerCase());
+                                        return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+                                    });
+                                    return sorted.map(prod => {
+                                        const name    = safeGetCellValueAsString(prod, 'Name');
+                                        const logo    = safeGetCellValue(prod, 'Logo');
+                                        const logoUrl = Array.isArray(logo) && logo.length > 0
+                                            ? (logo[0].thumbnails?.large?.url || logo[0].url)
+                                            : null;
                                         return (
-                                            <div className="contact-block" key={product.id}>
-                                                <div className="contact-topic">{productName} Support</div>
-                                                <div className="contact-email">{supportEmail || 'Contact coming soon'}</div>
-                                            </div>
+                                            <button key={prod.id} className="prod-card" onClick={() => setProductModal(prod)}>
+                                                {logoUrl
+                                                    ? <img src={logoUrl} alt={name} className="prod-card-bg" />
+                                                    : <div className="prod-card-bg-fallback" />
+                                                }
+                                                <div className="prod-card-shade" />
+                                                <div className="prod-card-overlay">
+                                                    <div className="prod-card-hover-label">View Product Details</div>
+                                                    <div className="prod-card-hover-btn">Explore {name} →</div>
+                                                </div>
+                                            </button>
                                         );
-                                    })
-                                ) : (
-                                    <div className="contact-block">
-                                        <div className="contact-topic">Product Support</div>
-                                        <div className="contact-email">Loading products…</div>
+                                    });
+                                })()}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            )}
+
+            {currentView === 'register' && (
+                <div className="section-view">
+                    <section id="register" className="sec-white">
+                        <div className="sec-wrap-wide">
+                            <span className="sec-label">Get Involved</span>
+                            <h2 className="sec-h2">Hackathon Registration</h2>
+                            <p className="sec-sub" style={{marginBottom:32}}>Follow the steps below to register for the event, form or join a team, and get started.</p>
+                            <RegistrationSection
+                                dirTable={dirTable}
+                                subTable={subTable}
+                                dirRecords={dirRecords}
+                                liveTeams={liveTeams}
+                                freeAgents={freeAgents}
+                                volunteerAgents={volunteerAgents}
+                                dfName={dfName}
+                                dfEmail={dfEmail}
+                                selfRegistered={selfRegistered}
+                                setSelfRegistered={setSelfRegistered}
+                                step1Complete={step1Complete}
+                                setStep1Complete={setStep1Complete}
+                                sessionEmail={sessionEmail}
+                                sessionUserRec={sessionUserRec}
+                            />
+                        </div>
+                    </section>
+                </div>
+            )}
+
+            {currentView === 'help' && (
+                <div className="section-view">
+                    <section id="help" className="sec-cloud">
+                        <div className="sec-wrap">
+                            <span className="sec-label">Support</span>
+                            <h2 className="sec-h2">We&apos;ve Got You Covered</h2>
+                            <p className="sec-sub">Multiple support channels available before and during the event.</p>
+
+                            <div className="help-cards">
+                                <div className="help-card">
+                                    <div className="help-card-icon"><UsersThreeIcon size={28} color={T.blue} weight="duotone" /></div>
+                                    <div className="help-card-title">Internal Support Team</div>
+                                    <div className="contact-blocks">
+                                        <div className="contact-block">
+                                            <div className="contact-topic">Hackathon Lead</div>
+                                            <div className="contact-name">Nick Hammons</div>
+                                            <div className="contact-role">GG Digital Acceleration</div>
+                                        </div>
+                                        <div className="contact-block">
+                                            <div className="contact-topic">Operations Lead</div>
+                                            <div className="contact-name">Abby Worley</div>
+                                            <div className="contact-role">GG Digital Acceleration</div>
+                                        </div>
+                                        <div className="contact-block">
+                                            <div className="contact-topic">Technical Lead</div>
+                                            <div className="contact-name">Michael Chapman</div>
+                                            <div className="contact-role">GG Digital Acceleration</div>
+                                        </div>
                                     </div>
-                                )}
+                                    <div className="card-footer-email">Email: ggda@email.wal-mart.com</div>
+                                </div>
+
+                                <div className="help-card">
+                                    <div className="help-card-icon"><HeadsetIcon size={28} color={T.blue} weight="duotone" /></div>
+                                    <div className="help-card-title">Product Support</div>
+                                    <div className="contact-blocks">
+                                        {prodRecords && prodRecords.length > 0 ? (
+                                            prodRecords.map(product => {
+                                                const productName  = safeGetCellValueAsString(product, 'Name');
+                                                const supportEmail = safeGetCellValueAsString(product, 'Product Support');
+                                                return (
+                                                    <div className="contact-block" key={product.id}>
+                                                        <div className="contact-topic">{productName} Support</div>
+                                                        <div className="contact-email">{supportEmail || 'Contact coming soon'}</div>
+                                                    </div>
+                                                );
+                                            })
+                                        ) : (
+                                            <div className="contact-block">
+                                                <div className="contact-topic">Product Support</div>
+                                                <div className="contact-email">Loading products&hellip;</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="help-card">
+                                    <div className="help-card-icon"><ChalkboardTeacherIcon size={28} color={T.blue} weight="duotone" /></div>
+                                    <div className="help-card-title">Mentor Program</div>
+                                    <div className="mentor-body">
+                                        Every registered team is assigned one internal mentor with relevant domain or technical expertise. Please reach out to the Internal Support Team for help regarding mentor assignments.
+                                    </div>
+                                    <ul className="mentor-bullets">
+                                        <li className="mentor-bullet">1 mentor per team (subject to team count)</li>
+                                        <li className="mentor-bullet">Available during the build week</li>
+                                        <li className="mentor-bullet">Matched based on your tool choice and problem area</li>
+                                    </ul>
+                                    <div className="mentor-note">
+                                        Vendor support (Airtable, Harvey, CodePuppy) is available in addition to your mentor.
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        {/* Card 3: Mentor Program */}
-                        <div className="help-card">
-                            <div className="help-card-icon"><ChalkboardTeacherIcon size={28} color={T.blue} weight="duotone" /></div>
-                            <div className="help-card-title">Mentor Program</div>
-                            <div className="mentor-body">
-                                Every registered team is assigned one internal mentor with relevant domain or technical expertise. Please reach out to the Internal Support Team for help regarding mentor assignments.
-                            </div>
-                            <ul className="mentor-bullets">
-                                <li className="mentor-bullet">1 mentor per team (subject to team count)</li>
-                                <li className="mentor-bullet">Available during the build week</li>
-                                <li className="mentor-bullet">Matched based on your tool choice and problem area</li>
-                            </ul>
-                            <div className="mentor-note">
-                                Vendor support (Airtable, Harvey, CodePuppy) is available in addition to your mentor.
-                            </div>
-                        </div>
-                    </div>
+                    </section>
                 </div>
-            </section>
-
-            {/* ── FOOTER ── */}
-            <footer className="site-footer">
-                <div className="site-footer-top">
-                    <div className="site-footer-brand">
-                        <div className="nav-spark"><SparkIcon size={14} /></div>
-                        <span className="site-footer-brand-text">GG Digital Acceleration · AI Hackathon 2026</span>
-                    </div>
-                    <div className="site-footer-links">
-                        <button className="site-footer-link-cta" onClick={() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' })}>Register →</button>
-                        <button className="site-footer-link" onClick={() => document.getElementById('rules')?.scrollIntoView({ behavior: 'smooth' })}>Rules ↗</button>
-                    </div>
-                </div>
-                <div className="site-footer-bottom">
-                    GG Digital Acceleration © 2026 · All rights reserved
-                </div>
-            </footer>
+            )}
 
             {/* ── REGISTRATION MODAL ── */}
             {showReg && (
@@ -2782,6 +2684,228 @@ function App() {
         </div>
         )}
         </>
+    );
+}
+
+// ─── HOME VIEW ────────────────────────────────────────────────────────────────
+function HomeView({ sessionUserRec, liveTeams, prodRecords, totalTeams, onNavigate }) {
+    // Derive user's team from liveTeams
+    const myTeam = useMemo(() => {
+        if (!sessionUserRec) return null;
+        const userId = sessionUserRec.id;
+        for (const team of liveTeams) {
+            for (const slot of SLOT_FIELDS) {
+                const val = safeGetCellValue(team, slot);
+                if (Array.isArray(val) && val.some(link => link.id === userId)) return team;
+            }
+        }
+        return null;
+    }, [sessionUserRec, liveTeams]);
+
+    const teamName = myTeam ? safeGetCellValueAsString(myTeam, 'Team Name') : '';
+
+    const toolSelected = myTeam ? safeGetCellValueAsString(myTeam, 'Technology') : '';
+    const subStatus    = myTeam ? safeGetCellValueAsString(myTeam, 'Submission Status') : '';
+    const useCase      = myTeam ? safeGetCellValueAsString(myTeam, 'Use Case') : '';
+
+    // Build member roster for team card
+    const memberRows = useMemo(() => {
+        if (!myTeam) return [];
+        return MEMBER_SLOT_DEFS.map(({ field, isCaptain }) => {
+            const val = safeGetCellValue(myTeam, field);
+            if (!Array.isArray(val) || val.length === 0) return null;
+            const name = val[0].name || '';
+            const initials = name.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?';
+            return { name, initials, isCaptain };
+        }).filter(Boolean);
+    }, [myTeam]);
+
+    // Tool grid — match prodRecords to TOOL_NAMES_ORDERED
+    const toolCards = useMemo(() => {
+        return TOOL_NAMES_ORDERED.map(toolName => {
+            const rec = prodRecords.find(r => safeGetCellValueAsString(r, 'Name').toLowerCase() === toolName.toLowerCase());
+            let logoUrl = null;
+            if (rec) {
+                const logo = safeGetCellValue(rec, 'Logo');
+                logoUrl = Array.isArray(logo) && logo.length > 0
+                    ? (logo[0].thumbnails?.large?.url || logo[0].url)
+                    : null;
+            }
+            const isSelected = toolSelected.toLowerCase() === toolName.toLowerCase();
+            return { toolName, logoUrl, isSelected };
+        });
+    }, [prodRecords, toolSelected]);
+
+    const step1Done = !!sessionUserRec;
+    const step2Done = !!myTeam;
+    const step3Done = !!toolSelected;
+    const step4Done = subStatus === 'Submitted';
+
+    return (
+        <div className="home-layout">
+            {/* LEFT COLUMN */}
+            <div className="home-left">
+                {/* Welcome Card */}
+                <div className="home-welcome">
+                    <div className="home-welcome-eyebrow">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <SparkIcon size={12} color="white" />
+                            GG AI HACKATHON FY27
+                        </div>
+                        <div className="home-welcome-stat">{totalTeams} teams registered</div>
+                    </div>
+                    <div className="home-welcome-title">Welcome to the Hackathon</div>
+                    <div className="home-welcome-sub">
+                        {myTeam
+                            ? <>You&apos;re on Team <span style={{ color: '#FFC220', fontWeight: 700 }}>{teamName}</span>.</>
+                            : 'You are not yet matched to a registered team. Contact your team captain.'
+                        }
+                    </div>
+                    <div className="home-countdown-row">
+                        <HomeCountdownCell label="days to Kickoff"  target={HOME_TARGETS.kickoff}  />
+                        <HomeCountdownCell label="days to Deadline" target={HOME_TARGETS.deadline} />
+                        <HomeCountdownCell label="days to Judging"  target={HOME_TARGETS.judging}  />
+                    </div>
+                </div>
+
+                {/* Key Dates */}
+                <div className="home-card">
+                    <div className="home-card-title">Key Dates</div>
+                    <div className="home-key-dates">
+                        {KEY_DATES.map(({ label, date }) => (
+                            <div key={label} className="hkd-row">
+                                <div className="hkd-dot" />
+                                <div className="hkd-label">{label}</div>
+                                <div className="hkd-date">{date}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Announcements */}
+                <div className="home-card">
+                    <div className="home-card-title">Announcements</div>
+                    <div className="home-announcements">
+                        {ANNOUNCEMENTS.map(({ date, title, body }, i) => (
+                            <div key={date} className={`han-item${i < ANNOUNCEMENTS.length - 1 ? ' han-item-divider' : ''}`}>
+                                <div className="han-date">{date}</div>
+                                <div className="han-title">{title}</div>
+                                <div className="han-body">{body}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Quick Links */}
+                <div className="home-card">
+                    <div className="home-card-title">Quick Links</div>
+                    <div className="hql-grid">
+                        <button className="hql-card" onClick={() => onNavigate('rules')}>
+                            <ClipboardTextIcon size={18} color={T.blue} weight="duotone" />
+                            <div className="hql-label">Rules &amp; Guidelines</div>
+                            <div className="hql-desc">Eligibility, code of conduct, prizes</div>
+                        </button>
+                        <button className="hql-card" onClick={() => onNavigate('tools')}>
+                            <ChalkboardTeacherIcon size={18} color={T.blue} weight="duotone" />
+                            <div className="hql-label">Tools &amp; Access</div>
+                            <div className="hql-desc">Airtable, Harvey, CodePuppy, Dataiku</div>
+                        </button>
+                        <button className="hql-card" onClick={() => onNavigate('register')}>
+                            <UsersThreeIcon size={18} color={T.blue} weight="duotone" />
+                            <div className="hql-label">Registration</div>
+                            <div className="hql-desc">Join or create a team</div>
+                        </button>
+                        <button className="hql-card" onClick={() => onNavigate('help')}>
+                            <HeadsetIcon size={18} color={T.blue} weight="duotone" />
+                            <div className="hql-label">Help &amp; Support</div>
+                            <div className="hql-desc">Contact the hackathon team</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* RIGHT COLUMN */}
+            <div className="home-right">
+                {/* Team Card */}
+                <div className="home-card">
+                    <div className="home-card-label">Team</div>
+                    {myTeam ? (
+                        <>
+                            <div className="home-card-teamname">{teamName}</div>
+                            <div className="home-roster">
+                                {memberRows.map(({ name, initials, isCaptain }) => (
+                                    <div key={name} className="home-member-row">
+                                        <div className="home-avatar">{initials}</div>
+                                        <div className="home-member-name">{name}</div>
+                                        {isCaptain && <div className="home-cap-badge">CAP</div>}
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="home-no-team-msg">
+                            You haven&apos;t joined a team yet.{' '}
+                            <button className="inline-link" onClick={() => onNavigate('register')}>Go to Registration →</button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Tool Selection Card */}
+                <div className="home-card">
+                    <div className="home-card-label">Tool Selection</div>
+                    <div className="home-card-subtext">Free training is available for all tools. Pick one &mdash; or combine them if your use case calls for it.</div>
+                    <div className="home-tool-grid">
+                        {toolCards.map(({ toolName, logoUrl, isSelected }) => (
+                            <div key={toolName} className={`home-tool-card${isSelected ? ' home-tool-card-sel' : ''}`}>
+                                {isSelected && <div className="home-tool-check">✓</div>}
+                                {logoUrl
+                                    ? <img src={logoUrl} alt={toolName} className="home-tool-logo" />
+                                    : <div className="home-tool-fallback">{toolName}</div>
+                                }
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Draft Problem Statement (only if on a team) */}
+                {myTeam && (
+                    <div className="home-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                            <div className="home-card-label" style={{ marginBottom: 0 }}>Draft Problem Statement</div>
+                            <div className={`home-draft-badge${useCase ? ' home-draft-badge-done' : ''}`}>
+                                {useCase ? 'Filled In' : 'Drafting'}
+                            </div>
+                        </div>
+                        <div className="home-draft-field">
+                            {useCase || <span style={{ fontStyle: 'italic', color: '#8BA5BF' }}>Not yet filled in</span>}
+                        </div>
+                    </div>
+                )}
+
+                {/* Submission Progress */}
+                <div className="home-card">
+                    <div className="home-card-label">Submission Progress</div>
+                    <div className="home-steps">
+                        {[
+                            { num: 1, label: 'Registered',    done: step1Done, navId: 'register' },
+                            { num: 2, label: 'Team Formed',   done: step2Done, navId: 'register' },
+                            { num: 3, label: 'Tool Selected', done: step3Done, navId: 'tools'    },
+                            { num: 4, label: 'Submitted',     done: step4Done, navId: null        },
+                        ].map(({ num, label, done, navId }) => (
+                            <div key={num} className="home-step-row">
+                                <div className={`home-step-circle${done ? ' home-step-done' : ''}`}>
+                                    {done ? '✓' : num}
+                                </div>
+                                <div className={`home-step-label${done ? ' home-step-label-done' : ''}`}>{label}</div>
+                                {navId && (
+                                    <button className="inline-link" style={{ fontSize: 11 }} onClick={() => onNavigate(navId)}>Go →</button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 
